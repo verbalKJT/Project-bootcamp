@@ -79,6 +79,9 @@ crashlytics-build.properties
 # TestRunner generated files
 InitTestScene*.unity*
 
+# Unity PlasticSCM
+.plastic/
+
 # Addressables default ignores, before user customizations
 /ServerData
 /[Aa]ssets/StreamingAssets/aa*
