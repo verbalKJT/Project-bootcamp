@@ -10,9 +10,9 @@ using TMPro;
 // Photon 서버 초기화 및 로비 UI 기능 담당
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    public TMP_InputField roomName; // 방 이름 입력 필드
-    public GameObject roomItem;     // RoomItem 프리팹 (방 버튼)
-    public GameObject scrollContents; // Scroll View 안에 RoomItem들이 들어갈 부모 오브젝트
+    public TMP_InputField roomName; 
+    public GameObject roomItem;     
+    public GameObject scrollContents; 
 
     private Dictionary<string, GameObject> rooms = new Dictionary<string, GameObject>(); // 현재 로비에 표시된 방 목록
 
@@ -34,7 +34,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        // BGM이나 초기 UI 세팅 가능 (현재 생략됨)
+        
     }
 
     public override void OnConnectedToMaster()
@@ -66,8 +66,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     IEnumerator LoadBattleField()
     {
         PhotonNetwork.IsMessageQueueRunning = false;
-
-        // 팀 선택/준비 UI가 있는 씬으로 이동
         AsyncOperation ao = SceneManager.LoadSceneAsync("TeamLobby");
         yield return ao;
     }
@@ -131,16 +129,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                     GameObject room = Instantiate(roomItem);
                     room.transform.SetParent(scrollContents.transform, false);
 
-                    RoomData roomData = room.GetComponent<RoomData>();
-                    roomData.roomName = roomInfo.Name;
-                    roomData.connectPlayer = roomInfo.PlayerCount;
-                    roomData.maxPlayer = roomInfo.MaxPlayers;
-                    roomData.DispRoomData();
+                    // RoomData roomData = room.GetComponent<RoomData>();
+                    // roomData.roomName = roomInfo.Name;
+                    // roomData.connectPlayer = roomInfo.PlayerCount;
+                    // roomData.maxPlayer = roomInfo.MaxPlayers;
+                    // roomData.DispRoomData();
 
                     // 방 클릭 시 입장 시도
                     room.GetComponent<Button>().onClick.AddListener(delegate
                     {
-                        OnClickRoomItem(roomData.roomName);
+                        //OnClickRoomItem(roomData.roomName);
                     });
 
                     rooms.Add(roomInfo.Name, room);
@@ -152,11 +150,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                     // 기존 방 정보 갱신
                     if (rooms.TryGetValue(roomInfo.Name, out tempRoom))
                     {
-                        RoomData roomData = tempRoom.GetComponent<RoomData>();
-                        roomData.roomName = roomInfo.Name;
-                        roomData.connectPlayer = roomInfo.PlayerCount;
-                        roomData.maxPlayer = roomInfo.MaxPlayers;
-                        roomData.DispRoomData();
+                        // RoomData roomData = tempRoom.GetComponent<RoomData>();
+                        // roomData.roomName = roomInfo.Name;
+                        // roomData.connectPlayer = roomInfo.PlayerCount;
+                        // roomData.maxPlayer = roomInfo.MaxPlayers;
+                        // roomData.DispRoomData();
                     }
                 }
             }
