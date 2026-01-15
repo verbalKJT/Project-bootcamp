@@ -10,6 +10,7 @@ using TMPro;
 // Photon 서버 초기화 및 로비 UI 기능 담당
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
+    public TMP_InputField userIdInput;
     public TMP_InputField roomName; 
     public GameObject roomItem;     
     public GameObject scrollContents; 
@@ -25,8 +26,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings(); // 서버 연결
         }
 
-        // 유저 닉네임 설정 (PlayerPrefs에서 불러오거나 랜덤 생성)
-        PhotonNetwork.NickName = PlayerPrefs.GetString("USER_ID", "USER_" + Random.Range(0, 999).ToString("000"));
+        // 유저 닉네임 설정 (닉네임 설정 안할 시 임의 닉네임 설정 -> Player 1~999)
+        string nickname = PlayerPrefs.GetString("USER_ID", "Player_" + Random.Range(1, 999));
+        PhotonNetwork.NickName = nickname;
+
+        if (userIdInput != null)
+            userIdInput.text = nickname; // UI에도 기본 닉네임 표시
 
         // 방 이름 초기값 설정
         roomName.text = "Room_" + Random.Range(0, 999).ToString("000");
@@ -51,7 +56,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("No rooms!!");
 
-        // 랜덤 입장 실패 시, 기본 방 생성 (개발용)
+        // 랜덤 입장 실패 시, 기본 방 생성 
         PhotonNetwork.CreateRoom("My Room", new RoomOptions { MaxPlayers = 3 });
     }
 
@@ -60,10 +65,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.Log("Enter Room");
 
         // 방 입장 후 TeamLobby 씬으로 전환
-        StartCoroutine(LoadBattleField());
+        StartCoroutine(LoadTeamLobby());
     }
 
-    IEnumerator LoadBattleField()
+    IEnumerator LoadTeamLobby()
     {
         PhotonNetwork.IsMessageQueueRunning = false;
         AsyncOperation ao = SceneManager.LoadSceneAsync("TeamLobby");
@@ -73,6 +78,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     // 랜덤 방 입장 버튼 클릭 시 호출
     public void OnClickJoinRandomRoom()
     {
+        // 닉네임 저장
+        string inputName = userIdInput.text;
+        if (string.IsNullOrEmpty(inputName))
+            inputName = "Player_" + Random.Range(1, 999);
+
+        PlayerPrefs.SetString("USER_ID", inputName);
+        PhotonNetwork.NickName = inputName;
+        
         PhotonNetwork.JoinRandomRoom(); // 랜덤 입장 시도
     }
 
@@ -85,7 +98,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             _roomName = "Room_" + Random.Range(0, 999).ToString("000");
         }
+        
+        // 닉네임 저장
+        string inputName = userIdInput.text;
+        if (string.IsNullOrEmpty(inputName))
+            inputName = "Player_" + Random.Range(1, 999);
 
+        PlayerPrefs.SetString("USER_ID", inputName);
+        PhotonNetwork.NickName = inputName;
+        
         RoomOptions roomOptions = new RoomOptions
         {
             IsOpen = true,
@@ -129,16 +150,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                     GameObject room = Instantiate(roomItem);
                     room.transform.SetParent(scrollContents.transform, false);
 
-                    // RoomData roomData = room.GetComponent<RoomData>();
-                    // roomData.roomName = roomInfo.Name;
-                    // roomData.connectPlayer = roomInfo.PlayerCount;
-                    // roomData.maxPlayer = roomInfo.MaxPlayers;
-                    // roomData.DispRoomData();
+                    RoomData roomData = room.GetComponent<RoomData>();
+                    roomData.roomName = roomInfo.Name;
+                    roomData.connectPlayer = roomInfo.PlayerCount;
+                    roomData.maxPlayer = roomInfo.MaxPlayers;
+                    roomData.DispRoomData();
 
                     // 방 클릭 시 입장 시도
                     room.GetComponent<Button>().onClick.AddListener(delegate
                     {
-                        //OnClickRoomItem(roomData.roomName);
+                        OnClickRoomItem(roomData.roomName);
                     });
 
                     rooms.Add(roomInfo.Name, room);
@@ -150,11 +171,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                     // 기존 방 정보 갱신
                     if (rooms.TryGetValue(roomInfo.Name, out tempRoom))
                     {
-                        // RoomData roomData = tempRoom.GetComponent<RoomData>();
-                        // roomData.roomName = roomInfo.Name;
-                        // roomData.connectPlayer = roomInfo.PlayerCount;
-                        // roomData.maxPlayer = roomInfo.MaxPlayers;
-                        // roomData.DispRoomData();
+                        RoomData roomData = tempRoom.GetComponent<RoomData>();
+                        roomData.roomName = roomInfo.Name;
+                        roomData.connectPlayer = roomInfo.PlayerCount;
+                        roomData.maxPlayer = roomInfo.MaxPlayers;
+                        roomData.DispRoomData();
                     }
                 }
             }
