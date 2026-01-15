@@ -149,17 +149,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 {
                     GameObject room = Instantiate(roomItem);
                     room.transform.SetParent(scrollContents.transform, false);
-
+                    
+                    // Photon에서 받은 정보 세팅
                     RoomData roomData = room.GetComponent<RoomData>();
                     roomData.roomName = roomInfo.Name;
                     roomData.connectPlayer = roomInfo.PlayerCount;
                     roomData.maxPlayer = roomInfo.MaxPlayers;
-                    roomData.DispRoomData();
+                    roomData.DispRoomData(); // UI 텍스트에 표시
 
                     // 방 클릭 시 입장 시도
                     room.GetComponent<Button>().onClick.AddListener(delegate
                     {
-                        OnClickRoomItem(roomData.roomName);
+                        OnClickRoomItem(roomData.roomName); // 방 이름 넘겨서 입장
                     });
 
                     rooms.Add(roomInfo.Name, room);
