@@ -9245,6 +9245,7 @@ MonoBehaviour:
   - {fileID: 1919598104}
   textLogMsg: {fileID: 1517814750}
   startGameButton: {fileID: 1662379092}
+  exitButton: {fileID: 1327843221}
 --- !u!4 &782485657
 Transform:
   m_ObjectHideFlags: 0

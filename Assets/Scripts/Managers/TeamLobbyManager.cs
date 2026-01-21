@@ -9,13 +9,15 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     public TMP_Text[] playerNameTexts; // Player1 ~ Player3 UI 텍스트
     public TMP_Text textLogMsg;        // 입장/퇴장 로그 텍스트 영역
     public GameObject startGameButton; // 방장만 보이는 시작 버튼
-
+    public GameObject exitButton;
     private PhotonView pv;
-
+    void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
     void Start()
     {
         pv = GetComponent<PhotonView>();
-
         UpdatePlayerList();
         ShowEnterLog(PhotonNetwork.NickName);
         // 방장만 게임 시작 버튼 활성화
@@ -65,13 +67,21 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer) // 새로운 플레이어가 룸 접속했을 때 
     {
         UpdatePlayerList();
-        //ShowEnterLog(newPlayer.NickName);
+        ShowEnterLog(newPlayer.NickName);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer) // 플레이어가 룸에서 나갔을 때
     {
+        Debug.Log($"[DEBUG] Player Left Room: {otherPlayer.NickName}");
         UpdatePlayerList();
         ShowExitLog(otherPlayer.NickName);
+    }
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (changedProps.ContainsKey("nickname"))
+        {
+            UpdatePlayerList();
+        }
     }
 
     public void OnClickStartGame()
@@ -89,7 +99,15 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
 
     public void OnClickExitRoom()
     {
-        PhotonNetwork.LeaveRoom();
+        if (PhotonNetwork.InRoom && PhotonNetwork.IsConnectedAndReady)
+        {
+            exitButton.SetActive(false); // 중복 클릭 방지
+            PhotonNetwork.LeaveRoom();
+        }
+        else
+        {
+            Debug.LogWarning("Cannot leave room: not in room or not ready.");
+        }
     }
 
     public override void OnLeftRoom()

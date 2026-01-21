@@ -183,6 +183,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     // RoomItem 버튼 클릭 시 호출 → 방 입장
     void OnClickRoomItem(string roomName)
     {
+        SavePlayerName(); // 닉네임 저장
         PhotonNetwork.JoinRoom(roomName);
     }
 
