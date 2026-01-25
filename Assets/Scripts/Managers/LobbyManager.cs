@@ -78,34 +78,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     // 랜덤 방 입장 버튼 클릭 시 호출
     public void OnClickJoinRandomRoom()
     {
-        // 닉네임 저장
-        string inputName = userIdInput.text;
-        if (string.IsNullOrEmpty(inputName))
-            inputName = "Player_" + Random.Range(1, 999);
-
-        PlayerPrefs.SetString("USER_ID", inputName);
-        PhotonNetwork.NickName = inputName;
-        
+        SavePlayerName(); // 닉네임 저장
         PhotonNetwork.JoinRandomRoom(); // 랜덤 입장 시도
     }
 
     // 방 만들기 버튼 클릭 시 호출
     public void OnClickCreateRoom()
     {
+        SavePlayerName(); // 닉네임 저장
+        
         string _roomName = roomName.text;
-
         if (string.IsNullOrEmpty(_roomName))
         {
             _roomName = "Room_" + Random.Range(0, 999).ToString("000");
         }
-        
-        // 닉네임 저장
-        string inputName = userIdInput.text;
-        if (string.IsNullOrEmpty(inputName))
-            inputName = "Player_" + Random.Range(1, 999);
-
-        PlayerPrefs.SetString("USER_ID", inputName);
-        PhotonNetwork.NickName = inputName;
         
         RoomOptions roomOptions = new RoomOptions
         {
@@ -121,7 +107,19 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("방 만들기 실패 : " + message);
     }
+    // 닉네임 저장
+    void SavePlayerName()
+    {
+        string inputName = userIdInput.text;
 
+        if (string.IsNullOrEmpty(inputName))
+            inputName = "Player_" + Random.Range(1, 999);
+
+        PlayerPrefs.SetString("USER_ID", inputName);
+        PlayerPrefs.Save();
+
+        PhotonNetwork.NickName = inputName;
+    }
     // 방 목록 업데이트 이벤트
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
@@ -149,17 +147,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 {
                     GameObject room = Instantiate(roomItem);
                     room.transform.SetParent(scrollContents.transform, false);
-
+                    
+                    // Photon에서 받은 정보 세팅
                     RoomData roomData = room.GetComponent<RoomData>();
                     roomData.roomName = roomInfo.Name;
                     roomData.connectPlayer = roomInfo.PlayerCount;
                     roomData.maxPlayer = roomInfo.MaxPlayers;
-                    roomData.DispRoomData();
+                    roomData.DispRoomData(); // UI 텍스트에 표시
 
                     // 방 클릭 시 입장 시도
                     room.GetComponent<Button>().onClick.AddListener(delegate
                     {
-                        OnClickRoomItem(roomData.roomName);
+                        OnClickRoomItem(roomData.roomName); // 방 이름 넘겨서 입장
                     });
 
                     rooms.Add(roomInfo.Name, room);
@@ -181,10 +180,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             }
         }
     }
-
     // RoomItem 버튼 클릭 시 호출 → 방 입장
     void OnClickRoomItem(string roomName)
     {
+        SavePlayerName(); // 닉네임 저장
         PhotonNetwork.JoinRoom(roomName);
     }
 

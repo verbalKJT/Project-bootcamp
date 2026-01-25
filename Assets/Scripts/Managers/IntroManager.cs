@@ -1,7 +1,12 @@
 using UnityEngine;
+using Photon.Pun;
 using UnityEngine.SceneManagement;
 public class IntroManager : MonoBehaviour
 {
+    void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
