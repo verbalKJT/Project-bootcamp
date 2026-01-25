@@ -18,16 +18,16 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     private const string IS_READY = "IsReady";
     void Awake()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.AutomaticallySyncScene = true; // 씬 자동 동기화 설정
     }
     void Start()
     {
         pv = GetComponent<PhotonView>();
         // 방장/참여자 버튼 UI 초기화
         UpdateRoomUI();
-        
+        // 플레이어 리스트 UI 업데이트
         UpdatePlayerList();
-        ShowEnterLog(PhotonNetwork.NickName);
+        ShowEnterLog(PhotonNetwork.NickName); // 입장 로그 
     }
     public override void OnJoinedRoom()
     {
@@ -38,8 +38,8 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     {
         bool isMaster = PhotonNetwork.IsMasterClient;
 
-        // 1. 방장일 경우: 시작 버튼 보임, 준비 버튼 숨김
-        // 2. 참여자일 경우: 시작 버튼 숨김, 준비 버튼 보임
+        // 방장일 경우: 시작 버튼 보임, 준비 버튼 숨김
+        // 참여자일 경우: 시작 버튼 숨김, 준비 버튼 보임
         if (startGameButton) startGameButton.SetActive(isMaster);
         if (readyButton) readyButton.SetActive(!isMaster);
 
@@ -59,16 +59,15 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
             if (i < players.Length)
             {
                 string nickname = players[i].NickName;
-                // (선택사항) 이름 옆에 준비 상태 텍스트 표시
-                // 방장이 아니면서 준비 완료된 상태면 (Ready) 표시 추가
                 object isReadyVal;
                 bool isReady = false;
+                // 플레이어가 준비상태인지
                 if(players[i].CustomProperties.TryGetValue(IS_READY, out isReadyVal))
                 {
-                    isReady = (bool)isReadyVal;
+                    isReady = (bool)isReadyVal; // 커스텀프로퍼티는 object 타입이라 형변환 -> true로
                 }
-
-                if (!players[i].IsMasterClient && isReady)
+                // 방장이 아니면서 준비 완료된 상태면 (Ready) 표시 추가
+                if (!players[i].IsMasterClient && isReady) 
                 {
                     nickname += " <color=green>(Ready)</color>";
                 }
@@ -107,7 +106,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     {
         UpdatePlayerList();
         ShowEnterLog(newPlayer.NickName);
-        // 누군가 들어오면 방장의 시작 버튼을 다시 검사 (새로 온 사람은 준비 안 된 상태이므로 버튼 비활성화 될 것임)
+        // 누군가 들어오면 방장의 시작 버튼을 다시 검사 
         if (PhotonNetwork.IsMasterClient) CheckAllPlayersReady();
     }
     public override void OnPlayerLeftRoom(Player otherPlayer) // 플레이어가 룸에서 나갔을 때
@@ -117,29 +116,14 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
         // 누군가 나가면 남은 인원 기준으로 다시 검사
         if (PhotonNetwork.IsMasterClient) CheckAllPlayersReady();
     }
-    // 플레이어의 커스텀 프로퍼티(준비 상태 등)가 변경되면 호출되는 콜백
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-    {
-        // 준비 상태가 변경된 것이라면
-        if (changedProps.ContainsKey(IS_READY))
-        {
-            UpdatePlayerList(); // (선택사항) 이름 옆에 준비 표시를 하고 싶다면 여기서 갱신
-            
-            // 방장이라면 모든 인원이 준비되었는지 확인
-            if (PhotonNetwork.IsMasterClient)
-            {
-                CheckAllPlayersReady();
-            }
-        }
-    }
-    // 모든 플레이어가 준비되었는지 확인하는 로직 (방장용)
+    // 모든 플레이어가 준비되었는지 확인하는 함수 (방장용)
     void CheckAllPlayersReady()
     {
         bool allReady = true;
 
         foreach (Player p in PhotonNetwork.PlayerList)
         {
-            // 방장은 준비 검사에서 제외 (혹은 방장도 준비가 필요하면 조건 제거)
+            // 방장은 준비 검사에서 제외 
             if (p.IsMasterClient) continue;
 
             // 플레이어의 프로퍼티에서 상태 가져오기 (없으면 false)
@@ -159,12 +143,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
                 break;
             }
         }
-
-        // 혼자일 때는 바로 시작 가능하게 할지, 아니면 혼자라도 준비가 필요한지 정책에 따라 결정
-        // 여기서는 "다른 플레이어가 없으면(혼자면) 시작 버튼 활성화"로 가정
-        if (PhotonNetwork.PlayerList.Length == 1) allReady = true;
-
-        // 시작 버튼의 상호작용(클릭 가능 여부) 설정
+        // 버튼 활성화
         Button btn = startGameButton.GetComponent<Button>();
         if (btn != null)
         {
@@ -185,28 +164,44 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     }
     public void OnClickReady()
     {
+        // 현재 준비 상태를 가져옴
         bool isReady = false;
-
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(IS_READY, out object value))
         {
             isReady = (bool)value;
         }
+        // 준비 상태 설정
         SetReadyStatus(!isReady);
     }
     // 내 준비 상태를 네트워크에 설정하는 함수
     void SetReadyStatus(bool ready)
     {
-        Hashtable props = new Hashtable() { { IS_READY, ready } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        // 내 준비 상태를 커스텀프로퍼티에 저장
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { IS_READY, ready } });
         
-        // (선택사항) 준비 버튼 텍스트를 "Ready" <-> "Cancel"로 바꾸고 싶다면 여기서 처리
+        // 버튼 텍스트 바꾸기 Ready <-> Cancel
         if(readyButton != null)
         {
             TMP_Text btnText = readyButton.GetComponentInChildren<TMP_Text>();
             if(btnText) btnText.text = ready ? "Cancel" : "Ready";
         }
     }
-    // 방장이 바뀌었을 때 UI 재설정 (예: 내가 방장이 되면 준비버튼->시작버튼으로 교체)
+    // 플레이어의 커스텀 프로퍼티(준비 상태)가 변경되면 호출되는 콜백
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        // 준비 상태가 변경된 것이라면
+        if (changedProps.ContainsKey(IS_READY))
+        {
+            UpdatePlayerList(); // 이름 옆에 준비 표시를 하고 싶다면 여기서 갱신
+            
+            // 방장이라면 모든 인원이 준비되었는지 확인
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CheckAllPlayersReady();
+            }
+        }
+    }
+    // 방장이 바뀌었을 때 UI 재설정 (준비버튼 -> 시작버튼)
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         UpdateRoomUI();
