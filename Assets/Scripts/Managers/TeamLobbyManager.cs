@@ -31,7 +31,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
         UpdateRoomUI();
         // 플레이어 리스트 UI 업데이트
         UpdatePlayerList();
-        ShowEnterLog(PhotonNetwork.NickName); // 입장 로그 
+        UpdateCharacterImages();
     }
     public override void OnJoinedRoom()
     {
@@ -109,6 +109,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer) // 새로운 플레이어가 룸 접속했을 때 
     {
         UpdatePlayerList();
+        UpdateCharacterImages();
         ShowEnterLog(newPlayer.NickName);
         // 누군가 들어오면 방장의 시작 버튼을 다시 검사 
         if (PhotonNetwork.IsMasterClient) CheckAllPlayersReady();
@@ -116,6 +117,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer) // 플레이어가 룸에서 나갔을 때
     {
         UpdatePlayerList();
+        UpdateCharacterImages();
         ShowExitLog(otherPlayer.NickName);
         // 누군가 나가면 남은 인원 기준으로 다시 검사
         if (PhotonNetwork.IsMasterClient) CheckAllPlayersReady();
@@ -227,7 +229,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
         UpdateMyCharacterImage(characterIndex);
     }
 
-// 내 UI 이미지에 캐릭터 스프라이트 적용
+    // 내 UI 이미지에 캐릭터 스프라이트 적용
     void UpdateMyCharacterImage(int characterIndex)
     {
         Player[] players = PhotonNetwork.PlayerList;
