@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerState
   hp: 100
   speed: 20
-  jumpForce: 30
+  jumpForce: 10
   rotationSpeed: 50
