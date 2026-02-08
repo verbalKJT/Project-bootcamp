@@ -65,7 +65,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.Log("Enter Room");
 
         // 방 입장 후 TeamLobby 씬으로 전환
-        PhotonNetwork.LoadLevel("TeamLobby");
+        StartCoroutine(LoadTeamLobby());
+    }
+
+    IEnumerator LoadTeamLobby()
+    {
+        PhotonNetwork.IsMessageQueueRunning = false;
+        AsyncOperation ao = SceneManager.LoadSceneAsync("TeamLobby");
+        yield return ao;
     }
 
     // 랜덤 방 입장 버튼 클릭 시 호출
