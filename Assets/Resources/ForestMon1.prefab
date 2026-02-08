@@ -483,7 +483,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyEntity
   movePoint: []
-  wayPoint: []
 --- !u!114 &5707275649698584725
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,10 +13,6 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     public GameObject startGameButton; // 방장만 보이는 시작 버튼
     public GameObject readyButton;     // 일반 유저용 Ready 버튼
     public GameObject exitButton;
-    
-    public Image[] playerCharacterImages; // Player 1~3의 캐릭터 이미지 UI
-    public Sprite[] characterSprites;     // FireMan, StoneMan, GrassMan
-    
     private PhotonView pv;
     // 플레이어의 준비 상태를 저장할 키값
     private const string IS_READY = "IsReady";
@@ -31,7 +27,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
         UpdateRoomUI();
         // 플레이어 리스트 UI 업데이트
         UpdatePlayerList();
-        UpdateCharacterImages();
+        ShowEnterLog(PhotonNetwork.NickName); // 입장 로그 
     }
     public override void OnJoinedRoom()
     {
@@ -109,7 +105,6 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer) // 새로운 플레이어가 룸 접속했을 때 
     {
         UpdatePlayerList();
-        UpdateCharacterImages();
         ShowEnterLog(newPlayer.NickName);
         // 누군가 들어오면 방장의 시작 버튼을 다시 검사 
         if (PhotonNetwork.IsMasterClient) CheckAllPlayersReady();
@@ -117,7 +112,6 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer) // 플레이어가 룸에서 나갔을 때
     {
         UpdatePlayerList();
-        UpdateCharacterImages();
         ShowExitLog(otherPlayer.NickName);
         // 누군가 나가면 남은 인원 기준으로 다시 검사
         if (PhotonNetwork.IsMasterClient) CheckAllPlayersReady();
@@ -206,64 +200,12 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
                 CheckAllPlayersReady();
             }
         }
-        if (changedProps.ContainsKey("SelectedChar"))
-        {
-            UpdateCharacterImages();
-        }
     }
     // 방장이 바뀌었을 때 UI 재설정 (준비버튼 -> 시작버튼)
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         UpdateRoomUI();
     }
-    
-    // 오른쪽 캐릭터 버튼에서 호출되는 함수
-    public void OnClickCharacter(int characterIndex)
-    {
-        if (characterIndex < 0 || characterIndex >= characterSprites.Length) return;
-
-        // 커스텀 프로퍼티로 내 캐릭터 선택 정보 저장
-        PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "SelectedChar", characterIndex } });
-
-        // 내 캐릭터 이미지 갱신
-        UpdateMyCharacterImage(characterIndex);
-    }
-
-    // 내 UI 이미지에 캐릭터 스프라이트 적용
-    void UpdateMyCharacterImage(int characterIndex)
-    {
-        Player[] players = PhotonNetwork.PlayerList;
-
-        for (int i = 0; i < players.Length; i++)
-        {
-            if (players[i] == PhotonNetwork.LocalPlayer && i < playerCharacterImages.Length)
-            {
-                playerCharacterImages[i].sprite = characterSprites[characterIndex];
-                break;
-            }
-        }
-    }
-    void UpdateCharacterImages()
-    {
-        Player[] players = PhotonNetwork.PlayerList;
-
-        for (int i = 0; i < players.Length; i++)
-        {
-            if (i < playerCharacterImages.Length)
-            {
-                object charIndex;
-                if (players[i].CustomProperties.TryGetValue("SelectedChar", out charIndex))
-                {
-                    int index = (int)charIndex;
-                    if (index >= 0 && index < characterSprites.Length)
-                    {
-                        playerCharacterImages[i].sprite = characterSprites[index];
-                    }
-                }
-            }
-        }
-    }
-
     public void OnClickExitRoom()
     {
         if (PhotonNetwork.InRoom && PhotonNetwork.IsConnectedAndReady)
