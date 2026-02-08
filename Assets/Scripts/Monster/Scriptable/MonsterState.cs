@@ -3,6 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MonsterState", menuName = "Scriptable Objects/MonsterState")]
 public class MonsterState : ScriptableObject
 {
-    private Flare moveSpeed;
-    private int hp;
+    public float moveSpeed = 20f;
+    public int hp = 100;
 }

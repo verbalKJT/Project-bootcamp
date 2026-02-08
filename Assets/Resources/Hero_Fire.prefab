@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7594754063313097467}
   - component: {fileID: 2653595053943112460}
   - component: {fileID: 8156077549653155448}
+  - component: {fileID: 890718158204209695}
   - component: {fileID: 5991849117274350564}
   - component: {fileID: 9062481498246403391}
   m_Layer: 0
@@ -62,10 +63,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &7594754063313097467
 CapsuleCollider:
@@ -203,6 +204,23 @@ MonoBehaviour:
   animator: {fileID: 3201938327561752934}
   playerState: {fileID: 11400000, guid: de6043aa378004439a59f4b98df0e798, type: 2}
   playerCam: {fileID: 7933624654506755448}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &890718158204209695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127481964412156798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9317574b7753c4f3ca43104b814874d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  weapon_collider: {fileID: 7391163688037947926}
+  sword: {fileID: 11400000, guid: 26bcff84b938f4f3a8b45e006593a602, type: 2}
 --- !u!114 &5991849117274350564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,6 +425,7 @@ GameObject:
   - component: {fileID: 2767844653612457211}
   - component: {fileID: 6208582503506483439}
   - component: {fileID: 1463708198304603052}
+  - component: {fileID: 7391163688037947926}
   m_Layer: 0
   m_Name: Sword_Fire
   m_TagString: Untagged
@@ -485,6 +504,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7391163688037947926
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526271199374151854}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &608662101070017315
 GameObject:
   m_ObjectHideFlags: 0
@@ -983,13 +1023,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700786199789710281}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04212923, y: -0, z: -0, w: 0.9991122}
-  m_LocalPosition: {x: -0.01718998, y: 2.46, z: -3.4100013}
+  m_LocalRotation: {x: 0.20180483, y: -0, z: -0, w: 0.9794257}
+  m_LocalPosition: {x: -0.017190298, y: 3.75, z: -4.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3729518320900421727}
-  m_LocalEulerAnglesHint: {x: 4.829, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 23.285, y: 0, z: 0}
 --- !u!114 &8061602311164358625
 MonoBehaviour:
   m_ObjectHideFlags: 0

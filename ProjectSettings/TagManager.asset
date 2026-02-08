@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - NavMesh
+  - Monster
   layers:
   - Default
   - TransparentFX

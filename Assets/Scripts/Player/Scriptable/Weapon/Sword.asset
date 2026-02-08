@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bb4a8358d44e4b5b9d53d0f10b1e567, type: 3}
-  m_Name: FireHero
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerState
-  hp: 100
-  speed: 20
-  jumpForce: 10
-  rotationSpeed: 50
+  m_Script: {fileID: 11500000, guid: 0569f47d34989462795000c2f937832b, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  damage: 20
+  reloadTime: 5

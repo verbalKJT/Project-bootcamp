@@ -10,10 +10,13 @@ public class EnemyMove : MonoBehaviourPun
 
     [SerializeField] private Transform[] wayPoint; // 갈림길 위치들
     private NavMeshAgent agent;
+    
+    private Animator animator;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         StartCoroutine(GotoDestination(0));
+        animator = GetComponent<Animator>();
     }
     
     
@@ -39,7 +42,6 @@ public class EnemyMove : MonoBehaviourPun
         else // 갈림길 입구가아닌 갈림편 출구에 도착했다면
         {
             agent.SetDestination(movePoint[index + 1].position); // 최종목적지
-            Debug.Log(agent.destination.ToString());
         }
 
         if (index == movePoint.Length - 1) // 마지막 목적지로 향하고 있으면
