@@ -328,10 +328,17 @@ PrefabInstance:
     - target: {fileID: 3792807868317254431, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
       propertyPath: m_Avatar
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9000000, guid: 0392ad5188ec61545b5b7f77789a7dfb, type: 3}
     - target: {fileID: 3792807868317254431, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
       propertyPath: m_WarningMessage
-      value: 
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'ring2.r'\n\tTransform 'pinky1.l'\n\tTransform
+        'root'\n\tTransform 'middle2.l'\n\tTransform 'pinky1.r'\n\tTransform 'arm_stretch.l'\n\tTransform
+        'spine_02.x'\n\tTransform 'spine_01.x'\n\tTransform 'toes_01.r'\n\tTransform
+        'thigh_stretch.r'\n\tand more ...\n\tFrom animation clip 'Monster01_Idle'\n\tFrom
+        animation clip 'Monster01_Die'\n\tFrom animation clip 'Monster01_Walk'\n\tFrom
+        animation clip 'Monster01_GetHit'"
       objectReference: {fileID: 0}
     - target: {fileID: 3792807868317254431, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
       propertyPath: m_ApplyRootMotion
