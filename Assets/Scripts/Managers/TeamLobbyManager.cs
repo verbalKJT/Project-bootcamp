@@ -165,7 +165,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.IsVisible = false;
 
             // 모든 클라이언트가 게임씬으로 전환
-            PhotonNetwork.LoadLevel("InGame");
+            PhotonNetwork.LoadLevel("Map1");
         }
     }
     public void OnClickReady()
