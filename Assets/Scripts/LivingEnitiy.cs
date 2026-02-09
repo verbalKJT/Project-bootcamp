@@ -32,11 +32,11 @@ public class LivingEnitiy : MonoBehaviourPun, IPunObservable
     // 몬스터가 맞았을 때
     public void TakeDamage(int damage)
     {
-        photonView.RPC("TakeDameToMonster",RpcTarget.All,damage);
+        photonView.RPC("TakeDamToMonster",RpcTarget.All,damage);
     }
     
     [PunRPC]
-    public void TakeDameToMonster(int damage)
+    public void TakeDamToMonster(int damage)
     {
         if (!isDead)
         {

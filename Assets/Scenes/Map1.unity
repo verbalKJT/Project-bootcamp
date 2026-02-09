@@ -325,25 +325,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3792807868317254431, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_Avatar
-      value: 
-      objectReference: {fileID: 9000000, guid: 0392ad5188ec61545b5b7f77789a7dfb, type: 3}
-    - target: {fileID: 3792807868317254431, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'ring2.r'\n\tTransform 'pinky1.l'\n\tTransform
-        'root'\n\tTransform 'middle2.l'\n\tTransform 'pinky1.r'\n\tTransform 'arm_stretch.l'\n\tTransform
-        'spine_02.x'\n\tTransform 'spine_01.x'\n\tTransform 'toes_01.r'\n\tTransform
-        'thigh_stretch.r'\n\tand more ...\n\tFrom animation clip 'Monster01_Idle'\n\tFrom
-        animation clip 'Monster01_Die'\n\tFrom animation clip 'Monster01_Walk'\n\tFrom
-        animation clip 'Monster01_GetHit'"
-      objectReference: {fileID: 0}
-    - target: {fileID: 3792807868317254431, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4787734284849576031, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
       propertyPath: m_Name
       value: ForestMon1
@@ -351,14 +332,6 @@ PrefabInstance:
     - target: {fileID: 5707275649698584725, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
       propertyPath: sceneViewId
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6117277431117192529, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: wayPoint.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6117277431117192529, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: movePoint.Array.size
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6117277431117192529, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
       propertyPath: 'wayPoint.Array.data[0]'
@@ -380,60 +353,7 @@ PrefabInstance:
       propertyPath: 'movePoint.Array.data[2]'
       value: 
       objectReference: {fileID: 1469576196}
-    - target: {fileID: 6117277431117192529, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: 'movePoint.Array.data[3]'
-      value: 
-      objectReference: {fileID: 18021325}
-    - target: {fileID: 6117277431117192529, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: 'movePoint.Array.data[4]'
-      value: 
-      objectReference: {fileID: 1469576196}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[0].Name
-      value: IsWalk
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[0].Type
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[1].Name
-      value: IsHit
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[1].Type
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[0].SynchronizeType
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6958447866932774104, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_SynchronizeParameters.Array.data[1].SynchronizeType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7738236343348507017, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: sceneViewId
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7818545876862354335, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_Speed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7818545876862354335, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
-      propertyPath: m_StoppingDistance
-      value: 0.5
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8696133246864607810, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1904,10 +1824,6 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 8156077549653155448, guid: df4f2f0f6395ba24eba216c4933a1b5f, type: 3}
-      propertyPath: col
-      value: 
-      objectReference: {fileID: 1300014834}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1944,11 +1860,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 577604675}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1300014834 stripped
-CapsuleCollider:
-  m_CorrespondingSourceObject: {fileID: 7594754063313097467, guid: df4f2f0f6395ba24eba216c4933a1b5f, type: 3}
-  m_PrefabInstance: {fileID: 1135908986}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1302106608
 Mesh:
   m_ObjectHideFlags: 0

@@ -37,13 +37,18 @@ public class PlayerAttack : MonoBehaviourPun
     {
         if (other.tag == "Monster")
         {
+            
             // OnTriggerEnter 호출이 Update에서 자기 자신 가능하게 바꿔 놓음
             LivingEnitiy target = other.GetComponent<EnemyHealth>();
-            
+            Debug.Log(target);
+            // 모두에게 맞은 애니메이션 출력
+            target.photonView.RPC("Is_Hit",RpcTarget.All);
+            // 데미치 처리
             target.TakeDamage(sword.damage); // 공격
+          
+          
         }
     }
-
     IEnumerator IncreaseSword(float waittime)
     {
         yield return new WaitForSeconds(waittime);

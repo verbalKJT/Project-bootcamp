@@ -40,6 +40,9 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - LogMsg
+  - TakeDameToMonster
+  - TakeDamToMonster
+  - Is_Hit
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

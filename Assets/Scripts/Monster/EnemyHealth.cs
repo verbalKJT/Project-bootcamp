@@ -7,14 +7,18 @@ public class EnemyHealth : LivingEnitiy
     [Header("적 상태")]
     [SerializeField] private MonsterState foreast_state;
     
+    [Header("체력 바 UI")]
     [SerializeField] private Canvas hpCanvas;
     [SerializeField] private Image hpBar;
     
+    [Header("적 컴포넌트")]
+    public Animator animator;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
        curhp = foreast_state.hp; // 체력 초기화
+       hpBar.fillAmount = curhp;
     }
 
     // Update is called once per frame
@@ -22,10 +26,10 @@ public class EnemyHealth : LivingEnitiy
     {
         
     }
-
-    protected virtual void OnHpChanged() // 자식들이 쓸 껍데기
+   
+    protected override void OnHpChanged() // 자식들이 쓸 껍데기
     {
-       hpBar.fillAmount = curhp / foreast_state.hp;
+       hpBar.fillAmount = (float)curhp / foreast_state.hp;
        if (hpBar.fillAmount <= 0.3f) 
        {
            hpBar.color = Color.darkRed;
@@ -35,8 +39,14 @@ public class EnemyHealth : LivingEnitiy
            hpBar.color = Color.white;
        }
     }
-    protected virtual void OnDeath() // 죽었을 때
+    protected override void OnDeath() // 죽었을 때
     { }
-    protected virtual void OnRespawn() // 다시 살아날때
+    protected override void OnRespawn() // 다시 살아날때
     { }
+    [PunRPC]
+    public void Is_Hit()
+    {
+        animator.SetTrigger("IsHit");
+    }
+    
 }
