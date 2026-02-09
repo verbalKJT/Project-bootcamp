@@ -58,6 +58,8 @@ public class PlayerMovement : MonoBehaviourPun
 
         if (Input.GetKeyDown(KeyCode.Space) && Grounded()) // 스페이스바를 누르면
         {
+            animator.SetTrigger("Jump");
+            
             Jump();
         }
     }

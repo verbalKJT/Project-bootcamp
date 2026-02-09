@@ -13,10 +13,10 @@ public class PlayerHealth : LivingEnitiy
     {
         
     }
-    protected virtual void OnHpChanged() // 자식들이 쓸 껍데기
+    protected override void OnHpChanged() // 자식들이 쓸 껍데기
     { }
-    protected virtual void OnDeath() // 죽었을 때
+    protected override void OnDeath() // 죽었을 때
     { }
-    protected virtual void OnRespawn() // 다시 살아날때
+    protected override void OnRespawn() // 다시 살아날때
     { }
 }

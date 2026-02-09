@@ -11,12 +11,10 @@ public class EnemyMove : MonoBehaviourPun
     [SerializeField] private Transform[] wayPoint; // 갈림길 위치들
     private NavMeshAgent agent;
     
-    private Animator animator;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         StartCoroutine(GotoDestination(0));
-        animator = GetComponent<Animator>();
     }
     
     
