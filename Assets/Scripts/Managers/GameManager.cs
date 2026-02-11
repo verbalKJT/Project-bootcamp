@@ -23,8 +23,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         SpawnEnemies();
     }
 
+    // 플레이어 생성 로직
     void SpawnPlayerCharacter()
     {
+        // 로컬 플레이어의 커스텀 프로퍼티에서 선택된 캐릭터 인덱스 가져오기
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(SELECTED_CHAR, out object selectedCharObj))
         {
             int charIndex = (int)selectedCharObj;
@@ -35,17 +37,20 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.LogError("캐릭터 프리팹 이름이 잘못됨!");
                 return;
             }
-
+            
+            // Resources 폴더에서 로드 확인
             GameObject prefab = Resources.Load<GameObject>("Heroes/" + prefabName);
             if (prefab == null)
             {
                 Debug.LogError($"프리팹 로드 실패: Heroes/{prefabName}");
                 return;
             }
-
+            
+            // ActorNumber를 활용해 스폰 포인트 순환 배정
             int spawnIndex = PhotonNetwork.LocalPlayer.ActorNumber % playerSpawnPoints.Length;
             Vector3 spawnPos = playerSpawnPoints[spawnIndex].position;
-
+            
+            // 네트워크 상에 오브젝트 생성
             PhotonNetwork.Instantiate("Heroes/" + prefabName, spawnPos, Quaternion.identity);
         }
         else
@@ -54,20 +59,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    // 캐릭터 인덱스를 프리팹 이름으로 변환
     string GetCharacterPrefabName(int index)
     {
         switch (index)
         {
             case 0: return "Hero_Fire";
-            case 1: return "Hero_Stone";
-            case 2: return "Hero_Grass";
+            case 1: return "Hero_Rock";
+            case 2: return "Hero_Ice";
             default: return null;
         }
     }
-
+    
+    // 적 생성 로직
     void SpawnEnemies()
     {
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (!PhotonNetwork.IsMasterClient) return; // 호스트만 실행
 
         for (int i = 0; i < enemyPrefabNames.Length && i < enemySpawnPoints.Length; i++)
         {
