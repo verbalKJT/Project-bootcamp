@@ -1,3 +1,4 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 
@@ -20,15 +21,31 @@ public class PlayerMovement : MonoBehaviourPun
 
     [Header("Terrain 레이어")] [SerializeField]
     private LayerMask groundLayer;
+    
+    private PhotonView pv;
 
     void Awake()
     {
+        pv = GetComponentInParent<PhotonView>();
+    }
+
+    private void Start()
+    {
+        // 내 캐릭터가 아니면 
+        if (!pv.IsMine)
+        {
+            // 다른 플레이어의 캠을 끔
+            if (playerCam != null)
+            {
+                playerCam.gameObject.SetActive(false);
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.IsMine) return;
+        if (!pv.IsMine) return;
 
         // 입력 받기
         h = Input.GetAxis("Horizontal");
@@ -66,6 +83,8 @@ public class PlayerMovement : MonoBehaviourPun
 
     void FixedUpdate()
     {
+        if (!pv.IsMine) return; // 점프도 내 캐릭터만
+        
         if (rb.linearVelocity.y < 0)
         {
             // 중력 가속도 높이기 -> 떨어질 떄 팍 떨어지게
