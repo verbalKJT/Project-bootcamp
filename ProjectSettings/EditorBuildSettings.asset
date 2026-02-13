@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TeamLobby.unity
     guid: 6c2c7a988d747804f9206c2f60c15726
   - enabled: 1
+    path: Assets/Scenes/Loading.unity
+    guid: 5035e07b55c9d654f8790064a3f4ed8e
+  - enabled: 1
     path: Assets/Scenes/InGame.unity
     guid: 9f22a3c4b1b53994b963135b4effaede
   - enabled: 1

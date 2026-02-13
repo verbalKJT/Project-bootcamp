@@ -165,7 +165,7 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
             PhotonNetwork.CurrentRoom.IsVisible = false;
 
             // 모든 클라이언트가 게임씬으로 전환
-            PhotonNetwork.LoadLevel("Map1");
+            PhotonNetwork.LoadLevel("Loading");
         }
     }
     public void OnClickReady()
@@ -232,14 +232,19 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     // 내 UI 이미지에 캐릭터 스프라이트 적용
     void UpdateMyCharacterImage(int characterIndex)
     {
+        // 현재 방에 있는 플레이어 목록 가져오기
         Player[] players = PhotonNetwork.PlayerList;
 
+        // 플레이어 수만큼 반복
         for (int i = 0; i < players.Length; i++)
         {
+            playerCharacterImages[i].gameObject.SetActive(true);
+            // players[i]가 나 자신이고, 이미지 배열 범위를 넘지 않는다면
             if (players[i] == PhotonNetwork.LocalPlayer && i < playerCharacterImages.Length)
             {
+                // 내가 선택한 캐릭터 인덱스에 해당하는 스프라이트를 내 자리 UI 이미지에 적용
                 playerCharacterImages[i].sprite = characterSprites[characterIndex];
-                break;
+                break; // 찾았으면 종료
             }
         }
     }
@@ -247,19 +252,28 @@ public class TeamLobbyManager : MonoBehaviourPunCallbacks
     {
         Player[] players = PhotonNetwork.PlayerList;
 
-        for (int i = 0; i < players.Length; i++)
+        // 플레이어 UI 이미지 개수만큼 반복
+        for (int i = 0; i < playerCharacterImages.Length; i++)
         {
-            if (i < playerCharacterImages.Length)
+            if (i < players.Length)
             {
-                object charIndex;
-                if (players[i].CustomProperties.TryGetValue("SelectedChar", out charIndex))
+                playerCharacterImages[i].gameObject.SetActive(true); // 이미지를 켬
+                
+                // 해당 플레이어의 CustomProperties에서 "SelectedChar" 값을 가져옴
+                if (players[i].CustomProperties.TryGetValue("SelectedChar", out object charIndex))
                 {
+                    // object → int 변환
                     int index = (int)charIndex;
                     if (index >= 0 && index < characterSprites.Length)
                     {
                         playerCharacterImages[i].sprite = characterSprites[index];
                     }
                 }
+            }
+            // 접속자가 없는 빈 슬롯인 경우
+            else
+            {
+                playerCharacterImages[i].gameObject.SetActive(false); 
             }
         }
     }

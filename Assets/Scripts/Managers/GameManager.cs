@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Transform[] playerSpawnPoints;
     public Transform[] enemySpawnPoints;
 
+    [Header("적 이동 경로")]
+    public Transform[] MovePoints; 
+    public Transform[] WayPoints;  
+    
     [Header("적 프리팹 이름 리스트")]
     public string[] enemyPrefabNames = { "ForestMon1" };
 
@@ -87,8 +91,16 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.LogError("적 프리팹 로드 실패: " + enemyName);
                 continue;
             }
-
-            PhotonNetwork.Instantiate("Enemies/" + enemyName, spawnPoint.position, Quaternion.identity);
+                
+            // 적 생성
+            GameObject enemyObj = PhotonNetwork.Instantiate("Enemies/" + enemyName, spawnPoint.position, Quaternion.identity);
+            // 적의 EnemyMove 컴포넌트 가져오기
+            EnemyMove enemyMove = enemyObj.GetComponent<EnemyMove>();
+            // 경로 정보 주입
+            if (enemyMove != null)
+            {
+                enemyMove.SetMovePoints(MovePoints, WayPoints); 
+            }
         }
     }
 }
