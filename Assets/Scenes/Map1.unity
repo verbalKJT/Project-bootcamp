@@ -3655,6 +3655,13 @@ MonoBehaviour:
   - {fileID: 1191676158}
   enemySpawnPoints:
   - {fileID: 524785854}
+  MovePoints:
+  - {fileID: 2056412596}
+  - {fileID: 18021325}
+  - {fileID: 1469576196}
+  WayPoints:
+  - {fileID: 577604675}
+  - {fileID: 886298872}
   enemyPrefabNames:
   - ForestMon1
 --- !u!4 &1772523330
