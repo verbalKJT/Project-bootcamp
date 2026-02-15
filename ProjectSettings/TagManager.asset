@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NavMesh
   - Monster
+  - Weapon
   layers:
   - Default
   - TransparentFX
