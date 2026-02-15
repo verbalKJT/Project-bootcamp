@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             case 0: return "Hero_Fire";
             case 1: return "Hero_Rock";
-            case 2: return "Hero_Ice";
+            case 2: return "Hero_Nature";
             default: return null;
         }
     }
