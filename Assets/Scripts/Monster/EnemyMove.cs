@@ -11,7 +11,7 @@ public class EnemyMove : MonoBehaviourPun
     [SerializeField] private Transform[] movePoint; // 반드시 이동할 위치들
 
     [SerializeField] private Transform[] wayPoint; // 갈림길 위치들
-    private NavMeshAgent agent;
+    public NavMeshAgent agent;
 
     private void Awake()
     {
