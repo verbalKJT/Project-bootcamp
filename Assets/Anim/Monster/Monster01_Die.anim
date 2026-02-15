@@ -183906,7 +183906,7 @@ AnimationClip:
   - time: 1
     functionName: EndDeadAnim
     data: 
-    objectReferenceParameter: {fileID: 4787734284849576031, guid: b60af57d57618b345836c194a9b23bd7, type: 3}
+    objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
