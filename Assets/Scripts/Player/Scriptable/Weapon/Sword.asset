@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   damage: 20
-  reloadTime: 5
+  reloadTime: 2
