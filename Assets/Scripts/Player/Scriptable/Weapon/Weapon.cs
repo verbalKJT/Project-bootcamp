@@ -5,4 +5,5 @@ public class Weapon : ScriptableObject
 {
     public int damage;
     public float reloadTime;
+    public float speed;
 }
