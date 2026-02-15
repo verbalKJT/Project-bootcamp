@@ -40,14 +40,13 @@ public class LivingEnitiy : MonoBehaviourPun, IPunObservable
     {
         if (!isDead)
         {
+            curhp -= damage; // 체력 빼기
+            OnHpChanged(); // UI 갱신
             if (curhp <= 0)
             {
                 isDead = true;
                 OnDeath(); // 죽음 이벤트
             }
-            curhp -= damage; // 체력 빼기
-            OnHpChanged(); // UI 갱신
-            
         }
     }
 }
