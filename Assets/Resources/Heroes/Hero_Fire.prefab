@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7594754063313097467}
   - component: {fileID: 2653595053943112460}
   - component: {fileID: 8156077549653155448}
-  - component: {fileID: 890718158204209695}
+  - component: {fileID: 5636794366031196361}
   - component: {fileID: 5991849117274350564}
   - component: {fileID: 9062481498246403391}
   m_Layer: 0
@@ -203,12 +203,13 @@ MonoBehaviour:
   rb: {fileID: 7303369853732717766}
   animator: {fileID: 3201938327561752934}
   col: {fileID: 7594754063313097467}
+  boxCol: {fileID: 0}
   playerState: {fileID: 11400000, guid: de6043aa378004439a59f4b98df0e798, type: 2}
   playerCam: {fileID: 7933624654506755448}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
---- !u!114 &890718158204209695
+--- !u!114 &5636794366031196361
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -217,11 +218,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 127481964412156798}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9317574b7753c4f3ca43104b814874d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 95cad962cda4348bc98a64805aa95ef7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  weapon_collider: {fileID: 7391163688037947926}
-  sword: {fileID: 11400000, guid: 26bcff84b938f4f3a8b45e006593a602, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::FireManAttack
+  sword: {fileID: 5138308362424021807}
 --- !u!114 &5991849117274350564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,6 +427,7 @@ GameObject:
   - component: {fileID: 6208582503506483439}
   - component: {fileID: 1463708198304603052}
   - component: {fileID: 7391163688037947926}
+  - component: {fileID: 5138308362424021807}
   m_Layer: 0
   m_Name: Sword_Fire
   m_TagString: Player
@@ -526,6 +527,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &5138308362424021807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526271199374151854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1576c1c5e269840d0b93fda112fe92ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sword
+  weaponData: {fileID: 11400000, guid: 26bcff84b938f4f3a8b45e006593a602, type: 2}
+  swordCollider: {fileID: 7391163688037947926}
 --- !u!1 &608662101070017315
 GameObject:
   m_ObjectHideFlags: 0
