@@ -39,8 +39,12 @@ public class EnemyHealth : LivingEnitiy
            hpBar.color = Color.white;
        }
     }
+
     protected override void OnDeath() // 죽었을 때
-    { }
+    {
+        // RPC TakeDamToMonster에서 IsDead를 체크하고 들어온 상태
+        photonView.RPC("CallDieAnim",RpcTarget.All);
+    }
     protected override void OnRespawn() // 다시 살아날때
     { }
     [PunRPC]
@@ -48,5 +52,22 @@ public class EnemyHealth : LivingEnitiy
     {
         animator.SetTrigger("IsHit");
     }
-    
+
+    [PunRPC]
+    public void CallDieAnim()
+    {
+        // 애니메이션 변경 후
+        animator.SetTrigger("IsDead");
+        // agent 정지
+        EnemyMove em = GetComponent<EnemyMove>();
+        em.agent.Stop();
+    }
+
+    public void DestroyObj()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
 }
