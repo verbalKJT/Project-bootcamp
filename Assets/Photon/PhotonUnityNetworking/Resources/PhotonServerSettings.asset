@@ -43,6 +43,14 @@ MonoBehaviour:
   - TakeDameToMonster
   - TakeDamToMonster
   - Is_Hit
+  - ActivateScene
+  - CallDieAnim
+  - AttackAnim
+  - JumpAnim
+  - MoveAnim
+  - ShieldAnim
+  - SyncShieldState
+  - OnEnergyShield
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
