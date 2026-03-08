@@ -16,4 +16,20 @@ public class AnimEventMover : MonoBehaviour
         NatureManAttack natureManAttack = GetComponentInParent<NatureManAttack>();
         natureManAttack.Fire();
     }
+    
+    public void OnHammerHit()
+    {
+        Debug.Log("OnHammerHit");
+        Hammer hammer = GetComponentInChildren<Hammer>();
+        hammer.OnCollider();
+    }
+
+    public void OffHammerHit()
+    {
+        Debug.Log("OffHammerHit");
+        Hammer hammer = GetComponentInChildren<Hammer>();
+        hammer.OffCollider();
+    }
+
+    
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
-public class Sword : MonoBehaviour
+public class Sword : MonoBehaviourPun
 {
     [SerializeField] public Weapon weaponData;
     [SerializeField] BoxCollider swordCollider;
