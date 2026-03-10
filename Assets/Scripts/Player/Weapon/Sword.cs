@@ -8,6 +8,8 @@ public class Sword : MonoBehaviourPun
     [SerializeField] public Weapon weaponData;
     [SerializeField] BoxCollider swordCollider;
 
+    [Header("검기 OBJ,발사 위치")] [SerializeField] private Transform forcePos;
+    private GameObject swordForce;
     void Start()
     {
         swordCollider.enabled = false; // 콜라이더 끄기
@@ -39,5 +41,15 @@ public class Sword : MonoBehaviourPun
 
         swordCollider.size = orininSize;
         swordCollider.enabled = false; // 공격할 때만 콜라이더 사용
+    }
+
+    // 애니메이션 이벤트로 호출
+    public void ShotForce()
+    {
+        if (!photonView.IsMine) return;
+        // 네트워크로 생성
+        swordForce = PhotonNetwork.Instantiate("Heroes/Slash Projectile VFX Eletric", forcePos.position, forcePos.rotation, 0);
+        // 앞으로 발사
+        swordForce.GetComponent<Rigidbody>().AddForce(forcePos.forward * 20f, ForceMode.Impulse);
     }
 }
