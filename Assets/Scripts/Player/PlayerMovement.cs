@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviourPun
 {
     [Header("컴포넌트들")] [SerializeField] private Rigidbody rb;
-    [SerializeField] private Animator animator;
+    [SerializeField] public Animator animator;
     [SerializeField] private CapsuleCollider col;
     [SerializeField] private BoxCollider boxCol;
 
@@ -143,5 +143,11 @@ public class PlayerMovement : MonoBehaviourPun
     public void MoveAnim(float degree)
     {
         animator.SetFloat("Blend", degree);
+    }
+    
+    [PunRPC]
+    public void OnMoveRPC()
+    {
+        animator.SetBool("IsCast",false);
     }
 }

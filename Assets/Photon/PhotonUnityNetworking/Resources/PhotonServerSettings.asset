@@ -51,6 +51,8 @@ MonoBehaviour:
   - ShieldAnim
   - SyncShieldState
   - OnEnergyShield
+  - Force
+  - OnMoveRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
