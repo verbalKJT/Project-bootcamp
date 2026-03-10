@@ -36,6 +36,7 @@ Transform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7627421539130837806}
   - {fileID: 1401705507842740170}
   - {fileID: 4615424445665087143}
   - {fileID: 7933624654506755448}
@@ -67,7 +68,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!136 &7594754063313097467
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -90,7 +91,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!82 &2653595053943112460
 AudioSource:
   m_ObjectHideFlags: 0
@@ -505,6 +506,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &7391163688037947926
 BoxCollider:
@@ -541,6 +543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Sword
   weaponData: {fileID: 11400000, guid: 26bcff84b938f4f3a8b45e006593a602, type: 2}
   swordCollider: {fileID: 7391163688037947926}
+  forcePos: {fileID: 7627421539130837806}
 --- !u!1 &608662101070017315
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,6 +680,7 @@ GameObject:
   - component: {fileID: 1401705507842740170}
   - component: {fileID: 3201938327561752934}
   - component: {fileID: 6893812713540950619}
+  - component: {fileID: 2450722899721183121}
   m_Layer: 0
   m_Name: Hero_Fire_Body
   m_TagString: Untagged
@@ -753,9 +757,26 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 0
     Name: Move
+  - Type: 9
+    SynchronizeType: 0
+    Name: IsCast
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
+--- !u!114 &2450722899721183121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736206969987635109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28dc7ace3c4f4888b059cedf8845e51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireAnimMover
 --- !u!1 &781415932649454690
 GameObject:
   m_ObjectHideFlags: 0
@@ -3039,6 +3060,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -3934,6 +3956,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6260898682880258076}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6265958356633706911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7627421539130837806}
+  m_Layer: 0
+  m_Name: FirePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7627421539130837806
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6265958356633706911}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.006, y: 1.2723348, z: 0.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3729518320900421727}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6332711247911977238
 GameObject:
@@ -4888,6 +4941,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
