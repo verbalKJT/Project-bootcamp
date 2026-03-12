@@ -101962,7 +101962,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 4.266667
+  - time: 4.7
     functionName: OnMove
     data: 
     objectReferenceParameter: {fileID: 0}
