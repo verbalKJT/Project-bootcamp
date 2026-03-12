@@ -5,6 +5,7 @@ public class FireAnimMover : MonoBehaviour
 {
     private Sword sword; // sword.cs
     private PlayerMovement playerMovement;
+
     void Start()
     {
         sword = GetComponentInChildren<Sword>();
@@ -20,8 +21,15 @@ public class FireAnimMover : MonoBehaviour
     public void OnMove()
     {
         // 움직일 수 있게
-        playerMovement.enabled = true;
+        if (!playerMovement.photonView.IsMine) return;
+        playerMovement.canMove = true;
         playerMovement.photonView.RPC("OnMoveRPC", RpcTarget.All);
     }
-    
+
+    public void StopMoveDuringDash()
+    {
+        if (!playerMovement.photonView.IsMine) return;
+        playerMovement.canMove = true;
+        playerMovement.col.isTrigger = false;
+    }
 }
