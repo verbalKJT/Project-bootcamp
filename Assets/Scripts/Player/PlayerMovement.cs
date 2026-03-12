@@ -2,32 +2,24 @@ using System;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviourPun
+public class PlayerMovement : PlayerInput
 {
-    [Header("컴포넌트들")] [SerializeField] private Rigidbody rb;
+    [Header("컴포넌트들")] public Rigidbody rb;
     [SerializeField] public Animator animator;
-    [SerializeField] private CapsuleCollider col;
-    [SerializeField] private BoxCollider boxCol;
+    [SerializeField] public CapsuleCollider col;
+    [SerializeField] public BoxCollider boxCol;
 
     [Header("플레이어 데이터")] [SerializeField] PlayerState playerState;
 
-    [SerializeField] Transform playerCam;
-
-    private float h, v;
-    private float mouseX, mouseY; // 마우스로 회전 조정
-    private float sensitivity = 30f;
-    private float spaceBar;
+    [Header("플레이어 시네머신 캠")] [SerializeField]
+    private GameObject playerCam;
 
     [Header("Terrain 레이어")] [SerializeField]
     private LayerMask groundLayer;
-    
-    private PhotonView pv;
 
-    void Awake()
-    {
-        pv = GetComponentInParent<PhotonView>();
-    }
-
+    public bool isGrounded;
+        
+    public bool canMove = true;
     private void Start()
     {
         // 내 캐릭터가 아니면 
@@ -41,47 +33,42 @@ public class PlayerMovement : MonoBehaviourPun
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (!pv.IsMine) return;
-
-        // 입력 받기
-        h = Input.GetAxis("Horizontal");
-        v = Input.GetAxis("Vertical");
-        // 마우스 이동 감지
-        mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
-        mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
-
-
-        if (h != 0 || v != 0)
+        base.Update();
+        if (canMove)
         {
-            photonView.RPC("MoveAnim", RpcTarget.AllBuffered, 0.7f);
-        }
-        else
-        {
-            photonView.RPC("MoveAnim", RpcTarget.AllBuffered,0f);
-        }
+            if (h != 0 || v != 0)
+            {
+                photonView.RPC("MoveAnim", RpcTarget.AllBuffered, 0.7f);
+            }
+            else
+            {
+                photonView.RPC("MoveAnim", RpcTarget.AllBuffered, 0f);
+            }
 
-        // 이동
-        Vector3 moveV = transform.forward * v * Time.deltaTime * playerState.speed;
-        Vector3 moveH = transform.right * h * Time.deltaTime * playerState.speed;
-        rb.MovePosition(rb.position + moveV + moveH);
+            // 이동
+            moveV = transform.forward * v * Time.deltaTime * playerState.speed;
+            moveH = transform.right * h * Time.deltaTime * playerState.speed;
+            rb.MovePosition(rb.position + moveV + moveH);
+        }
 
         // 회전
         Quaternion rot = Quaternion.Euler(0, mouseX * playerState.rotationSpeed, 0);
         rb.MoveRotation(rb.rotation * rot);
+        // 마우스 상하 로직 필요할 듯
 
-        if (Input.GetKeyDown(KeyCode.Space) && Grounded()) // 스페이스바를 누르면
+        isGrounded = Grounded();
+        if (spaceBar && isGrounded) // 스페이스바를 누르면
         {
-            photonView.RPC("JumpAnim",RpcTarget.All);
+            photonView.RPC("JumpAnim", RpcTarget.All);
         }
     }
 
     void FixedUpdate()
     {
         if (!pv.IsMine) return; // 점프도 내 캐릭터만
-        
+
         if (rb.linearVelocity.y < 0)
         {
             // 중력 가속도 높이기 -> 떨어질 떄 팍 떨어지게
@@ -144,10 +131,10 @@ public class PlayerMovement : MonoBehaviourPun
     {
         animator.SetFloat("Blend", degree);
     }
-    
+
     [PunRPC]
     public void OnMoveRPC()
     {
-        animator.SetBool("IsCast",false);
+        animator.SetBool("IsCast", false);
     }
 }
