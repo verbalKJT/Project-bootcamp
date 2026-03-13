@@ -5,17 +5,21 @@ public class FireAnimMover : MonoBehaviour
 {
     private Sword sword; // sword.cs
     private PlayerMovement playerMovement;
+    private FireManAttack fm;
 
     void Start()
     {
         sword = GetComponentInChildren<Sword>();
         playerMovement = GetComponentInParent<PlayerMovement>();
+        fm = GetComponentInParent<FireManAttack>();
     }
 
     public void CallForce()
     {
         // 애니메이션 이벤트로 호출
         sword.ShotForce();
+        fm.animator.SetBool("IsCast",false);
+        
     }
 
     public void OnMove()

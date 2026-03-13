@@ -8,14 +8,16 @@ public class FireManAttack : PlayerAttack
 
     private PlayerMovement playerMovement;
     
-    private float fCoolTime = 0f;
-    private float forceTime = 5f; // 검기 쿨타임 
+    public float fCoolTime = 0f;
+    public float forceTime = 5f; // 검기 쿨타임 
     
-    private float dashTime = 3f;
-    private float dashCoolTime = 0f; // 대쉬 쿨타임 
+    public float dashTime = 3f;
+    public float dashCoolTime = 0f; // 대쉬 쿨타임 
     private float dashSpeed = 40f; // 대쉬 속도
     
-    
+    [Header("스킬 UI 연걀")]
+    [SerializeField] private SkillSlotUI dash;
+    [SerializeField] private SkillSlotUI force;
     void Start()
     {
         base.Start();// 부모 Start 메서드 먼저 -> animator 할당
@@ -38,6 +40,8 @@ public class FireManAttack : PlayerAttack
             photonView.RPC("Force",RpcTarget.All);
         }
         fCoolTime += Time.deltaTime; // 검기 시간 새기
+        force.UpdateSkillSlot(fCoolTime,forceTime); // 스킬 UI 갱신
+        
         // 대쉬 스킬은 Shift로 + 땅에 있을 때만?
         if (shift && dashCoolTime >= dashTime && playerMovement.isGrounded)
         {
@@ -45,6 +49,7 @@ public class FireManAttack : PlayerAttack
             photonView.RPC("Dash",RpcTarget.All);
         }
         dashCoolTime += Time.deltaTime;// 대쉬 스킬 시간 재기 
+        dash.UpdateSkillSlot(dashCoolTime, dashTime);
     }
     
 
@@ -75,7 +80,7 @@ public class FireManAttack : PlayerAttack
         Slide(dashSpeed);
         animator.SetTrigger("Slide");
         // 애니메이션 이벤트로 플레이어 이동 활성화 + IsTrigger 해제
-        // 카메라 회전도 막힘 이러면 
+        playerMovement.col.excludeLayers += LayerMask.NameToLayer("Monster");
     }
     
     // 대쉬 스킬

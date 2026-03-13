@@ -51,6 +51,10 @@ public class PlayerMovement : PlayerInput
             moveV = transform.forward * v * Time.deltaTime * playerState.speed;
             moveH = transform.right * h * Time.deltaTime * playerState.speed;
             rb.MovePosition(rb.position + moveV + moveH);
+            if (spaceBar && isGrounded) // 스페이스바를 누르면
+            {
+                photonView.RPC("JumpAnim", RpcTarget.All);
+            }
         }
 
         // 회전
@@ -59,10 +63,7 @@ public class PlayerMovement : PlayerInput
         // 마우스 상하 로직 필요할 듯
 
         isGrounded = Grounded();
-        if (spaceBar && isGrounded) // 스페이스바를 누르면
-        {
-            photonView.RPC("JumpAnim", RpcTarget.All);
-        }
+        
     }
 
     void FixedUpdate()
