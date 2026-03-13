@@ -376,7 +376,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
@@ -442,6 +442,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  isGrounded: 0
+  canMove: 1
 --- !u!114 &6276012764149856844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,6 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5599eedbc9a4f71bec133804bd10e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockAttack
+  animator: {fileID: 0}
 --- !u!114 &183573821792174633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1671,6 +1674,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -4770,6 +4774,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
