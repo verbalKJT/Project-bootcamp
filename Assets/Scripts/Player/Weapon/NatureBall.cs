@@ -6,20 +6,6 @@ public class NatureBall : MonoBehaviourPun
 {
     // Damage
     [Header("WeaponData")] public Weapon weaponData;
-    
-    private Rigidbody rb;
-    private SphereCollider sc;
-    
-    [SerializeField] private Transform firePoint;
-    
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-        sc = GetComponent<SphereCollider>();
-
-        Shot();
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Monster")
@@ -37,8 +23,5 @@ public class NatureBall : MonoBehaviourPun
             }
         }
     }
-    private void Shot()
-    {
-        rb.AddForce(transform.forward * weaponData.speed);
-    }
+    
 }

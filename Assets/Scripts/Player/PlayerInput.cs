@@ -11,24 +11,15 @@ public class PlayerInput : MonoBehaviourPun
     protected Vector3 moveV;
     protected Vector3 moveH;
     
-    protected PhotonView pv;
     
     protected bool input; // 마우스 기본 공격
     protected bool commandE;
     protected bool commandQ;
     protected bool shift;
-    void Awake()
-    {
-        pv = GetComponent<PhotonView>();
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    
     protected void Update()
     {
-        if (!pv.IsMine) return;
+        if (!photonView.IsMine) return;
         // ---- 이동 ----
         // 입력 받기
         h = Input.GetAxis("Horizontal");
