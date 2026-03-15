@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : PlayerInput
 {
+    // 내 캐릭터
+    public static GameObject player;
+    
     [Header("컴포넌트들")] public Rigidbody rb;
     [SerializeField] public Animator animator;
     [SerializeField] public CapsuleCollider col;
@@ -20,10 +23,20 @@ public class PlayerMovement : PlayerInput
     public bool isGrounded;
         
     public bool canMove = true;
+    
+    
+
+    void Awake()
+    {
+        if (photonView.IsMine)
+        {
+            player = gameObject;
+        }
+    }
     private void Start()
     {
         // 내 캐릭터가 아니면 
-        if (!pv.IsMine)
+        if (!photonView.IsMine)
         {
             // 다른 플레이어의 캠을 끔
             if (playerCam != null)
@@ -68,7 +81,7 @@ public class PlayerMovement : PlayerInput
 
     void FixedUpdate()
     {
-        if (!pv.IsMine) return; // 점프도 내 캐릭터만
+        if (!photonView.IsMine) return; // 점프도 내 캐릭터만
 
         if (rb.linearVelocity.y < 0)
         {
