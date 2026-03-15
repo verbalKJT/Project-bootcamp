@@ -9,13 +9,7 @@ public class AnimEventMover : MonoBehaviour
         // 이벤트 발동 시 EnemyHealth의 메소드 호출
         enemyHealth.DestroyObj();
     }
-
-    public void NatureCannonFire()
-    {
-        Debug.Log("NatureCannonFire");
-        NatureManAttack natureManAttack = GetComponentInParent<NatureManAttack>();
-        natureManAttack.Fire();
-    }
+    
     
     public void OnHammerHit()
     {
