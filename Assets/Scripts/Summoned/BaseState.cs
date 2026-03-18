@@ -1,3 +1,5 @@
+using Photon.Pun;
+
 public abstract class BaseState
 {
     protected Summoned _summoned;
