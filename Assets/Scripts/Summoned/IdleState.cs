@@ -7,7 +7,7 @@ public class IdleState : BaseState
     
     public override void EnterState()
     {
-        _summoned.ExecuteIdle();
+        UpdateState();
     }
     public override void UpdateState()
     {
