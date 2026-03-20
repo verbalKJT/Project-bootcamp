@@ -485,6 +485,7 @@ MonoBehaviour:
   hpCanvas: {fileID: 4855476122489328004}
   hpBar: {fileID: 6041306868332457326}
   animator: {fileID: 8696133246864607810}
+  em: {fileID: 0}
 --- !u!114 &5707275649698584725
 MonoBehaviour:
   m_ObjectHideFlags: 0

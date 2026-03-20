@@ -1,3 +1,4 @@
+using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +14,14 @@ public class EnemyHealth : LivingEnitiy
     
     [Header("적 컴포넌트")]
     public Animator animator;
-    
+
+    public EnemyMove em;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
        curhp = foreast_state.hp; // 체력 초기화
        hpBar.fillAmount = curhp;
+       em = GetComponent<EnemyMove>();
     }
 
     // Update is called once per frame
@@ -59,15 +62,32 @@ public class EnemyHealth : LivingEnitiy
         // 애니메이션 변경 후
         animator.SetTrigger("IsDead");
         // agent 정지
-        EnemyMove em = GetComponent<EnemyMove>();
+        
         em.agent.Stop();
+        StartCoroutine(DestroySelf(2f));
     }
 
+    //  애니메이션 이벤트
     public void DestroyObj()
     {
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(gameObject);
         }
+    }
+
+    IEnumerator DestroySelf(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void Is_Stun(bool isStun)
+    {
+        animator.SetBool("Stuned", isStun);
     }
 }
