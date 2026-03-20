@@ -63,16 +63,15 @@ public class Wolf : Summoned
         // 늑대 주인 등록
         master = PlayerMovement.player;
 
-        // 15초뒤 디스폰
-        //if (PhotonNetwork.IsMasterClient)
-        //    StartCoroutine(DeSpawn(15f));
+
+        if (PhotonNetwork.IsMasterClient)
+            StartCoroutine(DeSpawn(15f));
     }
 
     // 상태 체크
     private void Update()
     {
         if (!photonView.IsMine) return;
-        Debug.Log(_curState);
         switch (_curState)
         {
             case State.Idle:
@@ -193,7 +192,7 @@ public class Wolf : Summoned
     public override void ExecuteAttack()
     {
         if (!photonView.IsMine) return;
-        
+
         attackTime = 0; // 공격 쿨타임 초기화
         // 애니메이션 이벤트로 isTrigger 끄고 키기
     }
