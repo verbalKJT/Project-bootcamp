@@ -5,8 +5,7 @@ using UnityEngine;
 public class FireManAttack : PlayerAttack
 {
     [Header("Sword.cs")] [SerializeField] private Sword sword;
-
-    private PlayerMovement playerMovement;
+    
     
     public float fCoolTime = 0f;
     public float forceTime = 5f; // 검기 쿨타임 
@@ -20,8 +19,7 @@ public class FireManAttack : PlayerAttack
     [SerializeField] private SkillSlotUI force;
     void Start()
     {
-        base.Start();// 부모 Start 메서드 먼저 -> animator 할당
-        playerMovement = GetComponent<PlayerMovement>();
+        base.Start();// 부모 Start 메서드 먼저 -> animator + PlayerMovement 할당
     }
     
     void Update()
@@ -43,7 +41,7 @@ public class FireManAttack : PlayerAttack
         force.UpdateSkillSlot(fCoolTime,forceTime); // 스킬 UI 갱신
         
         // 대쉬 스킬은 Shift로 + 땅에 있을 때만?
-        if (shift && dashCoolTime >= dashTime && playerMovement.isGrounded)
+        if (shift && dashCoolTime >= dashTime && pm.isGrounded)
         {
             dashCoolTime = 0f;
             photonView.RPC("Dash",RpcTarget.All);
@@ -64,7 +62,7 @@ public class FireManAttack : PlayerAttack
     {
         if(!photonView.IsMine) return;
         // 못 움직이도록
-        playerMovement.canMove = false;
+        pm.canMove = false;
         animator.SetBool("IsCast",true);
         
         // 애니메이션 이벤트로 플레이어 이동 활성화
@@ -75,12 +73,12 @@ public class FireManAttack : PlayerAttack
     {
         if (!photonView.IsMine) return;
         // 불맨은 캡슐 콜라이더 씀
-        playerMovement.col.isTrigger = true; // Dash 할 때만 isTrigger 켜놓기
-        playerMovement.canMove = false;
+        pm.col.isTrigger = true; // Dash 할 때만 isTrigger 켜놓기
+        pm.canMove = false;
         Slide(dashSpeed);
         animator.SetTrigger("Slide");
         // 애니메이션 이벤트로 플레이어 이동 활성화 + IsTrigger 해제
-        playerMovement.col.excludeLayers += LayerMask.NameToLayer("Monster");
+        pm.col.excludeLayers += LayerMask.NameToLayer("Monster");
     }
     
     // 대쉬 스킬
@@ -91,11 +89,11 @@ public class FireManAttack : PlayerAttack
         
         if (slideDir != Vector3.zero)
         {
-            playerMovement.rb.AddForce(slideDir * dashSpeed, ForceMode.Impulse);
+            pm.rb.AddForce(slideDir * dashSpeed, ForceMode.Impulse);
         }
         else
         {
-            playerMovement.rb.AddForce(transform.forward * dashSpeed, ForceMode.VelocityChange);
+            pm.rb.AddForce(transform.forward * dashSpeed, ForceMode.VelocityChange);
         }
     }
 

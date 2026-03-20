@@ -50,6 +50,6 @@ public class Sword : MonoBehaviourPun
         // 네트워크로 생성
         swordForce = PhotonNetwork.Instantiate("Heroes/Slash Projectile VFX Eletric", forcePos.position, forcePos.rotation, 0);
         // 앞으로 발사
-        swordForce.GetComponent<Rigidbody>().AddForce(forcePos.forward * 20f, ForceMode.Impulse);
+        swordForce.GetComponent<Rigidbody>().AddForce(forcePos.forward * weaponData.speed, ForceMode.Impulse);
     }
 }

@@ -14751,6 +14751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NatureBall
   weaponData: {fileID: 11400000, guid: f1b432c06ec794da49429c0db2c90c8e, type: 2}
+  hitEffect: {fileID: 6361997728236094490, guid: fd25cbdb7c54fa4478d443fd2bea4ef1, type: 3}
 --- !u!114 &2536574452701851038
 MonoBehaviour:
   m_ObjectHideFlags: 0
