@@ -16,11 +16,16 @@ public class NatureManAttack : PlayerAttack
 
     [Header("소환 위치")]
     // 늑대 소환 
-    private float summonTime = 0f;
-
-    private float summonCoolTime = 2f; // 15~20초 생각중
+    private float summonTime = 20f;
+    private float summonCoolTime = 20f; // 15~20초 생각중
     [SerializeField] private Transform[] summonPoint;
     [SerializeField] private string wolfName;
+    
+    [Header("Snare")]
+    private float snareTime = 2f;
+    private float snareCoolTime = 2f;
+    [SerializeField] private GameObject snareObj;
+    [SerializeField] private Transform snareSPoint; // 덩쿨 생성 위치
 
     void Start()
     {
@@ -50,6 +55,13 @@ public class NatureManAttack : PlayerAttack
         {
             photonView.RPC("SummonWolf", RpcTarget.All, true);
             summonTime = 0f; // 초기화
+        }
+        
+        snareTime += Time.deltaTime;
+        if (commandQ && snareTime >= snareCoolTime && pm.isGrounded)
+        {
+            photonView.RPC("Snare", RpcTarget.All);
+            snareTime = 0f;
         }
     }
 
@@ -88,7 +100,27 @@ public class NatureManAttack : PlayerAttack
 
             wolfs.GetComponent<Wolf>().SetSlot(t);
         }
+    }
 
-        photonView.RPC("SummonWolf", RpcTarget.All, false);
+    [PunRPC]
+    protected void Snare()
+    {
+        animator.SetTrigger("Snare");
+        animator.SetBool("Summon", false); // 해줘야 Snare -> wolf로 안넘어감 제약조건
+        // 소환 타이밍은 애니메이션 이벤트로
+    }
+
+    // 애니메이션 이벤트에서 호출
+    public void SnareAttack()
+    {
+        if (!photonView.IsMine) return;
+        
+        GameObject obj = PhotonNetwork.Instantiate("Heroes/"+snareObj.name, snareSPoint.position, Quaternion.identity);
+        
+        // 바닥을 기어야하니.
+        obj.GetComponent<Rigidbody>().AddForce(snareSPoint.forward * 20f, ForceMode.Impulse);
+        
+        // 마스터 등록
+        obj.GetComponent<Snare>().SetMaster(gameObject);
     }
 }
