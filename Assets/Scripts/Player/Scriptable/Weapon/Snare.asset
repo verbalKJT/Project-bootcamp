@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0569f47d34989462795000c2f937832b, type: 3}
-  m_Name: Sword
+  m_Name: Snare
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  damage: 20
-  reloadTime: 2
-  speed: 30
+  damage: 10
+  reloadTime: 0
+  speed: 0
+  effect: {fileID: 11400000, guid: 6d31a14623d1c4236b693028bf627db1, type: 2}

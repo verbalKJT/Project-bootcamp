@@ -16,5 +16,11 @@ public class NatureAnimMover : MonoBehaviour
     public void SummonWolf()
     {
         natureManAttack.Summon();
+        natureManAttack.animator.SetBool("Summon",false); // 소환후 재소환 안하게 애니메이터 Transition 막기
+    }
+
+    public void SummonSnare()
+    {
+        natureManAttack.SnareAttack();
     }
 }

@@ -25,12 +25,18 @@ public class FireForce : MonoBehaviourPun
             LivingEnitiy target = other.GetComponent<EnemyHealth>();
             target.photonView.RPC("Is_Hit", RpcTarget.All);
             target.TakeDamage(damage);
-            
-            PhotonNetwork.Destroy(gameObject); // 네트워크에서 삭제
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(gameObject); // 네트워크에서 삭제
+            }
         }
         else if(other.tag != "Player")
         {
-            PhotonNetwork.Destroy(gameObject);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(gameObject); // 네트워크에서 삭제
+            }
         } 
     }
 
