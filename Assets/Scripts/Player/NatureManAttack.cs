@@ -17,16 +17,21 @@ public class NatureManAttack : PlayerAttack
     [Header("소환 위치")]
     // 늑대 소환 
     private float summonTime = 20f;
-    private float summonCoolTime = 20f; // 15~20초 생각중
+    private const float summonCoolTime = 20f; // 15~20초 생각중
     [SerializeField] private Transform[] summonPoint;
     [SerializeField] private string wolfName;
     
     [Header("Snare")]
-    private float snareTime = 2f;
-    private float snareCoolTime = 2f;
+    private float snareTime = 10f;
+    private const float snareCoolTime = 10f;
     [SerializeField] private GameObject snareObj;
     [SerializeField] private Transform snareSPoint; // 덩쿨 생성 위치
 
+    public override float FirstSkillTime => snareTime;
+    public override float FirstSkillCool => snareCoolTime;
+    public override float SecSkillTime => summonTime;
+    public override float SecSkillCool => summonCoolTime;
+    
     void Start()
     {
         base.Start();

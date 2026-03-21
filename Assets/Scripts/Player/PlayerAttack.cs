@@ -9,6 +9,11 @@ public class PlayerAttack : PlayerInput
     public Animator animator;
 
     protected PlayerMovement pm;
+    
+    public virtual float FirstSkillTime => 0;
+    public virtual float FirstSkillCool => 0;
+    public virtual float SecSkillTime => 0;
+    public virtual float SecSkillCool => 0;
     protected void Start()
     {
         animator = GetComponentInChildren<Animator>();
