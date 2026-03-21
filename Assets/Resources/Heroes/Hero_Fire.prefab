@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8156077549653155448}
   - component: {fileID: 5636794366031196361}
   - component: {fileID: 4349054476287959122}
+  - component: {fileID: 8281235580521960965}
   - component: {fileID: 5991849117274350564}
   - component: {fileID: 9062481498246403391}
   m_Layer: 7
@@ -228,12 +229,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FireManAttack
   animator: {fileID: 0}
   sword: {fileID: 5138308362424021807}
-  fCoolTime: 0
   forceTime: 5
   dashTime: 3
-  dashCoolTime: 0
-  dash: {fileID: 3648587011940797980}
-  force: {fileID: 8246303145583905384}
 --- !u!114 &4349054476287959122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,6 +243,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea874294c9a44fc5b1740bc71a8f07c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+--- !u!114 &8281235580521960965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127481964412156798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757f14f77e5b4443894b2b64feffff00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShowSKillIcon
+  fistSkillSlotUI: {fileID: 3648587011940797980}
+  secondSkillSlotUI: {fileID: 8246303145583905384}
 --- !u!114 &5991849117274350564
 MonoBehaviour:
   m_ObjectHideFlags: 0

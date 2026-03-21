@@ -18,14 +18,14 @@ public class FireAnimMover : MonoBehaviour
     {
         // 애니메이션 이벤트로 호출
         sword.ShotForce();
-        fm.animator.SetBool("IsCast",false);
-        
     }
 
     public void OnMove()
     {
         // 움직일 수 있게
         if (!playerMovement.photonView.IsMine) return;
+        fm.animator.SetBool("IsCast", false);
+        fm.isCast = false;
         playerMovement.canMove = true;
         playerMovement.photonView.RPC("OnMoveRPC", RpcTarget.All);
     }

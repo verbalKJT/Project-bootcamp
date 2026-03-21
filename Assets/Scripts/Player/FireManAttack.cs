@@ -7,16 +7,20 @@ public class FireManAttack : PlayerAttack
     [Header("Sword.cs")] [SerializeField] private Sword sword;
     
     
-    public float fCoolTime = 0f;
-    public float forceTime = 5f; // 검기 쿨타임 
+    public float forceTime = 7f;
+    public const float fCoolTime = 7f; // 검기 쿨타임 
+    public bool isCast = false;
     
-    public float dashTime = 3f;
-    public float dashCoolTime = 0f; // 대쉬 쿨타임 
+    public float dashTime = 5f;
+    public const float dashCoolTime = 5f; // 대쉬 쿨타임 
     private float dashSpeed = 40f; // 대쉬 속도
     
-    [Header("스킬 UI 연걀")]
-    [SerializeField] private SkillSlotUI dash;
-    [SerializeField] private SkillSlotUI force;
+    public override float FirstSkillTime => dashTime;
+    public override float FirstSkillCool => dashCoolTime;
+    public override float SecSkillTime => forceTime;
+    public override float SecSkillCool => fCoolTime;
+    
+    
     void Start()
     {
         base.Start();// 부모 Start 메서드 먼저 -> animator + PlayerMovement 할당
@@ -32,22 +36,22 @@ public class FireManAttack : PlayerAttack
             photonView.RPC("AttackAnim",RpcTarget.All);
         }
 
-        if (commandE && fCoolTime >= forceTime) 
+        if (commandE && forceTime >= fCoolTime) 
         {
-            fCoolTime = 0f; // 쿨타임 초기화 
+            forceTime = 0f; // 쿨타임 초기화 
+            isCast = true;
             photonView.RPC("Force",RpcTarget.All);
         }
-        fCoolTime += Time.deltaTime; // 검기 시간 새기
-        force.UpdateSkillSlot(fCoolTime,forceTime); // 스킬 UI 갱신
+        forceTime += Time.deltaTime; // 검기 시간 새기
+         // 스킬 UI 갱신
         
         // 대쉬 스킬은 Shift로 + 땅에 있을 때만?
-        if (shift && dashCoolTime >= dashTime && pm.isGrounded)
+        if (shift && dashTime >= dashCoolTime && pm.isGrounded && !isCast)
         {
-            dashCoolTime = 0f;
+            dashTime = 0f;
             photonView.RPC("Dash",RpcTarget.All);
         }
-        dashCoolTime += Time.deltaTime;// 대쉬 스킬 시간 재기 
-        dash.UpdateSkillSlot(dashCoolTime, dashTime);
+        dashTime += Time.deltaTime;// 대쉬 스킬 시간 재기 
     }
     
 
