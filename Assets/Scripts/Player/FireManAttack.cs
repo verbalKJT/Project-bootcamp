@@ -97,7 +97,7 @@ public class FireManAttack : PlayerAttack
         }
         else
         {
-            pm.rb.AddForce(transform.forward * dashSpeed, ForceMode.VelocityChange);
+            pm.rb.AddForce(transform.forward * dashSpeed, ForceMode.Impulse);
         }
     }
 

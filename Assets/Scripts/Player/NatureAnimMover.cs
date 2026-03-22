@@ -4,6 +4,8 @@ public class NatureAnimMover : MonoBehaviour
 {
     private NatureManAttack natureManAttack;
 
+    
+    
     void Start()
     {
         natureManAttack = GetComponentInParent<NatureManAttack>();
