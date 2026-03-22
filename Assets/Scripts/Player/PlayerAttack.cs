@@ -1,5 +1,3 @@
-using System.Collections;
-using Photon.Pun;
 using UnityEngine;
 
 public class PlayerAttack : PlayerInput
