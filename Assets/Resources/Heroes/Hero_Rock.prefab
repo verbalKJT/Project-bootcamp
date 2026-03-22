@@ -354,7 +354,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2581033161379346890}
-  - {fileID: 5410869800552600237}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &2904403956208601798
@@ -457,6 +456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockAttack
   animator: {fileID: 0}
+  wall: {fileID: 1661941200241538334, guid: 215627614292441f59fe6655bf10ece4, type: 3}
 --- !u!114 &183573821792174633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1495,6 +1495,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5410869800552600237}
   - {fileID: 3326305733080737234}
   - {fileID: 3838533173772364905}
   - {fileID: 2998027648595106287}
@@ -3441,7 +3442,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 751762560753533056}
+  m_Father: {fileID: 2581033161379346890}
   m_LocalEulerAnglesHint: {x: 16.247, y: 0, z: 0}
 --- !u!114 &5654279515199803015
 MonoBehaviour:

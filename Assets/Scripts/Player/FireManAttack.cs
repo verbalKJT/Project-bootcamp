@@ -7,12 +7,12 @@ public class FireManAttack : PlayerAttack
     [Header("Sword.cs")] [SerializeField] private Sword sword;
     
     
-    public float forceTime = 7f;
-    public const float fCoolTime = 7f; // 검기 쿨타임 
+    private float forceTime = 7f;
+    private const float fCoolTime = 7f; // 검기 쿨타임 
     public bool isCast = false;
     
-    public float dashTime = 5f;
-    public const float dashCoolTime = 5f; // 대쉬 쿨타임 
+    private float dashTime = 5f;
+    private const float dashCoolTime = 5f; // 대쉬 쿨타임 
     private float dashSpeed = 40f; // 대쉬 속도
     
     public override float FirstSkillTime => dashTime;
@@ -97,7 +97,7 @@ public class FireManAttack : PlayerAttack
         }
         else
         {
-            pm.rb.AddForce(transform.forward * dashSpeed, ForceMode.VelocityChange);
+            pm.rb.AddForce(transform.forward * dashSpeed, ForceMode.Impulse);
         }
     }
 
