@@ -34,6 +34,5 @@ public class FireAnimMover : MonoBehaviour
     {
         if (!playerMovement.photonView.IsMine) return;
         playerMovement.canMove = true;
-        playerMovement.col.isTrigger = false;
     }
 }

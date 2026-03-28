@@ -46,7 +46,7 @@ public class RockAttack : PlayerAttack
         if (shift && pm.isGrounded && earthquakeTime >= earthquakeCool)
         {
             earthquakeTime = 0f;
-            photonView.RPC("Earthquake", RpcTarget.All);
+            photonView.RPC("Earthquake", RpcTarget.All, true);
         }
         // 쿨타임
         wallTime += Time.deltaTime;
@@ -69,11 +69,11 @@ public class RockAttack : PlayerAttack
     }
 
     [PunRPC]
-    public void Earthquake()
+    public void Earthquake(bool state)
     {
         if (!photonView.IsMine) return;
         
-        animator.SetTrigger("Earthquake");
+        animator.SetBool("Earthquake", state);
         
     }
 

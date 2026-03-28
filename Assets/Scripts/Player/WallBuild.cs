@@ -70,7 +70,7 @@ public class WallBuild : PlayerAttack
     private void StartAiming()
     {
         isAiming = true; 
-        rk.enabled = false; // 다른 공격 막기
+        //rk.enabled = false; // 다른 공격 막기
 
         curPreWall = Instantiate(preWallPrefab); // 프리뷰는 동기화 할 필요가 없음,
         curPreWall.SetActive(false); // 처음엔 안보이게
@@ -86,7 +86,6 @@ public class WallBuild : PlayerAttack
         GameObject wall = PhotonNetwork.Instantiate("Heroes/" + wallPrefab.name, curPreWall.transform.position,
             curPreWall.transform.rotation);
         rk.SetWallTime(0f); // 초기화
-        rk.photonView.RPC("SummonWall", RpcTarget.All, false);
         CancleAming(); // 벽 설치 후 조준 취소
     }
 
@@ -101,6 +100,7 @@ public class WallBuild : PlayerAttack
             // 네트워크에서 삭제할 필요 없음
             Destroy(curPreWall);
         }
+        rk.photonView.RPC("SummonWall", RpcTarget.All, false);
     }
 
     private void UdpatePreViewPos()

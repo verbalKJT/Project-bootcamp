@@ -15,8 +15,8 @@ public class PlayerMovement : PlayerInput
 
     [Header("플레이어 데이터")] [SerializeField] PlayerState playerState;
 
-    [Header("플레이어 시네머신 캠")] 
-    [SerializeField] private CinemachineCamera playerCam;
+    [Header("플레이어 시네머신 캠")] [SerializeField]
+    private CinemachineCamera playerCam;
 
     [Header("Terrain 레이어")] [SerializeField]
     private LayerMask groundLayer;
@@ -26,23 +26,24 @@ public class PlayerMovement : PlayerInput
     public bool canMove = true;
 
     private Quaternion targetRotation;
+
+
     void Awake()
     {
         if (photonView.IsMine)
         {
             player = gameObject;
-            
-            var vcam = GameObject.FindAnyObjectByType<CinemachineCamera>();
-            
+
+            var vcam = FindAnyObjectByType<CinemachineCamera>();
+
             playerCam = vcam;
 
             playerCam.Follow = transform;
-            
+
             // 마우스 커서 중앙 고정 및 안보이게
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-        
     }
 
     private void Start()
@@ -55,7 +56,6 @@ public class PlayerMovement : PlayerInput
             {
                 playerCam.gameObject.SetActive(false);
             }
-            return;
         }
     }
 
@@ -69,7 +69,7 @@ public class PlayerMovement : PlayerInput
                 // 입력 받은 h와 v중 큰 값
                 float moveValue = Mathf.Abs(h) > Mathf.Abs(v) ? h : v;
 
-                
+
                 photonView.RPC("MoveAnim", RpcTarget.All, Mathf.Abs(moveValue));
 
                 if (moveValue == 0f)
@@ -77,14 +77,8 @@ public class PlayerMovement : PlayerInput
                     // 정지 상태일 때 0을 전달하여 애니메이션 멈춤
                     photonView.RPC("MoveAnim", RpcTarget.All, 0f);
                 }
-                
             }
 
-            // 이동
-            moveV = transform.forward * v * Time.deltaTime * playerState.speed;
-            moveH = transform.right * h * Time.deltaTime * playerState.speed;
-            rb.MovePosition(rb.position + moveV + moveH);
-            rb.MovePosition(rb.position + moveV + moveH);
             if (spaceBar && isGrounded) // 스페이스바를 누르면
             {
                 photonView.RPC("JumpAnim", RpcTarget.All);
@@ -108,6 +102,11 @@ public class PlayerMovement : PlayerInput
             // 중력 가속도 높이기 -> 떨어질 떄 팍 떨어지게
             rb.linearVelocity += Vector3.up * Physics.gravity.y * (4f - 1) * Time.fixedDeltaTime;
         }
+
+        // 이동
+        moveV = transform.forward * v * Time.fixedDeltaTime * playerState.speed;
+        moveH = transform.right * h * Time.fixedDeltaTime * playerState.speed;
+        rb.MovePosition(rb.position + moveV + moveH);
     }
 
     private void Jump()
@@ -135,19 +134,18 @@ public class PlayerMovement : PlayerInput
     {
         if (col != null)
         {
-            float raycastDistance = (col.height / 2) + 0.1f;
             bool hit;
+            
             // 내가 지금 바닥인지
-            hit = Physics.Raycast(transform.position, Vector3.down, raycastDistance, groundLayer);
-
+            hit = Physics.Raycast(col.bounds.center, Vector3.down, col.bounds.extents.y + 0.2f, groundLayer);
+            
             return hit;
         }
         else
         {
-            float raycastDistance = (boxCol.size.y / 2) + 0.1f;
             bool hit;
             // 내가 지금 바닥인지
-            hit = Physics.Raycast(transform.position, Vector3.down, raycastDistance, groundLayer);
+            hit = Physics.Raycast(boxCol.bounds.center, Vector3.down, col.bounds.extents.y + 0.2f, groundLayer);
 
             return hit;
         }
@@ -171,6 +169,4 @@ public class PlayerMovement : PlayerInput
     {
         animator.SetBool("IsCast", false);
     }
-    
-    
 }
