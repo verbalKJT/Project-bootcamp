@@ -37,6 +37,10 @@ public class PlayerMovement : PlayerInput
             playerCam = vcam;
 
             playerCam.Follow = transform;
+            
+            // 마우스 커서 중앙 고정 및 안보이게
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         
     }
