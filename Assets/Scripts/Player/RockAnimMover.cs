@@ -59,6 +59,7 @@ public class RockAnimMover : MonoBehaviour
         else
         {
             canMove = false;
+            rk.photonView.RPC("Earthquake", RpcTarget.All,false);
         }
         // AddForce 타이밍
         playerMovement.canMove = canMove; // 회전은 가능

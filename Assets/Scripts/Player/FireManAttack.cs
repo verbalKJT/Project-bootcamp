@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using Photon.Pun;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 
 public class FireManAttack : PlayerAttack
@@ -13,7 +15,7 @@ public class FireManAttack : PlayerAttack
     
     private float dashTime = 5f;
     private const float dashCoolTime = 5f; // 대쉬 쿨타임 
-    private float dashSpeed = 40f; // 대쉬 속도
+    private float dashDis = 20f; // 대쉬 거리
     
     public override float FirstSkillTime => dashTime;
     public override float FirstSkillCool => dashCoolTime;
@@ -77,38 +79,75 @@ public class FireManAttack : PlayerAttack
     {
         if (!photonView.IsMine) return;
         // 불맨은 캡슐 콜라이더 씀
-        pm.col.isTrigger = true; // Dash 할 때만 isTrigger 켜놓기
         pm.canMove = false;
-        Slide(dashSpeed);
+        Slide(dashDis);
         animator.SetTrigger("Slide");
         // 애니메이션 이벤트로 플레이어 이동 활성화 + IsTrigger 해제
-        pm.col.excludeLayers += LayerMask.NameToLayer("Monster");
+        pm.col.excludeLayers |= 1 << LayerMask.NameToLayer("Monster");
     }
     
     // 대쉬 스킬
-    public void Slide(float dashSpeed)
+    public void Slide(float dashDisance)
     {
-        // 방향만 
+        // 대쉬할 방향만 
         Vector3 slideDir = (moveV + moveH).normalized;
+        if(slideDir == Vector3.zero) slideDir = transform.forward;
         
-        if (slideDir != Vector3.zero)
-        {
-            pm.rb.AddForce(slideDir * dashSpeed, ForceMode.Impulse);
-        }
-        else
-        {
-            pm.rb.AddForce(transform.forward * dashSpeed, ForceMode.Impulse);
-        }
+        // 0.3초 동안 이동 
+        StartCoroutine(DashRoutine(slideDir, dashDis, 0.3f));
+        
     }
-
-    private void OnTriggerEnter(Collider other)
+    IEnumerator DashRoutine(Vector3 dir, float distance, float duration)
     {
-        if (other.tag == "Monster")
-        {
-            LivingEnitiy target = other.GetComponent<EnemyHealth>();
-            target.TakeDamage(40); // 일단 40뎀 정도만
-            target.photonView.RPC("Is_Hit", RpcTarget.All); 
-        }
-    }
+        // 대쉬 동안 충돌 될 몬스터 갯수
+        HashSet<int> monsters = new HashSet<int>();
+        
+        pm.canMove = false; // 대쉬 중 조작 금지
     
+        // 대쉬 시작
+        Vector3 startPos = pm.rb.position;
+        // 대쉬할 거리
+        Vector3 targetPos = startPos + dir * distance;
+        
+        // 비율
+        float elapsed = 0f;
+
+        // 내 콜라이더 크가
+        float radius = pm.col.radius;
+        
+        while (elapsed < duration)
+        {
+            elapsed += Time.fixedDeltaTime;
+            float t = elapsed / duration; // 0에서 1로 변하는 비율
+
+            // 점진적으로 목표 지점까지 이동 보간
+            Vector3 nextPos = Vector3.Lerp(startPos, targetPos, t);
+            pm.rb.MovePosition(nextPos);
+                
+            // 맞은 놈 
+            Collider[] monColliders = Physics.OverlapSphere(transform.position,radius,LayerMask.GetMask("Monster"));
+
+            foreach (Collider hits in monColliders)
+            {
+                // 맞은 놈 포톤 뷰 아이디 가져워서 처리 (동기화)
+                int hitId = hits.gameObject.GetComponent<PhotonView>().ViewID;
+                // 맞은놈 인스터스 아이디 저장 
+                if (!monsters.Contains(hitId))
+                {
+                    monsters.Add(hitId);
+                    if (hits.TryGetComponent(out EnemyHealth  target))
+                    {
+                        target.TakeDamage(30);
+                        target.photonView.RPC("Is_Hit", RpcTarget.All);
+                    }   
+                }
+            }
+            
+            yield return new WaitForFixedUpdate();
+        }
+
+        // 최종 위치 고정 및 상태 복구
+        pm.rb.MovePosition(targetPos);
+        pm.canMove = true;
+    }
 }
