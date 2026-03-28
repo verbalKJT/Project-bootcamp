@@ -1,12 +1,13 @@
 using System;
 using Photon.Pun;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class PlayerMovement : PlayerInput
 {
     // 내 캐릭터
     public static GameObject player;
-    
+
     [Header("컴포넌트들")] public Rigidbody rb;
     [SerializeField] public Animator animator;
     [SerializeField] public CapsuleCollider col;
@@ -14,25 +15,36 @@ public class PlayerMovement : PlayerInput
 
     [Header("플레이어 데이터")] [SerializeField] PlayerState playerState;
 
-    [Header("플레이어 시네머신 캠")] [SerializeField]
-    private GameObject playerCam;
+    [Header("플레이어 시네머신 캠")] 
+    [SerializeField] private CinemachineCamera playerCam;
 
     [Header("Terrain 레이어")] [SerializeField]
     private LayerMask groundLayer;
 
     public bool isGrounded;
-        
-    public bool canMove = true;
-    
-    
 
+    public bool canMove = true;
+
+    private Quaternion targetRotation;
     void Awake()
     {
         if (photonView.IsMine)
         {
             player = gameObject;
+            
+            var vcam = GameObject.FindAnyObjectByType<CinemachineCamera>();
+            
+            playerCam = vcam;
+
+            playerCam.Follow = transform;
+            
+            // 마우스 커서 중앙 고정 및 안보이게
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
+        
     }
+
     private void Start()
     {
         // 내 캐릭터가 아니면 
@@ -43,6 +55,7 @@ public class PlayerMovement : PlayerInput
             {
                 playerCam.gameObject.SetActive(false);
             }
+            return;
         }
     }
 
@@ -53,16 +66,24 @@ public class PlayerMovement : PlayerInput
         {
             if (h != 0 || v != 0)
             {
-                photonView.RPC("MoveAnim", RpcTarget.AllBuffered, 0.7f);
-            }
-            else
-            {
-                photonView.RPC("MoveAnim", RpcTarget.AllBuffered, 0f);
+                // 입력 받은 h와 v중 큰 값
+                float moveValue = Mathf.Abs(h) > Mathf.Abs(v) ? h : v;
+
+                
+                photonView.RPC("MoveAnim", RpcTarget.All, Mathf.Abs(moveValue));
+
+                if (moveValue == 0f)
+                {
+                    // 정지 상태일 때 0을 전달하여 애니메이션 멈춤
+                    photonView.RPC("MoveAnim", RpcTarget.All, 0f);
+                }
+                
             }
 
             // 이동
             moveV = transform.forward * v * Time.deltaTime * playerState.speed;
             moveH = transform.right * h * Time.deltaTime * playerState.speed;
+            rb.MovePosition(rb.position + moveV + moveH);
             rb.MovePosition(rb.position + moveV + moveH);
             if (spaceBar && isGrounded) // 스페이스바를 누르면
             {
@@ -76,7 +97,6 @@ public class PlayerMovement : PlayerInput
         // 마우스 상하 로직 필요할 듯
 
         isGrounded = Grounded();
-        
     }
 
     void FixedUpdate()
@@ -151,4 +171,6 @@ public class PlayerMovement : PlayerInput
     {
         animator.SetBool("IsCast", false);
     }
+    
+    
 }

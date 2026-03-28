@@ -9,13 +9,18 @@ public class RockAttack : PlayerAttack
     private RockAnimMover ram;
 
     // 프로 퍼티로 가져다 쓰는건 편하게
-    public float earthquakeTime { get; private set; } = 1f;
-    public float earthquakeCool { get; private set; } = 1f;
-    
-    [Header("벽")]
+    public float earthquakeTime { get; private set; } = 8f;
+    public float earthquakeCool { get; private set; } = 8f;
+
+    [Header("벽")] 
+    public float wallTime { get; private set; } = 10f;
+    public float wallCool { get; private set; } = 10f;
     [SerializeField] private GameObject wall;
     public override float FirstSkillTime => earthquakeTime;
     public override float FirstSkillCool => earthquakeCool;
+    
+    public override float SecSkillTime => wallTime;
+    public override float SecSkillCool => wallCool;
     void Start()
     {
         base.Start();
@@ -43,6 +48,8 @@ public class RockAttack : PlayerAttack
             earthquakeTime = 0f;
             photonView.RPC("Earthquake", RpcTarget.All);
         }
+        // 쿨타임
+        wallTime += Time.deltaTime;
     }
 
     [PunRPC]
@@ -94,5 +101,15 @@ public class RockAttack : PlayerAttack
                 t.photonView.RPC("Is_Hit", RpcTarget.All);
             }
         }
+    }
+
+    [PunRPC]
+    public void SummonWall(bool state)
+    {
+        animator.SetBool("Wall", state);
+    }
+    public void SetWallTime(float time)
+    {
+        wallTime = time;
     }
 }

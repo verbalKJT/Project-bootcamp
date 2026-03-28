@@ -69,5 +69,16 @@ public class RockAnimMover : MonoBehaviour
         rk.QuakeJump();
     }
     
-    
+    public void OnHammerHit()
+    {
+        
+        Hammer hammer = GetComponentInChildren<Hammer>();
+        hammer.OnCollider();
+    }
+
+    public void OffHammerHit()
+    {
+        Hammer hammer = GetComponentInChildren<Hammer>();
+        hammer.OffCollider();
+    }
 }
