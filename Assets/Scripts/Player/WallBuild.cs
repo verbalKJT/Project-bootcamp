@@ -81,7 +81,7 @@ public class WallBuild : PlayerAttack
     private void CreateWall()
     {
         // 네트워크 생성
-        if(!PhotonNetwork.IsMasterClient) return;
+        if(!photonView.IsMine) return;
 
         GameObject wall = PhotonNetwork.Instantiate("Heroes/" + wallPrefab.name, curPreWall.transform.position,
             curPreWall.transform.rotation);

@@ -34,9 +34,29 @@ public class LivingEnitiy : MonoBehaviourPun, IPunObservable
     {
         photonView.RPC("TakeDamToMonster",RpcTarget.All,damage);
     }
+
+    public void TakeDamagePlayer(int damage)
+    {
+        photonView.RPC("TakeDamToPlayer", RpcTarget.All,damage);
+    }
     
     [PunRPC]
     public void TakeDamToMonster(int damage)
+    {
+        if (!isDead)
+        {
+            curhp -= damage; // 체력 빼기
+            OnHpChanged(); // UI 갱신
+            if (curhp <= 0)
+            {
+                isDead = true;
+                OnDeath(); // 죽음 이벤트
+            }
+        }
+    }
+
+    [PunRPC]
+    public void TakeDamToPlayer(int damage)
     {
         if (!isDead)
         {
