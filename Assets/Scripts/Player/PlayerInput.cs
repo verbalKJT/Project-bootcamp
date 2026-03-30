@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviourPun
 {
+    [Header("플레이어 데이터")] [SerializeField] protected PlayerState playerState;
     protected float h, v;
     protected float mouseX, mouseY; // 마우스로 회전 조
     protected float sensitivity = 30f;

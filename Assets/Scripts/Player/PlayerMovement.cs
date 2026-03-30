@@ -13,8 +13,6 @@ public class PlayerMovement : PlayerInput
     [SerializeField] public CapsuleCollider col;
     [SerializeField] public BoxCollider boxCol;
 
-    [Header("플레이어 데이터")] [SerializeField] PlayerState playerState;
-
     [Header("플레이어 시네머신 캠")] [SerializeField]
     private CinemachineCamera playerCam;
 
@@ -103,10 +101,13 @@ public class PlayerMovement : PlayerInput
             rb.linearVelocity += Vector3.up * Physics.gravity.y * (4f - 1) * Time.fixedDeltaTime;
         }
 
-        // 이동
-        moveV = transform.forward * v * Time.fixedDeltaTime * playerState.speed;
-        moveH = transform.right * h * Time.fixedDeltaTime * playerState.speed;
-        rb.MovePosition(rb.position + moveV + moveH);
+        if (canMove)
+        {
+            // 이동
+            moveV = transform.forward * v * Time.fixedDeltaTime * playerState.speed;
+            moveH = transform.right * h * Time.fixedDeltaTime * playerState.speed;
+            rb.MovePosition(rb.position + moveV + moveH);
+        }
     }
 
     private void Jump()
@@ -135,10 +136,10 @@ public class PlayerMovement : PlayerInput
         if (col != null)
         {
             bool hit;
-            
+
             // 내가 지금 바닥인지
             hit = Physics.Raycast(col.bounds.center, Vector3.down, col.bounds.extents.y + 0.2f, groundLayer);
-            
+
             return hit;
         }
         else

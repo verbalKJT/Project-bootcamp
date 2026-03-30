@@ -24,7 +24,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
 
     // 가장 가까운 타겟(플레이어)
     public Transform target;
-
+    private bool target_Died = false;
     // 원거리 공격 대상 여부
     private bool hasRangeTarget = false;
 
@@ -43,8 +43,13 @@ public class EnemyRangeAttack : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
         rangedAttack += Time.fixedDeltaTime;
+
+        if (target != null)
+        {
+            target_Died = target.gameObject.GetComponent<PlayerHealth>().isDead;
+        }
         // 원거리 타겟이 없으면 종료
-        if (enemySensor.hasRangeTarget)
+        if (enemySensor.hasRangeTarget && !target_Died)
         {
             // 공격 시간은 4~6.5 사이
             if (rangedAttack >= rangedAttackCool)

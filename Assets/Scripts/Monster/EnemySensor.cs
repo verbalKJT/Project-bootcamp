@@ -6,17 +6,24 @@ public class EnemySensor : MonoBehaviour
     private float rangedAttackRange = 20f; // 원거리 공격 범위
 
     // 원거리 공격 대상 여부
-    public bool hasRangeTarget = false;
+    public bool hasRangeTarget { get; private set; } = false;
     
-
-
     private EnemyRangeAttack eRa;
+    
+    // 근거리 공격 대상 여부
+    public bool hasNearTarget { get; private set; } = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         eRa = GetComponent<EnemyRangeAttack>();
-        StartCoroutine(FindPlayerRoutine(0.4f));
+        
+        
+        
+        if (!hasNearTarget)
+        {
+            StartCoroutine(FindPlayerRoutine(0.4f));   
+        }
     }
 
     // Update is called once per frame

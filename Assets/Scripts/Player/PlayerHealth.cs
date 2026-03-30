@@ -1,22 +1,62 @@
-using UnityEngine;
+using System.Collections;
+using MagicPigGames; // 에셋
+using Photon.Pun;
+using UnityEngine; 
+
 
 public class PlayerHealth : LivingEnitiy
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("플레이어 데이터")] [SerializeField] protected PlayerState playerState;
+    
+    [Header("체력 바 UI")]
+    [SerializeField] private ProgressBar hpBar;
+
+    private PlayerMovement playerMovement;
+    private PlayerAttack playerAttack;
+    
     void Start()
     {
-        
+        curhp =  playerState.hp;
+        float ratio = (float)curhp / playerState.hp;
+        hpBar.SetProgress(ratio);
+        playerMovement = GetComponent<PlayerMovement>();
+        playerAttack = GetComponent<PlayerAttack>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
+
     protected override void OnHpChanged() // 자식들이 쓸 껍데기
-    { }
+    {
+        float ratio = (float)curhp / playerState.hp;
+        hpBar.SetProgress(ratio);
+    }
+
     protected override void OnDeath() // 죽었을 때
-    { }
-    protected override void OnRespawn() // 다시 살아날때
-    { }
+    {
+        photonView.RPC("Is_Stun", RpcTarget.All, true);
+    }
+
+    [PunRPC]
+    public void Is_Stun(bool isStun)
+    {
+        playerMovement.animator.SetBool("Stun", isStun);
+        playerMovement.canMove = !isStun;
+        playerAttack.enabled = !isStun;
+        if(photonView.IsMine && isStun)
+            StartCoroutine(StunCoroutine(8f));
+    }
+
+    IEnumerator StunCoroutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        curhp = playerState.hp / 2; // 절반만 다시 채우기
+        // hp 변경 적용
+        OnHpChanged();
+        photonView.RPC("Is_Stun",RpcTarget.All,false);
+        // 초기화 
+        isDead = false;
+    }
 }
