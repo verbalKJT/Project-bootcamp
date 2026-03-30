@@ -65,7 +65,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         
         // 50마리 정도 생각 중
         // 살아있는 몬스터의 수
-        return (enemies.Count <1) ?  true : false;
+        return (enemies.Count <9) ?  true : false;
     }
 
     IEnumerator RandomSpawnEnemies(float time)
