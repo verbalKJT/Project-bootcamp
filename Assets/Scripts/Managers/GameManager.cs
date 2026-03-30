@@ -18,13 +18,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     public string[] enemyPrefabNames = { "ForestMon1" };
 
     private const string SELECTED_CHAR = "SelectedChar";
+    
+    // 죽은 몬스터의 수
+    public static int DeadMonCnt = 0;
 
     IEnumerator Start()
     {
         yield return null; //  1프레임 대기
 
         SpawnPlayerCharacter();
-        SpawnEnemies();
+        //SpawnEnemies();
     }
 
     // 플레이어 생성 로직
