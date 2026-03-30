@@ -5013,6 +5013,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1772523330}
   - component: {fileID: 1772523329}
+  - component: {fileID: 1772523331}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5062,6 +5063,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1772523331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772523327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4743ded4330e14500af68e4b0626e4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  enemySpawnPoints:
+  - {fileID: 524785854}
+  MovePoints:
+  - {fileID: 2056412596}
+  - {fileID: 18021325}
+  - {fileID: 1469576196}
+  WayPoints:
+  - {fileID: 577604675}
+  - {fileID: 886298872}
+  enemyPrefabNames:
+  - ForestMon1
 --- !u!1 &1813930186
 GameObject:
   m_ObjectHideFlags: 0
