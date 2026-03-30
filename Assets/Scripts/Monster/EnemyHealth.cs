@@ -22,6 +22,9 @@ public class EnemyHealth : LivingEnitiy
        curhp = foreast_state.hp; // 체력 초기화
        hpBar.fillAmount = curhp;
        em = GetComponent<EnemyMove>();
+       
+       // 생성 후 스포너에 자기 자신 추가
+       EnemySpawner.enemies.Add(this); 
     }
 
     // Update is called once per frame
@@ -47,6 +50,14 @@ public class EnemyHealth : LivingEnitiy
     {
         // RPC TakeDamToMonster에서 IsDead를 체크하고 들어온 상태
         photonView.RPC("CallDieAnim",RpcTarget.All);
+        
+        // 사망 시 
+        if (EnemySpawner.enemies.Contains(this))
+        {
+            EnemySpawner.enemies.Remove(this);
+            // 죽은 몬스터 수 세기
+            GameManager.DeadMonCnt++;
+        }
     }
     protected override void OnRespawn() // 다시 살아날때
     { }

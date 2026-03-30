@@ -22,12 +22,12 @@ public class EnemyMove : MonoBehaviourPun
     {
     }
     
-    
-    // Update is called once per frame
     void Update()
     {
         
     }
+    
+    
     // GameManager에서 경로를 주입받는 초기화 함수
     public void SetMovePoints(Transform[] moves, Transform[] ways)
     {
@@ -72,7 +72,6 @@ public class EnemyMove : MonoBehaviourPun
     {
         int index = wayPoint[way].childCount - 1; // 갈림길 자식 갯수 -1 = index
         Transform target = wayPoint[way].GetChild(index);
-        Debug.Log(target.name + " " + index);
         agent.SetDestination(target.position);
         //경로를 계산 중이거나, 남은 거리가 정지 거리보다 크면 계속 기다림
         while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)

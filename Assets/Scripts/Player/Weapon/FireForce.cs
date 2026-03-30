@@ -11,7 +11,7 @@ public class FireForce : MonoBehaviourPun
     private Rigidbody rb;
     void Start()
     {
-        StartCoroutine(DestroySelf(6f));
+        StartCoroutine(DestroySelf(8f));
         rb = GetComponent<Rigidbody>(); 
         
         // 시작과 동시에 약간 위로 힘 주기
@@ -25,11 +25,6 @@ public class FireForce : MonoBehaviourPun
             LivingEnitiy target = other.GetComponent<EnemyHealth>();
             target.photonView.RPC("Is_Hit", RpcTarget.All);
             target.TakeDamage(damage);
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PhotonNetwork.Destroy(gameObject); // 네트워크에서 삭제
-            }
         }
         else if(other.tag != "Player")
         {

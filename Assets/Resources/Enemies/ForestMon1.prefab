@@ -281,6 +281,8 @@ GameObject:
   - component: {fileID: 5401562091338456196}
   - component: {fileID: 6117277431117192529}
   - component: {fileID: 6982170610268609746}
+  - component: {fileID: 1123089309323613863}
+  - component: {fileID: 1345454280712618063}
   - component: {fileID: 5707275649698584725}
   - component: {fileID: 3859106144226781074}
   m_Layer: 6
@@ -304,6 +306,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3336872421489217592}
+  - {fileID: 975670660067197314}
   - {fileID: 4156410298975813592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -342,7 +345,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2112
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -486,6 +489,34 @@ MonoBehaviour:
   hpBar: {fileID: 6041306868332457326}
   animator: {fileID: 8696133246864607810}
   em: {fileID: 0}
+--- !u!114 &1123089309323613863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4787734284849576031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d6a4988194f4882bfa93d2f1521464, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySensor
+  hasRangeTarget: 0
+--- !u!114 &1345454280712618063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4787734284849576031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8912010afce347e7bccb2eccd92e481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  <firePos>k__BackingField: {fileID: 975670660067197314}
+  <weapon>k__BackingField: {fileID: 2259493615913689608, guid: 514c9d8c7d0a2473f9ac8286cdf12740, type: 3}
+  target: {fileID: 0}
 --- !u!114 &5707275649698584725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,6 +633,37 @@ MonoBehaviour:
   m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &8219801160135771315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 975670660067197314}
+  m_Layer: 6
+  m_Name: FirPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &975670660067197314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8219801160135771315}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.00000004892481, y: -0.0000000037252899, z: -0.0000000036088745, w: 1}
+  m_LocalPosition: {x: 0.111362144, y: 0.7586477, z: 0.41474244}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3300304173100923524}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7474837030799372402
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -895,8 +957,24 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeLayers.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
       propertyPath: m_SynchronizeParameters.Array.size
-      value: 3
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[4].Name
+      value: Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[4].Type
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeLayers.Array.data[1].LayerIndex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6492300442113121044, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
       propertyPath: m_Layer
