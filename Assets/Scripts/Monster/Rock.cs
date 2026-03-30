@@ -1,21 +1,24 @@
 using System.Collections;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Rock : MonoBehaviourPun, IPunInstantiateMagicCallback
 {
-    private int damage;
-    private IPunInstantiateMagicCallback punInstantiateMagicCallbackImplementation;
-    public Rigidbody rb{get ; private set;}
+    private int damage = 10;
+    public Rigidbody rb { get; private set; }
 
     private EnemyRangeAttack era;
+
+    [SerializeField] private GameObject hitEffect;
+
     void Start()
     {
-        StartCoroutine(DestroySelf(6f));    
+        StartCoroutine(DestroySelf(6f));
         rb = GetComponent<Rigidbody>();
         era = GetComponentInParent<EnemyRangeAttack>();
     }
-    
+
     // IPunInstantiateMagicCallback 콜백 함수
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
@@ -41,17 +44,31 @@ public class Rock : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         if (other.tag == "Player")
         {
-            Debug.Log("Player Hit");           
-        }else if(other.tag == "Shield")
-        {
+            LivingEnitiy player = other.GetComponent<PlayerHealth>();
+            player.TakeDamagePlayer(damage);
             
+            // effect 생성.
+            
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
+        }
+        else if (other.tag == "Shield")
+        {
+            Shield shield = other.GetComponent<Shield>();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
         }
     }
 
     IEnumerator DestroySelf(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        if(PhotonNetwork.IsMasterClient){
+        if (PhotonNetwork.IsMasterClient)
+        {
             PhotonNetwork.Destroy(gameObject);
         }
     }
