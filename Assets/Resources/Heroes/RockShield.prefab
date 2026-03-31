@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5905923871116525441}
   - component: {fileID: 4220070934741943190}
   - component: {fileID: 3689943916960989837}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RockShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,10 +29,11 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2808610809708258276}
+  - {fileID: 4649829321648016701}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5905923871116525441
@@ -90,6 +91,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &3689943916960989837
 MonoBehaviour:
@@ -103,7 +105,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb3cae80030724b9896f7231d6caf8a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shield
-  shield: {fileID: 241451947649570769}
+  energyShield: {fileID: 241451947649570769}
+  shieldRenderer: {fileID: 1687810299178855180}
+  energyShieldCollider: {fileID: 8597511608546434516}
+  maxShieldHp: 200
+  recoverDelay: 10
+  hpBar: {fileID: 0}
 --- !u!1 &241451947649570769
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,13 +123,13 @@ GameObject:
   - component: {fileID: 6130943154547076412}
   - component: {fileID: 1687810299178855180}
   - component: {fileID: 8597511608546434516}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: EnergyShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2808610809708258276
 Transform:
   m_ObjectHideFlags: 0
@@ -193,6 +200,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &8597511608546434516
 BoxCollider:
@@ -215,3 +223,34 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10, y: 0.1, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &8490872506103502464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4649829321648016701}
+  m_Layer: 12
+  m_Name: ShieldHandle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4649829321648016701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8490872506103502464}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.000000009313224, y: 0.00000010454093, z: -0.00000003758395, w: 1}
+  m_LocalPosition: {x: -0.07, y: 0.06, z: 0.041}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3491323848562518633}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
