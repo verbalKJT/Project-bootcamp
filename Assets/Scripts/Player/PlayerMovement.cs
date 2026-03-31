@@ -146,7 +146,7 @@ public class PlayerMovement : PlayerInput
         {
             bool hit;
             // 내가 지금 바닥인지
-            hit = Physics.Raycast(boxCol.bounds.center, Vector3.down, col.bounds.extents.y + 0.2f, groundLayer);
+            hit = Physics.Raycast(boxCol.bounds.center, Vector3.down, boxCol.bounds.extents.y + 0.2f, groundLayer);
 
             return hit;
         }
