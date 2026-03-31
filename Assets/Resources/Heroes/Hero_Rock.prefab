@@ -336,6 +336,7 @@ GameObject:
   - component: {fileID: 6382310230234792220}
   - component: {fileID: 5696757857748348928}
   - component: {fileID: 4845428921081640172}
+  - component: {fileID: 3558794309091442192}
   m_Layer: 7
   m_Name: Hero_Rock
   m_TagString: Player
@@ -649,6 +650,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShowSKillIcon
   fistSkillSlotUI: {fileID: 5351879449168333211}
   secondSkillSlotUI: {fileID: 8220491585832929642}
+--- !u!114 &3558794309091442192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751762560753533063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea874294c9a44fc5b1740bc71a8f07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+  playerState: {fileID: 11400000, guid: 4dbfeb8d5e5fb4c86a6f7d8cf737c26f, type: 2}
 --- !u!1 &793293888240667872
 GameObject:
   m_ObjectHideFlags: 0
@@ -1685,7 +1699,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7796527283533099547}
-  m_Layer: 7
+  m_Layer: 12
   m_Name: ShieldHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6924,7 +6938,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7671135230617648099}
-  m_Layer: 7
+  m_Layer: 12
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7121,11 +7135,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 167395121887874946, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 241451947649570769, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 241451947649570769, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
       propertyPath: m_IsActive
@@ -7190,42 +7204,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3491323848562518633, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7796527283533099547}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 241451947649570769, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2959329435447177635}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
 --- !u!1 &328196106753922145 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 167395121887874946, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
   m_PrefabInstance: {fileID: 495194092309404643}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &398154203056557106 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 241451947649570769, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
-  m_PrefabInstance: {fileID: 495194092309404643}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &2959329435447177635
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 398154203056557106}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 9.999997, y: 0.00000036912724, z: 9.999999}
-  m_Center: {x: 0, y: -0.000000059604645, z: 0.0000009536743}
 --- !u!4 &3939775484418748810 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3491323848562518633, guid: 033b5f4d61fcc5a4892d0e9ff2d26e3f, type: 3}
@@ -7297,7 +7282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6503715093918975228, guid: 445184725abd30546b35e98e7b6286fe, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6503715093918975228, guid: 445184725abd30546b35e98e7b6286fe, type: 3}
       propertyPath: m_IsActive
