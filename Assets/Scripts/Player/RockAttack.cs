@@ -12,42 +12,60 @@ public class RockAttack : PlayerAttack
     public float earthquakeTime { get; private set; } = 8f;
     public float earthquakeCool { get; private set; } = 8f;
 
-    [Header("벽")] 
-    public float wallTime { get; private set; } = 10f;
+    [Header("벽")] public float wallTime { get; private set; } = 10f;
     public float wallCool { get; private set; } = 10f;
     [SerializeField] private GameObject wall;
     public override float FirstSkillTime => earthquakeTime;
     public override float FirstSkillCool => earthquakeCool;
-    
+
     public override float SecSkillTime => wallTime;
     public override float SecSkillCool => wallCool;
+
+    private Shield _shield;
+
     void Start()
     {
         base.Start();
         ram = GetComponentInChildren<RockAnimMover>();
+        _shield = GetComponentInChildren<Shield>();
     }
+
     void Update()
     {
         base.Update();
+        if (!photonView.IsMine) return;
+
         if (input)
         {
             photonView.RPC("AttackAnim", RpcTarget.All);
         }
 
         shieldInput = Input.GetMouseButton(1);
-        // 버튼 상태가 이전과 달라졌을 때만 RPC 전송 (꾹 누르고 있을 때 매 프레임 호출 방지)
-        if (shieldInput != isShieldActive)
+        bool shieldState = shieldInput && _shield.CanRaise;
+        
+        if (shieldState != isShieldActive) // 쉴드가 파괴 되지 않았을 때만
         {
-            isShieldActive = shieldInput;
-            // RPC를 통해 모든 클라이언트에게 현재 상태(true/false)를 전달
+            isShieldActive = shieldState;
+            if (isShieldActive)
+            {
+                _shield.TryRaised(); // 키기
+            }
+            else
+            {
+                _shield.Lower(); // 끄기
+            }
+
+            // 상태에 맞는 애니메이션
             photonView.RPC("SyncShieldState", RpcTarget.All, isShieldActive);
         }
+
         earthquakeTime += Time.deltaTime; // 쿨타임 재기
         if (shift && pm.isGrounded && earthquakeTime >= earthquakeCool)
         {
             earthquakeTime = 0f;
             photonView.RPC("Earthquake", RpcTarget.All, true);
         }
+
         // 쿨타임
         wallTime += Time.deltaTime;
     }
@@ -72,9 +90,8 @@ public class RockAttack : PlayerAttack
     public void Earthquake(bool state)
     {
         if (!photonView.IsMine) return;
-        
+
         animator.SetBool("Earthquake", state);
-        
     }
 
     public void QuakeJump()
@@ -90,8 +107,8 @@ public class RockAttack : PlayerAttack
 
     public void MakeAttackBound()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, 10f,LayerMask.GetMask("Monster"));
-        
+        Collider[] targets = Physics.OverlapSphere(transform.position, 10f, LayerMask.GetMask("Monster"));
+
         foreach (Collider target in targets)
         {
             if (target != null)
@@ -108,8 +125,26 @@ public class RockAttack : PlayerAttack
     {
         animator.SetBool("Wall", state);
     }
+
     public void SetWallTime(float time)
     {
         wallTime = time;
+    }
+
+    public void ForceShieldDown()
+    {
+        if (!isShieldActive)
+        {
+            return;
+        }
+
+        isShieldActive = false;
+
+        if (photonView.IsMine && _shield != null)
+        {
+            _shield.Lower();
+        }
+
+        photonView.RPC("SyncShieldState", RpcTarget.All, false);
     }
 }

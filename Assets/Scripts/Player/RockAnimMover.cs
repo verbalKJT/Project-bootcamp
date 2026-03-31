@@ -11,6 +11,7 @@ public class RockAnimMover : MonoBehaviour
     
     private PlayerMovement playerMovement;
     private RockAttack rk;
+    private Shield _shield;
     
     void Start()
     {
@@ -20,8 +21,7 @@ public class RockAnimMover : MonoBehaviour
         energyShield = shield.gameObject.transform.GetChild(0).gameObject;
         playerMovement = GetComponentInParent<PlayerMovement>();
         rk = GetComponentInParent<RockAttack>();
-        
-
+        _shield =  shield.GetComponent<Shield>();
     }
     // 애니메이션 이벤트로 위치 변경
     public void OnShield()
@@ -34,12 +34,12 @@ public class RockAnimMover : MonoBehaviour
     {
         // 회전값
         shield.transform.localRotation = shieldRot;
-        energyShield.SetActive(false);
+        _shield.ApplyState();
     }
 
     public void OnEnergyShield()
     {
-        energyShield.SetActive(true);
+        _shield.ApplyState();
     }
     public void MakeAttackBound()
     {
