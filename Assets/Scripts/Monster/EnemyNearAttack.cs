@@ -27,11 +27,13 @@ public class EnemyNearAttack : MonoBehaviourPun
     private EnemySensor _enemySensor;
     private EnemyHealth _enemyHealth;
     private EnemyRangeAttack _enemyRangeAttack;
+    private EnemyMove _enemyMove;
 
     void Start()
     {
         foreast_state = GetComponent<EnemyHealth>().foreast_state;
         damage = foreast_state.nearDam;
+        _enemyMove = GetComponent<EnemyMove>();
         _enemySensor = GetComponent<EnemySensor>();
         _enemyHealth = GetComponent<EnemyHealth>();
         _enemyRangeAttack = GetComponent<EnemyRangeAttack>();
@@ -85,6 +87,7 @@ public class EnemyNearAttack : MonoBehaviourPun
 
         isStrike = true;
         previousPos = strikePoint.position; // 궤도 추적 시작점
+        _enemyMove.agent.isStopped = true; // 공격하는 동안 걷지 않기
         strikeTargets.Clear(); // 새로운 공격
     }
 
@@ -93,6 +96,7 @@ public class EnemyNearAttack : MonoBehaviourPun
         if(!PhotonNetwork.IsMasterClient) return;
         
         isStrike = false;
+        _enemyMove.agent.isStopped = false; // 다시 목표를 향해 걷도록
         photonView.RPC("NearAttack", RpcTarget.All, false);
     }
 

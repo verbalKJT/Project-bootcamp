@@ -42,25 +42,27 @@ public class Rock : MonoBehaviourPun, IPunInstantiateMagicCallback
 
     void OnTriggerEnter(Collider other)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         if (other.tag == "Player")
         {
+            Debug.Log(other.gameObject.name);
             LivingEnitiy player = other.GetComponent<PlayerHealth>();
             player.TakeDamagePlayer(damage);
-            
+
             // effect 생성.
             
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PhotonNetwork.Destroy(gameObject);
-            }
+            PhotonNetwork.Destroy(gameObject);
         }
-        else if (other.tag == "Shield")
+        else if (other.gameObject.layer == LayerMask.NameToLayer("PlayerWeapon"))
         {
-            Shield shield = other.GetComponent<Shield>();
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PhotonNetwork.Destroy(gameObject);
-            }
+            Debug.Log(other.gameObject.name);
+            Shield shield = other.GetComponentInParent<Shield>();
+            Debug.Log("피격전 " + shield.CurrentHp);
+            if (shield != null)
+                shield.TakeShieldDamage(damage);
+
+            Debug.Log("피격후 " + shield.CurrentHp);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 
