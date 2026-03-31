@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class EnemyHealth : LivingEnitiy
 {
     [Header("적 상태")]
-    [SerializeField] private MonsterState foreast_state;
+    [field:  SerializeField]
+    public MonsterState foreast_state { get; private set; }
     
     [Header("체력 바 UI")]
     [SerializeField] private Canvas hpCanvas;

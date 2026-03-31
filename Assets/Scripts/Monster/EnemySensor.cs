@@ -1,50 +1,39 @@
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
-public class EnemySensor : MonoBehaviour
+public class EnemySensor : MonoBehaviourPun
 {
-    private float rangedAttackRange = 20f; // 원거리 공격 범위
-
-    // 원거리 공격 대상 여부
-    public bool hasRangeTarget { get; private set; } = false;
+    private float detectRange = 30f; // 몬스터의 플레이어 탐지 범위
+    // 찾은 타겟
+    public Transform curTarget{get; private set;}
+    // 타겟까지의 거리.
+    public float distanceToTarget{get; private set;}
     
-    private EnemyRangeAttack eRa;
-    
-    // 근거리 공격 대상 여부
-    public bool hasNearTarget { get; private set; } = false;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        eRa = GetComponent<EnemyRangeAttack>();
+    void Start(){
         
-        
-        
-        if (!hasNearTarget)
+        if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(FindPlayerRoutine(0.4f));   
+            StartCoroutine(FindPlayerRangedRoutine(0.4f));   
         }
     }
+    
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    IEnumerator FindPlayerRoutine(float delay)
+    IEnumerator FindPlayerRangedRoutine(float delay)
     {
         while (true)
         {
             // 0.4초 마다 가장 가까운 플레이어 찾기
-            FindNearestPlayer();
+            FindPlayer();
             yield return new WaitForSeconds(delay);
         }
     }
     
-    private void FindNearestPlayer()
+    // 원거리 공격 범위까지 가장 가까운 플레이어를 찾게됨.
+    private void FindPlayer()
     {
         // 공격 거리 기준 가상 구
-        Collider[] players = Physics.OverlapSphere(transform.position, rangedAttackRange, LayerMask.GetMask("Player"));
+        Collider[] players = Physics.OverlapSphere(transform.position,detectRange, LayerMask.GetMask("Player"));
         float minDistance = float.MaxValue;
         // 초기화가 됨.
         Transform nearest = null;
@@ -60,10 +49,9 @@ public class EnemySensor : MonoBehaviour
                 nearest = player.transform;
             }
         }
+        
+        curTarget = nearest;
 
-        // 공격 범위 내 가장 가까운 플레이어
-        eRa.target = nearest;
-
-        hasRangeTarget = (eRa.target != null) ? true : false;
+        distanceToTarget = (curTarget != null) ? Mathf.Sqrt(minDistance) : float.MaxValue;
     }
 }

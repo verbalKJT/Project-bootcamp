@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class AnimEventMover : MonoBehaviour
 {
-    private EnemyRangeAttack ea;
+    private EnemyRangeAttack _enemyRangeAttack;
+    private EnemyNearAttack _enemyNearAttack;
 
     private GameObject weapon;
     void Start()
     {
-        ea = GetComponentInParent<EnemyRangeAttack>();
+        _enemyRangeAttack = GetComponentInParent<EnemyRangeAttack>();
+        _enemyNearAttack = GetComponentInParent<EnemyNearAttack>();
     }
     public void EndDeadAnim()
     {
@@ -19,11 +21,24 @@ public class AnimEventMover : MonoBehaviour
 
     public void MakeFire()
     {
-        ea.MakeFire();
+        _enemyRangeAttack.MakeFire();
     }
 
     public void Shoot()
     {
-        ea.Shoot();
+        _enemyRangeAttack.Shoot();
+    }
+    
+    
+    // 근접 공격.
+    // 공격 시작
+    public void StartNearHit()
+    {
+        _enemyNearAttack.StartNearHit();
+    }
+    // 공격 끝
+    public void EndNearHit()
+    {
+        _enemyNearAttack.EndNearHit();
     }
 }
