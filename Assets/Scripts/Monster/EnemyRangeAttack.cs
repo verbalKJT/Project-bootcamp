@@ -21,21 +21,28 @@ public class EnemyRangeAttack : MonoBehaviourPun
     // 생성된 무기
     private GameObject fire;
     private Rock fireRock;
+    
 
-    // 가장 가까운 타겟(플레이어)
-    public Transform target;
     private bool target_Died = false;
+
     // 원거리 공격 대상 여부
     private bool hasRangeTarget = false;
 
     private EnemyMove em;
-    private EnemyHealth eh;
-    private EnemySensor enemySensor;
+    private EnemyHealth _enemyHealth;
+    private EnemySensor _enemySensor;
+
+    private void ClearProjectileRefs()
+    {
+        fire = null;
+        fireRock = null;
+    }
+
     void Start()
     {
         em = GetComponent<EnemyMove>();
-        eh = GetComponent<EnemyHealth>();
-        enemySensor = GetComponent<EnemySensor>();
+        _enemyHealth = GetComponent<EnemyHealth>();
+        _enemySensor = GetComponent<EnemySensor>();
         RandomCool(); // 공격 쿨 갱신
     }
 
@@ -44,27 +51,26 @@ public class EnemyRangeAttack : MonoBehaviourPun
         if (!photonView.IsMine) return;
         rangedAttack += Time.fixedDeltaTime;
 
-        if (target != null)
+        if (_enemySensor.curTarget != null && _enemySensor.distanceToTarget <= rangedAttackRange)
         {
-            target_Died = target.gameObject.GetComponent<PlayerHealth>().isDead;
-        }
-        // 원거리 타겟이 없으면 종료
-        if (enemySensor.hasRangeTarget && !target_Died)
-        {
-            // 공격 시간은 4~6.5 사이
-            if (rangedAttack >= rangedAttackCool)
+            target_Died = _enemySensor.curTarget.GetComponent<PlayerHealth>().isDead;
+            if (!target_Died)
             {
-                photonView.RPC("RangeAttack", RpcTarget.All,true);
-                rangedAttack = 0f;
-                RandomCool(); // 공격 쿨타임 갱신
+                // 공격 시간은 4~6.5 사이
+                if (rangedAttack >= rangedAttackCool)
+                {
+                    photonView.RPC("RangeAttack", RpcTarget.All, true);
+                    rangedAttack = 0f;
+                    RandomCool(); // 공격 쿨타임 갱신
+                }
             }
         }
     }
-    
+
     [PunRPC]
     private void RangeAttack(bool state)
     {
-        eh.animator.SetBool("RangeAttack", state);
+        _enemyHealth.animator.SetBool("RangeAttack", state);
     }
 
     // 애니메이션 이벤트로 호출 -> 애니메이션이 RPC로 동기화 되기 때문에 이 함수 자체는 RPC가 아니여도 됨.
@@ -72,18 +78,40 @@ public class EnemyRangeAttack : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        if (target == null)
+        if (_enemySensor.curTarget == null)
         {
             photonView.RPC("RangeAttack", RpcTarget.All, false);
+            ClearProjectileRefs();
             return;
         }
-        
+
+        if (fire == null || fireRock == null)
+        {
+            ClearProjectileRefs();
+        }
+
         // 몬스터의 ViewId를 담아서
         object[] instantiationData = new object[] { photonView.ViewID };
         // 생성
         fire = PhotonNetwork.InstantiateRoomObject("Enemies/" + weapon.name, firePos.position, firePos.rotation, 0,
             instantiationData);
+        if (fire == null)
+        {
+            photonView.RPC("RangeAttack", RpcTarget.All, false);
+            ClearProjectileRefs();
+            return;
+        }
+
         fireRock = fire.GetComponent<Rock>();
+        if (fireRock == null)
+        {
+            photonView.RPC("RangeAttack", RpcTarget.All, false);
+            if (PhotonNetwork.IsMasterClient && fire != null)
+            {
+                PhotonNetwork.Destroy(fire);
+            }
+            ClearProjectileRefs();
+        }
     }
 
     public void Shoot()
@@ -91,26 +119,38 @@ public class EnemyRangeAttack : MonoBehaviourPun
         // 마스터 클라이언트만 발사
         if (!PhotonNetwork.IsMasterClient) return;
         // 타겟이 범위를 벗어나는 순간 애니메이션 변화
-        if (target == null)
+        if (_enemySensor.curTarget == null)
         {
             photonView.RPC("RangeAttack", RpcTarget.All, false);
             // 안 던지니까 삭제
-            PhotonNetwork.Destroy(fire);
+            if (fire != null)
+            {
+                PhotonNetwork.Destroy(fire);
+            }
+            ClearProjectileRefs();
             return;
         }
+
+        if (fire == null || fireRock == null)
+        {
+            photonView.RPC("RangeAttack", RpcTarget.All, false);
+            ClearProjectileRefs();
+            return;
+        }
+
         // 부모 해제
         fire.transform.SetParent(null);
         // 타겟까지의 방향
-        Vector3 direction = (target.position - firePos.position).normalized;
-        
+        Vector3 direction = (_enemySensor.curTarget.position - firePos.position).normalized;
+
         // 타겟의 위치를 40m 정도 뒤로 생각 -> 아래 최소한의 힘이 강해짐 
-        Vector3 sTargert = target.position + direction * 40f;
-        
+        Vector3 sTargert = _enemySensor.curTarget.position + direction * 40f;
+
         // 포물선 공식을 사용한 초기 속도 계산 -> 목표지점까지의 최소한의 힘임       
-        Vector3 reVelocity = CalculateTargetPosition(firePos.position, 
-            sTargert , 5f); // angle 각도가 작아질 수로 Cos값이 커져서 힘이 세짐.
-        
-        
+        Vector3 reVelocity = CalculateTargetPosition(firePos.position,
+            sTargert, 5f); // angle 각도가 작아질 수로 Cos값이 커져서 힘이 세짐.
+
+
         // 던질 때 중력 적용
         fireRock.rb.useGravity = true;
         // 속도를 그대로 대입
@@ -119,8 +159,8 @@ public class EnemyRangeAttack : MonoBehaviourPun
         // 돌이 날아갈 때 랜덤하게 회전.
         fireRock.rb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.Impulse);
 
-        photonView.RPC("RangeAttack", RpcTarget.All,false);
-        //target = null; // 초기화
+        photonView.RPC("RangeAttack", RpcTarget.All, false);
+        ClearProjectileRefs();
     }
 
 
@@ -142,6 +182,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, rangedAttackRange);
     }
+
     // 곡선의 방정식 이용 -> 타겟 지점에 정확히 떨어지기 위한 "최소한의 힘"
     private Vector3 CalculateTargetPosition(Vector3 start, Vector3 end, float angle)
     {

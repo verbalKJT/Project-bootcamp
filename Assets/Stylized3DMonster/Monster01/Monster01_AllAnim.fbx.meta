@@ -39,11 +39,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Monster01_Walk (1)
-      takeName: Monster01_Walk
+      name: Monster01_Attack01_InPlace (1)
+      takeName: Monster01_Attack01_InPlace
       internalID: -304819389825454689
-      firstFrame: 0
-      lastFrame: 40
+      firstFrame: 30
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
