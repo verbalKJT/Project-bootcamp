@@ -97,7 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8768abc92527e4d589400136d580a094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rock
-  damage: 10
   hitEffect: {fileID: 0}
 --- !u!114 &4187372419010425299
 MonoBehaviour:

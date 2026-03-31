@@ -30,7 +30,8 @@ public class PlayerHealth : LivingEnitiy
 
     protected override void OnHpChanged() // 자식들이 쓸 껍데기
     {
-        float ratio = (float)curhp / playerState.hp;
+        // 음수가 안나오도록
+        float ratio = Mathf.Clamp01((float)curhp / playerState.hp);
         hpBar.SetProgress(ratio);
     }
 
