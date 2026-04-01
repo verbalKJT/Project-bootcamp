@@ -11,11 +11,15 @@ public class EnemyMove : MonoBehaviourPun
     [SerializeField] private Transform[] movePoint; // 반드시 이동할 위치들
 
     [SerializeField] private Transform[] wayPoint; // 갈림길 위치들
+    
+    [field: SerializeField]
+    public MonsterState _monsterState { get; private set; }
     public NavMeshAgent agent;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>(); // 적 생성 후 바로 초기화해주기 위해 awake 권장
+        agent.speed = _monsterState.moveSpeed;
     }
 
     void Start()

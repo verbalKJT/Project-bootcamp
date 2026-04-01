@@ -50,7 +50,8 @@ public class EnemyRangeAttack : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
         rangedAttack += Time.fixedDeltaTime;
-
+        // CriticalObj를 찾았다면 원거리 공격 안함.
+        if(_enemySensor.isCriticalTarget) return;
         if (_enemySensor.curTarget != null && _enemySensor.distanceToTarget <= rangedAttackRange)
         {
             target_Died = _enemySensor.curTarget.GetComponent<PlayerHealth>().isDead;
