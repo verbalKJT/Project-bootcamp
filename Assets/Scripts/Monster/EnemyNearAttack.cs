@@ -6,11 +6,11 @@ public class EnemyNearAttack : MonoBehaviourPun
 {
     // 공격력은 ScriptableObject로 -> EnemyHealth에 있음
     private MonsterState foreast_state;
-    private int damage = 100; // 근접 공경력
+    private int damage ; // 근접 공경력
 
     private float nearAttackRange = 8f; // 근거리 공격 범위
-    private float nearAttackTime = 5f; // 5초바다 공격
-    private float nearAttackCool = 5f;
+    private float nearAttackTime = 3f; // 3초마다공격
+    private float nearAttackCool = 3f;
 
     // 타격 판정 설정
     [SerializeField] private Transform strikePoint; // 공격 시작위치(오른손)
@@ -37,6 +37,8 @@ public class EnemyNearAttack : MonoBehaviourPun
         _enemySensor = GetComponent<EnemySensor>();
         _enemyHealth = GetComponent<EnemyHealth>();
         _enemyRangeAttack = GetComponent<EnemyRangeAttack>();
+
+        damage = _enemyMove._monsterState.nearDam;
     }
 
     void FixedUpdate()
@@ -50,14 +52,31 @@ public class EnemyNearAttack : MonoBehaviourPun
             transform.LookAt(_enemySensor.curTarget);
             // 근접 공격 범위 내면 원거리 공격 안하도록
             _enemyRangeAttack.enabled = false;
-            target_Died = _enemySensor.curTarget.GetComponent<PlayerHealth>().isDead;
+            
+            if (_enemySensor.isCriticalTarget)
+            {
+                // criticalObj를 찾았다면
+                CriticalObj cri = _enemySensor.curTarget.GetComponent<CriticalObj>();
+                target_Died = (cri == null || cri.curHp <= 0);
+            }
+            else
+            {
+                // criticalObj를 못 찾았다면
+                PlayerHealth player = _enemySensor.curTarget.GetComponent<PlayerHealth>();
+                target_Died = (player == null || player.isDead);
+            }
+            
             if (!target_Died)
             {
-                // 공격 시간은 4~6.5 사이
                 if (nearAttackTime >= nearAttackCool)
                 {
                     photonView.RPC("NearAttack", RpcTarget.All, true);
                     nearAttackTime = 0f;
+                    if (_enemySensor.isCriticalTarget)
+                    {
+                        // CriticlaObj(몬스터 최우선 공격 목표)를 찾은 상태면
+                        _enemyMove.agent.isStopped = true;
+                    }
                 }
             }
         }
@@ -76,7 +95,7 @@ public class EnemyNearAttack : MonoBehaviourPun
     void Update()
     {
         // 애니메이션 시작 시 
-        if(!PhotonNetwork.IsMasterClient && !isStrike) return;
+        if(!PhotonNetwork.IsMasterClient || !isStrike) return;
         
         CheckStrikeBound();
     }
@@ -110,9 +129,11 @@ public class EnemyNearAttack : MonoBehaviourPun
 
         if (distance > 0)
         {
+            int hitMask = LayerMask.GetMask("Player", "CriticalObj");
+            
             // 이전 위치에서 현재 위치 방향으로 거리만큼 구체를 쏴서 부딪힌 모든 것을 가져옴
             RaycastHit[] hits = Physics.SphereCastAll(previousPos,strikeRadius,
-                direction.normalized,distance,LayerMask.GetMask("Player"));
+                direction.normalized,distance,hitMask);
             foreach (RaycastHit hit in hits)
             {
                 Collider hitCol =  hit.collider;
@@ -122,10 +143,18 @@ public class EnemyNearAttack : MonoBehaviourPun
                 
                 // 맞은 놈 처리
                 strikeTargets.Add(hitCol);
-                
-                LivingEnitiy pH =  hit.collider.GetComponent<PlayerHealth>();
-                // 공격 처리
-                pH.TakeDamagePlayer(damage);
+
+                if (_enemySensor.isCriticalTarget)
+                {
+                    CriticalObj cri = hitCol.GetComponent<CriticalObj>();
+                    cri.TakeDamageObj(damage);
+                }
+                else
+                {
+                    LivingEnitiy pH =  hitCol.GetComponent<PlayerHealth>();
+                    // 공격 처리
+                    pH.TakeDamagePlayer(damage);   
+                }
             }
         }
         // 이동한 위치 덮어 쓰기
