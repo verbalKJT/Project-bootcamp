@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405297d851cef40f18ddcd48803d06cb, type: 3}
   m_Name: ForestMon
   m_EditorClassIdentifier: Assembly-CSharp::MonsterState
-  moveSpeed: 20
+  moveSpeed: 15
   hp: 100
+  nearDam: 50
