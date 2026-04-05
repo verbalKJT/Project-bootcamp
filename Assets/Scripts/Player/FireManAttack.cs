@@ -31,7 +31,7 @@ public class FireManAttack : PlayerAttack
     void Update()
     {
         base.Update(); // 부모 Update 메서드 먼저 -> Input 입력
-        
+        if(GameManager.isCinematic) return;
         if (input)
         {
             StartCoroutine(sword.IncreaseSword(1f));
@@ -124,8 +124,9 @@ public class FireManAttack : PlayerAttack
             Vector3 nextPos = Vector3.Lerp(startPos, targetPos, t);
             pm.rb.MovePosition(nextPos);
                 
+            LayerMask enemyLayer = LayerMask.GetMask("Monster","Boss");
             // 맞은 놈 
-            Collider[] monColliders = Physics.OverlapSphere(transform.position,radius,LayerMask.GetMask("Monster"));
+            Collider[] monColliders = Physics.OverlapSphere(transform.position,radius,enemyLayer);
 
             foreach (Collider hits in monColliders)
             {

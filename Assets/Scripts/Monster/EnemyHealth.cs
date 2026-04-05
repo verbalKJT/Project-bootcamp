@@ -17,6 +17,7 @@ public class EnemyHealth : LivingEnitiy
     public Animator animator;
 
     public EnemyMove em;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -57,7 +58,7 @@ public class EnemyHealth : LivingEnitiy
         {
             EnemySpawner.enemies.Remove(this);
             // 죽은 몬스터 수 세기
-            GameManager.DeadMonCnt++;
+            BossSpawner.BossSpawnerInstance.IncreaseDiedCnt();
         }
     }
     protected override void OnRespawn() // 다시 살아날때

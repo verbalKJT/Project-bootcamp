@@ -25,7 +25,11 @@ public class Sword : MonoBehaviourPun
             target.photonView.RPC("Is_Hit", RpcTarget.All);
             // 데미치 처리
             target.TakeDamage(weaponData.damage); // 공격
-        }
+        }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            LivingEnitiy target = other.GetComponent<BossHp>();
+            target.TakeDamage(weaponData.damage);
+        }    
     }
 
     public IEnumerator IncreaseSword(float waittime)

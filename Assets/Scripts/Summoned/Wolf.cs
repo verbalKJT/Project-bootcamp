@@ -202,8 +202,10 @@ public class Wolf : Summoned
         float minDis = Mathf.Infinity;
         // 적 오브젝트 찾기 로직
         // 늑대 기준 탐지 범위 내 적 콜라이더 개수
+        LayerMask enemyLayer = LayerMask.GetMask("Monster","Boss");
+        
         int enemiesInBound =
-            Physics.OverlapSphereNonAlloc(transform.position, detectRange, enemy, LayerMask.GetMask("Monster"));
+            Physics.OverlapSphereNonAlloc(transform.position, detectRange, enemy, enemyLayer);
 
         if (enemiesInBound == 0) return false;
         for (int i = 0; i < enemiesInBound; i++)
@@ -254,7 +256,11 @@ public class Wolf : Summoned
             LivingEnitiy target = other.GetComponent<EnemyHealth>();
             target.photonView.RPC("Is_Hit", RpcTarget.All);
             target.TakeDamage(damage);
-        }
+        }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            LivingEnitiy target = other.GetComponent<BossHp>();
+            target.TakeDamage(damage);
+        }    
     }
 
     IEnumerator DeSpawn(float time)

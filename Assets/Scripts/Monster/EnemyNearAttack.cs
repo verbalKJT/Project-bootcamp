@@ -8,7 +8,7 @@ public class EnemyNearAttack : MonoBehaviourPun
     private MonsterState foreast_state;
     private int damage ; // 근접 공경력
 
-    private float nearAttackRange = 8f; // 근거리 공격 범위
+    private float nearAttackRange = 9f; // 근거리 공격 범위
     private float nearAttackTime = 3f; // 3초마다공격
     private float nearAttackCool = 3f;
 
@@ -71,7 +71,7 @@ public class EnemyNearAttack : MonoBehaviourPun
                 if (nearAttackTime >= nearAttackCool)
                 {
                     photonView.RPC("NearAttack", RpcTarget.All, true);
-                    nearAttackTime = 0f;
+                    nearAttackTime = 0f; // 쿨타임 초기화.
                     if (_enemySensor.isCriticalTarget)
                     {
                         // CriticlaObj(몬스터 최우선 공격 목표)를 찾은 상태면
@@ -97,6 +97,7 @@ public class EnemyNearAttack : MonoBehaviourPun
         // 애니메이션 시작 시 
         if(!PhotonNetwork.IsMasterClient || !isStrike) return;
         
+        if(GameManager.isCinematic) return;
         CheckStrikeBound();
     }
     

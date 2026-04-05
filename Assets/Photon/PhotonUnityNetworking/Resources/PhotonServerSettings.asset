@@ -62,6 +62,17 @@ MonoBehaviour:
   - WolfAnimChanger
   - Earthquake
   - SummonWall
+  - RangeAttack
+  - TakeDamToPlayer
+  - NearAttack
+  - DestroyObj
+  - BossSpwand
+  - ElectornicWire
+  - FallCristal
+  - ElertornicWire
+  - ElectricWire
+  - FallCrystal
+  - SpawnBossCinematic
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

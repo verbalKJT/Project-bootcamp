@@ -44,6 +44,7 @@ public class NatureManAttack : PlayerAttack
     {
         // 부모 Update에서 IsMine을 체크하기 때문에 한번 더 체크할 필요 없음.
         base.Update();
+        if(GameManager.isCinematic) return;
         // 공속 
         reloadTime += Time.deltaTime;
         if (input)

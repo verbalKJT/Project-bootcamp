@@ -94,7 +94,7 @@ public class PlayerMovement : PlayerInput
     void FixedUpdate()
     {
         if (!photonView.IsMine) return; // 점프도 내 캐릭터만
-
+        if(GameManager.isCinematic) return;
         if (rb.linearVelocity.y < 0)
         {
             // 중력 가속도 높이기 -> 떨어질 떄 팍 떨어지게

@@ -32,7 +32,11 @@ public class FireForce : MonoBehaviourPun
             {
                 PhotonNetwork.Destroy(gameObject); // 네트워크에서 삭제
             }
-        } 
+        } else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            LivingEnitiy target = other.GetComponent<BossHp>();
+            target.TakeDamage(damage);
+        }    
     }
 
     IEnumerator DestroySelf(float time)

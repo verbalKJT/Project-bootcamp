@@ -49,6 +49,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
     void FixedUpdate()
     {
         if (!photonView.IsMine) return;
+        if(GameManager.isCinematic) return;
         rangedAttack += Time.fixedDeltaTime;
         // CriticalObj를 찾았다면 원거리 공격 안함.
         if(_enemySensor.isCriticalTarget) return;
