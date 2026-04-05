@@ -18,10 +18,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     public string[] enemyPrefabNames = { "ForestMon1" };
 
     private const string SELECTED_CHAR = "SelectedChar";
-    
+        
     // 죽은 몬스터의 수
     public static int DeadMonCnt = 0;
-
+    
+    // 보스 생성 후 타임라인 시네마틱 플래그
+    public static bool isCinematic = false;
+    
     IEnumerator Start()
     {
         yield return null; //  1프레임 대기

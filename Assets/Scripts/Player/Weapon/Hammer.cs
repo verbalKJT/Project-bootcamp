@@ -22,8 +22,12 @@ public class Hammer : MonoBehaviourPun
             // 모두에게 맞은 애니메이션 출력
             target.photonView.RPC("Is_Hit", RpcTarget.All);
             // 데미치 처리
-            target.TakeDamage(weaponData.damage); // 공격
-        }
+            target.TakeDamage(weaponData.damage + 40); // 공격
+        }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            LivingEnitiy target = other.GetComponent<BossHp>();
+            target.TakeDamage(weaponData.damage);
+        }    
     }
     public void OnCollider()
     {
