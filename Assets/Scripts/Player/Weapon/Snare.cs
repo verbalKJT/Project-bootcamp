@@ -32,7 +32,11 @@ public class Snare : MonoBehaviourPun
             {
                 PhotonNetwork.Destroy(gameObject);
             }
-        }
+        }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            LivingEnitiy target = other.GetComponent<BossHp>();
+            target.TakeDamage(weaponData.damage);
+        }    
         
     }
 

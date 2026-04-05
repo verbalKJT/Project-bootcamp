@@ -23,6 +23,7 @@ public class RockAttack : PlayerAttack
 
     private Shield _shield;
 
+    private int randDam = 40;
     void Start()
     {
         base.Start();
@@ -34,7 +35,7 @@ public class RockAttack : PlayerAttack
     {
         base.Update();
         if (!photonView.IsMine) return;
-
+        if(GameManager.isCinematic) return;
         if (input)
         {
             photonView.RPC("AttackAnim", RpcTarget.All);
@@ -107,15 +108,24 @@ public class RockAttack : PlayerAttack
 
     public void MakeAttackBound()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, 10f, LayerMask.GetMask("Monster"));
+        LayerMask enemyLayer = LayerMask.GetMask("Monster","Boss");
+        Collider[] targets = Physics.OverlapSphere(transform.position, 15f, enemyLayer);
 
         foreach (Collider target in targets)
         {
             if (target != null)
             {
-                LivingEnitiy t = target.GetComponent<EnemyHealth>();
-                t.TakeDamage(30);
-                t.photonView.RPC("Is_Hit", RpcTarget.All);
+                if(target.gameObject.layer == LayerMask.NameToLayer("Boss"))
+                {
+                    LivingEnitiy b = target.gameObject.GetComponent<BossHp>();
+                    b.TakeDamage(randDam);
+                }else if(target.gameObject.layer == LayerMask.NameToLayer("Monster"))
+                {
+                    LivingEnitiy t = target.GetComponent<EnemyHealth>();
+                    t.TakeDamage(randDam);
+                    t.photonView.RPC("Is_Hit", RpcTarget.All);
+                }
+             
             }
         }
     }

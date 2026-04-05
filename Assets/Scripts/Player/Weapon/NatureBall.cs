@@ -31,7 +31,11 @@ public class NatureBall : MonoBehaviourPun
                 //PhotonNetwork.Destroy(hitEffect);
                 PhotonNetwork.Destroy(gameObject);
             }
-        }
+        }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            LivingEnitiy target = other.GetComponent<BossHp>();
+            target.TakeDamage(weaponData.damage);
+        }    
     }
 
     IEnumerator DestroySelf(float duration)

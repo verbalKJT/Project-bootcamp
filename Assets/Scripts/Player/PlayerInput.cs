@@ -21,6 +21,7 @@ public class PlayerInput : MonoBehaviourPun
     protected void Update()
     {
         if (!photonView.IsMine) return;
+        if(GameManager.isCinematic) return;
         // ---- 이동 ----
         // 입력 받기
         h = Input.GetAxis("Horizontal");
