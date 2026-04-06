@@ -26,7 +26,8 @@ public class Wolf : Summoned
     private Rigidbody rb;
     public PhotonView photonView;
     public BoxCollider collider;
-
+    private WolfFeedback feedback;
+    
     // 자기 플레이어와 플레이어를 따라갈 위치(소환위치)
     private GameObject master;
     private Transform masterTransform; // 초기 위치
@@ -58,12 +59,13 @@ public class Wolf : Summoned
         animator = GetComponent<Animator>();
         photonView = GetComponent<PhotonView>();
         collider = GetComponent<BoxCollider>();
+        feedback = GetComponent<WolfFeedback>();
+        
         photonView.RPC("WolfSummoned", RpcTarget.All);
-
+        
         // 늑대 주인 등록
         master = PlayerMovement.player;
-
-
+        
         if (PhotonNetwork.IsMasterClient)
             StartCoroutine(DeSpawn(15f));
     }
@@ -245,6 +247,7 @@ public class Wolf : Summoned
     private void WolfSummoned()
     {
         animator.SetTrigger("Summoned");
+        feedback.WolfSpwanSound(); 
     }
 
     // 충돌로 피격 처리
