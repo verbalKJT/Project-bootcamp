@@ -25,7 +25,11 @@ public class PlayerHealth : LivingEnitiy
 
     void Update()
     {
-        
+        if (photonView.IsMine)
+        {
+            float ratio = (float)curhp / playerState.hp;
+            hpBar.SetProgress(ratio);
+        }
     }
 
     protected override void OnHpChanged() // 자식들이 쓸 껍데기
@@ -33,6 +37,10 @@ public class PlayerHealth : LivingEnitiy
         // 음수가 안나오도록
         float ratio = Mathf.Clamp01((float)curhp / playerState.hp);
         hpBar.SetProgress(ratio);
+        if (ratio <= 0)
+        {
+            OnDeath();
+        }
     }
 
     protected override void OnDeath() // 죽었을 때
