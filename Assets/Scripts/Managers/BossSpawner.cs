@@ -10,6 +10,8 @@ public class BossSpawner : MonoBehaviourPun
     
     [SerializeField] private CinemachineCamera bossCam;
     [SerializeField] private PlayableDirector director;
+    
+    [SerializeField] private GameObject spawnEffect;
     public int diedCnt { get; private set; }
     
     private bool isSpawned = false;
@@ -40,6 +42,7 @@ public class BossSpawner : MonoBehaviourPun
     private void SpawnBoss()
     {
         GameObject boss = PhotonNetwork.InstantiateRoomObject("Enemies/"+"Boss",transform.position, transform.rotation, 0);
+        spawnEffect.SetActive(true);
         photonView.RPC("SpawnBossCinematic", RpcTarget.All);
     }
 
@@ -66,5 +69,7 @@ public class BossSpawner : MonoBehaviourPun
         yield return new WaitForSeconds(duration);
         GameManager.isCinematic = false;
         noise.enabled = false;
+        spawnEffect.SetActive(false);
     }
+    
 }
