@@ -100,7 +100,7 @@ public class EnemyNearAttack : MonoBehaviourPun
         if(GameManager.isCinematic) return;
         CheckStrikeBound();
     }
-    
+    // 애니메이션 이벤트
     public void StartNearHit()
     {
         if(!PhotonNetwork.IsMasterClient) return;
@@ -110,7 +110,7 @@ public class EnemyNearAttack : MonoBehaviourPun
         _enemyMove.agent.isStopped = true; // 공격하는 동안 걷지 않기
         strikeTargets.Clear(); // 새로운 공격
     }
-
+    // 애니메이션 이벤트
     public void EndNearHit()
     {
         if(!PhotonNetwork.IsMasterClient) return;
