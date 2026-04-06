@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class RockAnimMover : MonoBehaviour
+public class RockAnimMover : MonoBehaviourPun
 {
     [Header("방어")] [SerializeField] private GameObject shield;
     
@@ -12,7 +12,8 @@ public class RockAnimMover : MonoBehaviour
     private PlayerMovement playerMovement;
     private RockAttack rk;
     private Shield _shield;
-    
+    private RockFeedback feedback;
+    private Hammer hammer;
     void Start()
     {
         shieldRot = shield.transform.localRotation;
@@ -21,7 +22,9 @@ public class RockAnimMover : MonoBehaviour
         energyShield = shield.gameObject.transform.GetChild(0).gameObject;
         playerMovement = GetComponentInParent<PlayerMovement>();
         rk = GetComponentInParent<RockAttack>();
+        feedback = GetComponentInParent<RockFeedback>();
         _shield =  shield.GetComponent<Shield>();
+        hammer = GetComponentInChildren<Hammer>();
     }
     // 애니메이션 이벤트로 위치 변경
     public void OnShield()
@@ -69,17 +72,18 @@ public class RockAnimMover : MonoBehaviour
     {
         rk.QuakeJump();
     }
-    
-    public void OnHammerHit()
+    public void StartAttack()
     {
-        
-        Hammer hammer = GetComponentInChildren<Hammer>();
-        hammer.OnCollider();
+        feedback.BasicShotSound(); // 기본 공격 오디오
+        if(!photonView.IsMine) return;
+        hammer.isStrike = true;
+        hammer.hitTargets.Clear();
+        hammer.prevPos = hammer.center.position;
     }
 
-    public void OffHammerHit()
+    public void EndAttack()
     {
-        Hammer hammer = GetComponentInChildren<Hammer>();
-        hammer.OffCollider();
+        if(!photonView.IsMine) return;
+        hammer.isStrike = false;
     }
 }
