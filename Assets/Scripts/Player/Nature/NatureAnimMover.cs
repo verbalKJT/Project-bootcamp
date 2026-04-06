@@ -12,7 +12,6 @@ public class NatureAnimMover : MonoBehaviour
     public void NatureCannonFire()
     {
         natureManAttack.Fire();
-        feedback.SnareFireSound();
     }
     
     public void SummonWolf()
@@ -24,6 +23,5 @@ public class NatureAnimMover : MonoBehaviour
     public void SummonSnare()
     {
         natureManAttack.SnareAttack();
-        feedback.SnareFireSound();
     }
 }

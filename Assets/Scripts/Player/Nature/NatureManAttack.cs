@@ -81,6 +81,7 @@ public class NatureManAttack : PlayerAttack
 
     public void Fire()
     {
+        feedback.BasicShotSound(); // 기본 공격오디오 호춣
         if (photonView.IsMine)
         {
             // 생성 후 밣사
@@ -100,12 +101,13 @@ public class NatureManAttack : PlayerAttack
     // 애니메이션 이벤트로 호출할 소환 메소드
     public void Summon()
     {
+        
         if (!photonView.IsMine) return;
         foreach (Transform t in summonPoint)
         {
             // 소환 위치에 늑대 2개 소환
             GameObject wolfs = PhotonNetwork.Instantiate("Heroes/" + wolfName, t.position, Quaternion.identity);
-            feedback.WolfSpwanEffect(t.position);
+            feedback.photonView.RPC(nameof(NatureFeedback.SpawnWolfSummonEffect), RpcTarget.All, t.position);
             wolfs.GetComponent<Wolf>().SetSlot(t);
         }
     }
@@ -115,12 +117,14 @@ public class NatureManAttack : PlayerAttack
     {
         animator.SetTrigger("Snare");
         animator.SetBool("Summon", false); // 해줘야 Snare -> wolf로 안넘어감 제약조건
+        if (!photonView.IsMine) return;
         // 소환 타이밍은 애니메이션 이벤트로
     }
 
     // 애니메이션 이벤트에서 호출
     public void SnareAttack()
     {
+        feedback.SnareFireSound(); // 스네어 발사 오디오
         if (!photonView.IsMine) return;
         
         GameObject obj = PhotonNetwork.Instantiate("Heroes/"+snareObj.name, snareSPoint.position, Quaternion.identity);
