@@ -4016,6 +4016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossSpawner
   bossCam: {fileID: 2134288889}
   director: {fileID: 1182067613}
+  spawnEffect: {fileID: 508014586}
 --- !u!4 &1182067612
 Transform:
   m_ObjectHideFlags: 0
