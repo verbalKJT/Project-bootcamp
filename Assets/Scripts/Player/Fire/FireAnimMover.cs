@@ -41,7 +41,7 @@ public class FireAnimMover : MonoBehaviourPun
 
     public void StartAttack()
     {
-        feedback.BasicHitSound(); // 기본 공격 오디오
+        feedback.BasicShotSound(); // 기본 공격 오디오
         if(!photonView.IsMine) return;
         sword.isStrike = true;
         sword.hitTargets.Clear();
