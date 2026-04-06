@@ -10,6 +10,9 @@ public class Snare : MonoBehaviourPun
     private EnemyHealth target;
     
     private GameObject master;
+    
+    [Header("피격 시 효과")]
+    [SerializeField] private GameObject hitEffect;
 
     void Start()
     {
@@ -18,6 +21,8 @@ public class Snare : MonoBehaviourPun
     }
     private void OnTriggerEnter(Collider other)
     {
+        if(!photonView.IsMine) return;
+        Vector3 hitPos = other.ClosestPoint(transform.position);
         if (other.tag == "Monster")
         {
             if(!photonView.IsMine) return;
@@ -32,10 +37,12 @@ public class Snare : MonoBehaviourPun
             {
                 PhotonNetwork.Destroy(gameObject);
             }
+            photonView.RPC("SnareHitEffect", RpcTarget.All,hitPos);
         }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             LivingEnitiy target = other.GetComponent<BossHp>();
             target.TakeDamage(weaponData.damage);
+            photonView.RPC("SnareHitEffect", RpcTarget.All,hitPos);
         }    
         
     }
@@ -82,6 +89,15 @@ public class Snare : MonoBehaviourPun
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void SnareHitEffect(Vector3 hitPos)
+    {
+        if (hitEffect != null)
+        {
+            Instantiate(hitEffect, hitPos, Quaternion.identity);
         }
     }
 }

@@ -25,7 +25,8 @@ public class ElectricWire : MonoBehaviourPun
             player.TakeDamage(damage);
             if (PhotonNetwork.IsMasterClient)
             {
-                PhotonNetwork.Instantiate("Enemies/"+hitEffect.name,
+                // 네트워크에서 생성하면 괜히 Ping만 많아짐
+                Instantiate(hitEffect,
                     other.ClosestPoint(transform.position), Quaternion.identity);
             }
         }

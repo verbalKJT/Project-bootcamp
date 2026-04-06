@@ -3,16 +3,16 @@ using UnityEngine;
 public class NatureAnimMover : MonoBehaviour
 {
     private NatureManAttack natureManAttack;
-
-    
-    
+    private NatureFeedback feedback;
     void Start()
     {
         natureManAttack = GetComponentInParent<NatureManAttack>();
+        feedback = GetComponentInParent<NatureFeedback>();
     }
     public void NatureCannonFire()
     {
         natureManAttack.Fire();
+        feedback.SnareFireSound();
     }
     
     public void SummonWolf()
@@ -24,5 +24,6 @@ public class NatureAnimMover : MonoBehaviour
     public void SummonSnare()
     {
         natureManAttack.SnareAttack();
+        feedback.SnareFireSound();
     }
 }

@@ -73,6 +73,21 @@ MonoBehaviour:
   - ElectricWire
   - FallCrystal
   - SpawnBossCinematic
+  - HitEffect
+  - SwordHitEffect
+  - BasicHit
+  - ForceEffect
+  - ForceHitEffect
+  - DashSound
+  - ForceFireSound
+  - PlaySnareFire
+  - PlayWolfSpwan
+  - WolfBarkSound
+  - WolfSpwanSound
+  - SpawnForceHitEffect
+  - NatureBallHitEffect
+  - SnareHitEffect
+  - SpawnBaiscHitEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

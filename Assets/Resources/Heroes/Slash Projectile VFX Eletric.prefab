@@ -14750,6 +14750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e2556230ef5f40d2afd9e6021b7b30f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireForce
+  forceHitEffectPrefab: {fileID: 5435998012328932994, guid: d8703a33a4eb0b84a875202fde23e8f7, type: 3}
 --- !u!1 &3020920808856018716
 GameObject:
   m_ObjectHideFlags: 0
@@ -24450,7 +24451,7 @@ Transform:
   m_GameObject: {fileID: 3020920809472885599}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.6797966, y: 0.023684328, z: 0.24038482}
+  m_LocalPosition: {x: 2.4996934, y: 0.00009734631, z: 0.00000023841858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

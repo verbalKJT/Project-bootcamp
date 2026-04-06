@@ -7,7 +7,7 @@ public class NatureBall : MonoBehaviourPun
 {
     // Damage
     [Header("WeaponData")] public Weapon weaponData;
-    //[Header("피격 효과")] [SerializeField] private GameObject hitEffect;
+    [Header("피격 효과")] [SerializeField] private GameObject hitEffect;
 
     void Start()
     {
@@ -17,6 +17,8 @@ public class NatureBall : MonoBehaviourPun
 
     private void OnTriggerEnter(Collider other)
     {
+        if(!photonView.IsMine) return;
+        Vector3 hitPos = other.ClosestPoint(transform.position);
         if (other.tag == "Monster")
         {
             EnemyHealth target = other.GetComponent<EnemyHealth>();
@@ -31,10 +33,12 @@ public class NatureBall : MonoBehaviourPun
                 //PhotonNetwork.Destroy(hitEffect);
                 PhotonNetwork.Destroy(gameObject);
             }
+            photonView.RPC("NatureBallHitEffect",RpcTarget.All,hitPos);
         }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             LivingEnitiy target = other.GetComponent<BossHp>();
             target.TakeDamage(weaponData.damage);
+            photonView.RPC("NatureBallHitEffect", RpcTarget.All, hitPos);
         }    
     }
 
@@ -42,5 +46,14 @@ public class NatureBall : MonoBehaviourPun
     {
         yield return new WaitForSeconds(duration);
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC]
+    public void NatureBallHitEffect(Vector3 hitPos)
+    {
+        if (hitEffect != null)
+        {
+            Instantiate(hitEffect, hitPos, Quaternion.identity);
+        }
     }
 }

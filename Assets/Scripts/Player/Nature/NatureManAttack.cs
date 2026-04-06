@@ -18,7 +18,7 @@ public class NatureManAttack : PlayerAttack
     // 늑대 소환 
     private float summonTime = 20f;
     private const float summonCoolTime = 20f; // 15~20초 생각중
-    [SerializeField] private Transform[] summonPoint;
+    [SerializeField] public Transform[] summonPoint;
     [SerializeField] private string wolfName;
     
     [Header("Snare")]
@@ -32,11 +32,13 @@ public class NatureManAttack : PlayerAttack
     public override float SecSkillTime => summonTime;
     public override float SecSkillCool => summonCoolTime;
     
+    private NatureFeedback feedback;
     void Start()
     {
         base.Start();
         cannonName = cannon.name;
         cannonCoolTime = cannon.GetComponent<NatureBall>().weaponData.reloadTime;
+        feedback = gameObject.GetComponent<NatureFeedback>();
     }
 
 
@@ -103,7 +105,7 @@ public class NatureManAttack : PlayerAttack
         {
             // 소환 위치에 늑대 2개 소환
             GameObject wolfs = PhotonNetwork.Instantiate("Heroes/" + wolfName, t.position, Quaternion.identity);
-
+            feedback.WolfSpwanEffect(t.position);
             wolfs.GetComponent<Wolf>().SetSlot(t);
         }
     }

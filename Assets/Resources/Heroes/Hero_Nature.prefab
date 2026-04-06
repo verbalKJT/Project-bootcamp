@@ -1549,8 +1549,10 @@ GameObject:
   - component: {fileID: 8657635274204686235}
   - component: {fileID: 2972067422824206448}
   - component: {fileID: 1903594388838454389}
+  - component: {fileID: 4185845748573951404}
   - component: {fileID: 2085190032438506447}
   - component: {fileID: 1776132460068317325}
+  - component: {fileID: 8599368273155385108}
   m_Layer: 7
   m_Name: Hero_Nature
   m_TagString: Player
@@ -1702,6 +1704,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShowSKillIcon
   fistSkillSlotUI: {fileID: 6856598962197570616}
   secondSkillSlotUI: {fileID: 7212568365831509079}
+--- !u!114 &4185845748573951404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517480223028523657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e024b07010a48425aa98b1d74cb64879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NatureFeedback
+  audioSource: {fileID: 8599368273155385108}
+  hitEffect: {fileID: 6361997728236094490, guid: fd25cbdb7c54fa4478d443fd2bea4ef1, type: 3}
+  hitClip: {fileID: 0}
+  snareFireClip: {fileID: 0}
+  snareHitEffect: {fileID: 6126188424833946103, guid: a58aa9a78f2b45b45bb0f3e2e1e3ad3c, type: 3}
+  wolfSpwanEffect: {fileID: 7986504087968017091, guid: 12a56ee4630040c4eb17ae9707ed4cef, type: 3}
 --- !u!114 &2085190032438506447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1743,6 +1763,103 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!82 &8599368273155385108
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517480223028523657}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1533837381129316626
 GameObject:
   m_ObjectHideFlags: 0
@@ -2352,6 +2469,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 0
     Name: Snare
+  - Type: 4
+    SynchronizeType: 0
+    Name: Stun
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0

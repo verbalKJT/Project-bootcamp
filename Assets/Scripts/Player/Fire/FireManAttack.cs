@@ -8,7 +8,6 @@ public class FireManAttack : PlayerAttack
 {
     [Header("Sword.cs")] [SerializeField] private Sword sword;
     
-    
     private float forceTime = 7f;
     private const float fCoolTime = 7f; // 검기 쿨타임 
     public bool isCast = false;
@@ -21,11 +20,12 @@ public class FireManAttack : PlayerAttack
     public override float FirstSkillCool => dashCoolTime;
     public override float SecSkillTime => forceTime;
     public override float SecSkillCool => fCoolTime;
-    
-    
+
+    private FireFeedback _feedback;
     void Start()
     {
         base.Start();// 부모 Start 메서드 먼저 -> animator + PlayerMovement 할당
+        _feedback = GetComponent<FireFeedback>();
     }
     
     void Update()
@@ -34,7 +34,6 @@ public class FireManAttack : PlayerAttack
         if(GameManager.isCinematic) return;
         if (input)
         {
-            StartCoroutine(sword.IncreaseSword(1f));
             photonView.RPC("AttackAnim",RpcTarget.All);
         }
 
@@ -52,6 +51,7 @@ public class FireManAttack : PlayerAttack
         {
             dashTime = 0f;
             photonView.RPC("Dash",RpcTarget.All);
+           
         }
         dashTime += Time.deltaTime;// 대쉬 스킬 시간 재기 
     }
@@ -66,10 +66,11 @@ public class FireManAttack : PlayerAttack
     [PunRPC]
     public void Force()
     {
+        animator.SetBool("IsCast",true);
+        _feedback.ForceEffect(); // 아우라 효과
         if(!photonView.IsMine) return;
         // 못 움직이도록
         pm.canMove = false;
-        animator.SetBool("IsCast",true);
         
         // 애니메이션 이벤트로 플레이어 이동 활성화
     }
@@ -77,11 +78,14 @@ public class FireManAttack : PlayerAttack
     [PunRPC]
     public void Dash()
     {
+        animator.SetTrigger("Slide");
+        _feedback.DashSound();
+        Vector3 spawnPos = transform.position - transform.forward * 1.5f;
+        _feedback.DashEffect(spawnPos, transform.rotation);
         if (!photonView.IsMine) return;
         // 불맨은 캡슐 콜라이더 씀
         pm.canMove = false;
         Slide(dashDis);
-        animator.SetTrigger("Slide");
         // 애니메이션 이벤트로 플레이어 이동 활성화 + IsTrigger 해제
         pm.col.excludeLayers |= 1 << LayerMask.NameToLayer("Monster");
     }
