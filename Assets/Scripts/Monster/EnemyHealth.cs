@@ -99,8 +99,28 @@ public class EnemyHealth : LivingEnitiy
     }
 
     [PunRPC]
+    public void Is_Stun(bool isStun,float duration)
+    {
+        animator.SetBool("Stuned", isStun);
+        if (isStun)
+        {
+            StartCoroutine(SnareEffect(duration));
+        }
+    }
+    [PunRPC]
     public void Is_Stun(bool isStun)
     {
         animator.SetBool("Stuned", isStun);
+    }
+    
+    IEnumerator SnareEffect(float time)
+    {
+        // 3초정도 agent 이동 막기.
+        em.agent.isStopped = true;
+
+        yield return new WaitForSeconds(time);
+        // 속박 효과 해제
+        em.agent.isStopped = false;
+        photonView.RPC("Is_Stun", RpcTarget.All, false);
     }
 }
