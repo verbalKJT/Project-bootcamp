@@ -23,19 +23,23 @@ public class RockAttack : PlayerAttack
 
     private Shield _shield;
 
+    private RockFeedback _feedback;
+
     private int randDam = 40;
+
     void Start()
     {
         base.Start();
         ram = GetComponentInChildren<RockAnimMover>();
         _shield = GetComponentInChildren<Shield>();
+        _feedback = GetComponent<RockFeedback>();
     }
 
     void Update()
     {
         base.Update();
         if (!photonView.IsMine) return;
-        if(GameManager.isCinematic) return;
+        if (GameManager.isCinematic) return;
         if (input)
         {
             photonView.RPC("AttackAnim", RpcTarget.All);
@@ -43,7 +47,7 @@ public class RockAttack : PlayerAttack
 
         shieldInput = Input.GetMouseButton(1);
         bool shieldState = shieldInput && _shield.CanRaise;
-        
+
         if (shieldState != isShieldActive) // 쉴드가 파괴 되지 않았을 때만
         {
             isShieldActive = shieldState;
@@ -90,42 +94,56 @@ public class RockAttack : PlayerAttack
     [PunRPC]
     public void Earthquake(bool state)
     {
-        if (!photonView.IsMine) return;
-
         animator.SetBool("Earthquake", state);
     }
 
     public void QuakeJump()
     {
-        pm.rb.AddForce(transform.forward * 50f, ForceMode.VelocityChange);
-        pm.rb.AddForce(transform.up * 15f, ForceMode.VelocityChange);
+        _feedback.StartLandSound();
+        if (!photonView.IsMine) return;
+        pm.rb.AddForce(transform.forward * 32f, ForceMode.VelocityChange);
+        pm.rb.AddForce(transform.up * 12f, ForceMode.VelocityChange);
     }
 
     public void Landing()
     {
-        pm.rb.AddForce(Vector3.down * 50f, ForceMode.VelocityChange);
+        _feedback.EndLandSound();
+        if (photonView.IsMine)
+            pm.rb.AddForce(Vector3.down * 50f, ForceMode.VelocityChange);
+        
+        _feedback.LandEffect(FindLandPos());
+    }
+
+    private Vector3 FindLandPos()
+    {
+        Vector3 origin = transform.position;
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 15f,LayerMask.GetMask("Ground")))
+        {
+            return hit.point + Vector3.up * 0.03f;
+        }
+        return origin;
     }
 
     public void MakeAttackBound()
     {
-        LayerMask enemyLayer = LayerMask.GetMask("Monster","Boss");
+        LayerMask enemyLayer = LayerMask.GetMask("Monster", "Boss");
         Collider[] targets = Physics.OverlapSphere(transform.position, 15f, enemyLayer);
 
         foreach (Collider target in targets)
         {
             if (target != null)
             {
-                if(target.gameObject.layer == LayerMask.NameToLayer("Boss"))
+                if (target.gameObject.layer == LayerMask.NameToLayer("Boss"))
                 {
                     LivingEnitiy b = target.gameObject.GetComponent<BossHp>();
                     b.TakeDamage(randDam);
-                }else if(target.gameObject.layer == LayerMask.NameToLayer("Monster"))
+                }
+                else if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
                 {
                     LivingEnitiy t = target.GetComponent<EnemyHealth>();
                     t.TakeDamage(randDam);
                     t.photonView.RPC("Is_Hit", RpcTarget.All);
                 }
-             
             }
         }
     }
