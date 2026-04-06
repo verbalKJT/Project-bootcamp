@@ -61,13 +61,13 @@ public class Wolf : Summoned
         collider = GetComponent<BoxCollider>();
         feedback = GetComponent<WolfFeedback>();
         
-        photonView.RPC("WolfSummoned", RpcTarget.All);
-        
+        animator.SetTrigger("Summoned");
+        feedback.WolfSpwanSound(); 
         // 늑대 주인 등록
         master = PlayerMovement.player;
         
-        if (PhotonNetwork.IsMasterClient)
-            StartCoroutine(DeSpawn(15f));
+        if (photonView.IsMine)
+            StartCoroutine(DeSpawn(10f));
     }
 
     // 상태 체크
@@ -241,13 +241,6 @@ public class Wolf : Summoned
     {
         // 플레이어 양옆 중 하나 늑대마다 다름
         masterTransform = t;
-    }
-
-    [PunRPC]
-    private void WolfSummoned()
-    {
-        animator.SetTrigger("Summoned");
-        feedback.WolfSpwanSound(); 
     }
 
     // 충돌로 피격 처리
