@@ -21,7 +21,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
     // 생성된 무기
     private GameObject fire;
     private Rock fireRock;
-    
+
 
     private bool target_Died = false;
 
@@ -31,6 +31,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
     private EnemyMove em;
     private EnemyHealth _enemyHealth;
     private EnemySensor _enemySensor;
+    private MonsterFeedBack feedback;
 
     private void ClearProjectileRefs()
     {
@@ -43,16 +44,17 @@ public class EnemyRangeAttack : MonoBehaviourPun
         em = GetComponent<EnemyMove>();
         _enemyHealth = GetComponent<EnemyHealth>();
         _enemySensor = GetComponent<EnemySensor>();
+        feedback = GetComponent<MonsterFeedBack>();
         RandomCool(); // 공격 쿨 갱신
     }
 
     void FixedUpdate()
     {
         if (!photonView.IsMine) return;
-        if(GameManager.isCinematic) return;
+        if (GameManager.isCinematic) return;
         rangedAttack += Time.fixedDeltaTime;
         // CriticalObj를 찾았다면 원거리 공격 안함.
-        if(_enemySensor.isCriticalTarget) return;
+        if (_enemySensor.isCriticalTarget) return;
         if (_enemySensor.curTarget != null && _enemySensor.distanceToTarget <= rangedAttackRange)
         {
             target_Died = _enemySensor.curTarget.GetComponent<PlayerHealth>().isDead;
@@ -72,6 +74,8 @@ public class EnemyRangeAttack : MonoBehaviourPun
     [PunRPC]
     private void RangeAttack(bool state)
     {
+        if (state)
+            feedback.CallRangeClip();
         _enemyHealth.animator.SetBool("RangeAttack", state);
     }
 
@@ -112,6 +116,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
             {
                 PhotonNetwork.Destroy(fire);
             }
+
             ClearProjectileRefs();
         }
     }
@@ -129,6 +134,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
             {
                 PhotonNetwork.Destroy(fire);
             }
+
             ClearProjectileRefs();
             return;
         }
