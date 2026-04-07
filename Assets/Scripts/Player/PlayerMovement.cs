@@ -15,8 +15,13 @@ public class PlayerMovement : PlayerInput
 
     [Header("플레이어 시네머신 캠")] [SerializeField]
     private CinemachineCamera playerCam;
-
-    [Header("Terrain 레이어")] [SerializeField]
+    private CinemachineThirdPersonFollow thirdPersonFollow;
+    [Header("카메라 수직 이동")]
+    [SerializeField] private float cameraSpeed = 20f;
+    [SerializeField] private float maxShoulderOffsetY = 16f;
+    
+    
+    [Header("땅 레이어")] [SerializeField]
     private LayerMask groundLayer;
 
     public bool isGrounded;
@@ -24,7 +29,8 @@ public class PlayerMovement : PlayerInput
     public bool canMove = true;
 
     private Quaternion targetRotation;
-
+    
+    
 
     void Awake()
     {
@@ -35,9 +41,9 @@ public class PlayerMovement : PlayerInput
             var vcam = FindAnyObjectByType<CinemachineCamera>();
 
             playerCam = vcam;
-
+            
             playerCam.Follow = transform;
-
+            thirdPersonFollow = playerCam.GetComponent<CinemachineThirdPersonFollow>();
             // 마우스 커서 중앙 고정 및 안보이게
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -60,6 +66,7 @@ public class PlayerMovement : PlayerInput
     void Update()
     {
         base.Update();
+        
         if (canMove)
         {
             if (h != 0 || v != 0)
@@ -82,11 +89,20 @@ public class PlayerMovement : PlayerInput
                 photonView.RPC("JumpAnim", RpcTarget.All);
             }
         }
-
+        // 카메라 상하
+        // 맥 -> 왼 command  / 윈도우 -> 왼 alt
+        if((Input.GetKey(KeyCode.LeftAlt) ||  Input.GetKey(KeyCode.LeftCommand))
+           && thirdPersonFollow !=null)
+        {
+            Vector3 shoulder = thirdPersonFollow.ShoulderOffset;
+            shoulder.y += mouseY * cameraSpeed;
+            shoulder.y = Mathf.Clamp(shoulder.y, 0, maxShoulderOffsetY);
+            thirdPersonFollow.ShoulderOffset = shoulder;
+        }
+        
         // 회전
         Quaternion rot = Quaternion.Euler(0, mouseX * playerState.rotationSpeed, 0);
         rb.MoveRotation(rb.rotation * rot);
-        // 마우스 상하 로직 필요할 듯
 
         isGrounded = Grounded();
     }
