@@ -54,7 +54,7 @@ public class BossHp : LivingEnitiy
     protected override void OnDeath() // 죽었을 때
     {  
         BossDead =  true;
-        feedBack.CallDieClip();
+        feedBack.CallDieClipAndEffect();
         
         // RPC -> 중복일 수 있음.
         CallDieAnim();
@@ -67,7 +67,7 @@ public class BossHp : LivingEnitiy
     public void CallDieAnim()
     {
         // 애니메이션 변경 후
-        _animator.SetTrigger("IsDead");
+        _animator.SetTrigger("Dead");
         BossDead = true;    
         StartCoroutine(DestroySelf(2f));
     }
