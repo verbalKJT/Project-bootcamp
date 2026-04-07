@@ -45,7 +45,7 @@ public class LivingEnitiy : MonoBehaviourPun, IPunObservable
     {
         if (!isDead)
         {
-            curhp -= damage; // 체력 빼기
+            curhp = Mathf.Max(curhp-damage,0); // 체력 빼기
             OnHpChanged(); // UI 갱신
             if (curhp <= 0)
             {
@@ -60,8 +60,8 @@ public class LivingEnitiy : MonoBehaviourPun, IPunObservable
     {
         if (!isDead)
         {
-            curhp -= damage; // 체력 빼기
-            OnHpChanged(); // UI 갱신
+            curhp = Mathf.Max(curhp-damage,0);
+            OnHpChanged(); // UI 갱신 
             if (curhp <= 0)
             {
                 isDead = true;
