@@ -3,7 +3,7 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
-public class CriticalObj : MonoBehaviourPun, IPunObservable
+public class CriticalObj : MonoBehaviourPunCallbacks, IPunObservable
 {
     public int maxhp { get; private set; } = 1000;
     public int curHp { get; private set; }
@@ -12,6 +12,11 @@ public class CriticalObj : MonoBehaviourPun, IPunObservable
     public event Action <int,int> onHpChange;
     
     private ReflectObj _reflectObj;
+    
+    [SerializeField] private GameObject explosionEffect;
+    [SerializeField] private string overSceneName = "Over";
+
+    public static bool isDestroyed { get; private set; } = false;
     
     void Start()
     {
@@ -37,25 +42,40 @@ public class CriticalObj : MonoBehaviourPun, IPunObservable
     public void TakeDamageObj(int damage)
     {
         if(!PhotonNetwork.IsMasterClient) return;
+        if (isDestroyed) return;
         
-        curHp -= damage;
+        curHp = Mathf.Max(curHp - damage, 0);
         // 이벤트 발생
         onHpChange?.Invoke(curHp, maxhp);
+
+        if (curHp == 0)
+        {
+            photonView.RPC(nameof(DestroyObj), RpcTarget.All);
+        }
     }
 
     [PunRPC]
     public void DestroyObj()
     {
-        if(!PhotonNetwork.IsMasterClient) return;
+        if (isDestroyed) return;
+
+        isDestroyed = true;
+
+        if (explosionEffect != null)
+        {
+            Instantiate(explosionEffect, transform.position, Quaternion.identity);
+        }
+
         StartCoroutine(GameOver(3f));
-        // 폭팔 효과
     }
 
     IEnumerator GameOver(float time)
     {
-        // 게임 종료 전 할일
-        
         yield return new WaitForSeconds(time);
-        PhotonNetwork.Destroy(gameObject);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel(overSceneName);
+        }
     }
 }
