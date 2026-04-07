@@ -3,11 +3,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ToEnding : MonoBehaviourPunCallbacks
-{
-    [SerializeField] private string gameoverSceneName;
-    private bool isLeaving;
+{ 
+    private string gameoverSceneName = "Clear";
+    private bool isLeaving = false;
     void OnTriggerEnter(Collider other)
     {
+        if(!BossHp.BossDead) return;
         if(isLeaving)  return;
         if(!other.CompareTag("Player")) return;
         PlayerHealth player = other.GetComponentInParent<PlayerHealth>();

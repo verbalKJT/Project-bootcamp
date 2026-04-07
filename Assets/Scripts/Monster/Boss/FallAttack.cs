@@ -12,7 +12,7 @@ public class FallAttack : MonoBehaviourPun
     public void CallFallAttack()
     {
         if (!PhotonNetwork.IsMasterClient) return;
-        
+        if (CriticalObj.isDestroyed) return;
         int rand = Random.Range(0, 10);
 
         if (rand < 7 && BossSensor.Instance != null && BossSensor.Instance.playerTransforms.Count > 0)

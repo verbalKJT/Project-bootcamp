@@ -45,7 +45,10 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     }
     void FixedUpdate()
     {
+        // obj 파괴 or boss Clear
+        if(CriticalObj.isDestroyed || BossHp.BossDead)return;
         if (!PhotonNetwork.IsMasterClient) return;
+        
         // 설정한 수 만큼 보다 살아있는 개체가 적다면 
         if (CheckMonCnt() && !isSpawning)
         {

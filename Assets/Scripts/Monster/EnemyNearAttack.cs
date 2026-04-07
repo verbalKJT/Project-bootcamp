@@ -46,6 +46,9 @@ public class EnemyNearAttack : MonoBehaviourPun
     void FixedUpdate()
     {
         if (!photonView.IsMine) return;
+        // obj 파괴 or boss Clear
+        if(CriticalObj.isDestroyed || BossHp.BossDead)return;
+        if (GameManager.isCinematic) return;
         nearAttackTime += Time.fixedDeltaTime; // 공격 쿨 재기
 
         if (_enemySensor.curTarget != null && _enemySensor.distanceToTarget <= nearAttackRange)

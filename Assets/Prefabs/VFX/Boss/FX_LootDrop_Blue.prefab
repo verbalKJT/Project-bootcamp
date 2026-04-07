@@ -28998,7 +28998,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -29038,7 +29038,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39a16e9d1dc374341b514e437518c43c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ToEnding
-  GameoverSceneName: 
 --- !u!1 &4487081461202973391
 GameObject:
   m_ObjectHideFlags: 0
