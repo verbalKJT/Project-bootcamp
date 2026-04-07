@@ -22,12 +22,12 @@ public class ElectricWire : MonoBehaviourPun
         if (collisionMask == LayerMask.NameToLayer("Player"))
         {
             PlayerHealth player = other.GetComponent<PlayerHealth>();
-            player.TakeDamage(damage);
             if (PhotonNetwork.IsMasterClient)
             {
+                Vector3 hitPoint = other.ClosestPoint(transform.position);
+                player.TakeDamage(damage);
+                photonView.RPC("ElectricHit", RpcTarget.All,hitPoint);
                 // 네트워크에서 생성하면 괜히 Ping만 많아짐
-                Instantiate(hitEffect,
-                    other.ClosestPoint(transform.position), Quaternion.identity);
             }
         }
     }
@@ -36,5 +36,12 @@ public class ElectricWire : MonoBehaviourPun
     {
         yield return new WaitForSeconds(waitTime);
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    [PunRPC]
+    public void ElectricHit(Vector3 hitPoint)
+    {
+        Instantiate(hitEffect,hitPoint
+            , Quaternion.identity);
     }
 }
