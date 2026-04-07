@@ -51,7 +51,9 @@ public class EnemyRangeAttack : MonoBehaviourPun
     void FixedUpdate()
     {
         if (!photonView.IsMine) return;
-        if (GameManager.isCinematic) return;
+        // obj 파괴 or boss Clear
+        if(CriticalObj.isDestroyed || BossHp.BossDead)return;
+        if(CriticalObj.isDestroyed) return;
         rangedAttack += Time.fixedDeltaTime;
         // CriticalObj를 찾았다면 원거리 공격 안함.
         if (_enemySensor.isCriticalTarget) return;

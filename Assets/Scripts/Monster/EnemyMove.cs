@@ -46,6 +46,12 @@ public class EnemyMove : MonoBehaviourPun
     }
     private IEnumerator GotoDestination(int index)
     {
+        // obj 파괴 or boss Clear
+        if(CriticalObj.isDestroyed || BossHp.BossDead)
+        {
+            agent.isStopped = true;
+            StopCoroutine(GotoDestination(index));
+        }
         agent.SetDestination(movePoint[index].position);
         //경로를 계산 중이거나, 남은 거리가 정지 거리보다 크면 계속 기다림
         while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
