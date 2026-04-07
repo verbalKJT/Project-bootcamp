@@ -284,6 +284,7 @@ GameObject:
   - component: {fileID: 1123089309323613863}
   - component: {fileID: -7785979966042137494}
   - component: {fileID: 1345454280712618063}
+  - component: {fileID: 195956192736968079}
   - component: {fileID: 5707275649698584725}
   - component: {fileID: 3859106144226781074}
   m_Layer: 6
@@ -367,7 +368,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -530,6 +531,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   <firePos>k__BackingField: {fileID: 975670660067197314}
   <weapon>k__BackingField: {fileID: 2259493615913689608, guid: 514c9d8c7d0a2473f9ac8286cdf12740, type: 3}
+--- !u!114 &195956192736968079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4787734284849576031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18085edff60464cb28e94feb5c28a056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterFeedBack
+  audioSource: {fileID: 5401562091338456196}
+  nearClip: {fileID: 8300000, guid: 4b67a96cfb65b4180afe0e900ae95ef9, type: 3}
+  rangeClip: {fileID: 8300000, guid: 8f54cb392a8fc47d9b39b2658d162140, type: 3}
+  dieClip: {fileID: 8300000, guid: ef5b7ae80f2e6493093da406d27c8af9, type: 3}
+  dieEffect: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
 --- !u!114 &5707275649698584725
 MonoBehaviour:
   m_ObjectHideFlags: 0

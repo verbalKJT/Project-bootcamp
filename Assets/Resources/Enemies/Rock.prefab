@@ -97,7 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8768abc92527e4d589400136d580a094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rock
-  hitEffect: {fileID: 0}
+  hitEffect: {fileID: 1758473627833946668, guid: 06b01faa886634375bbb9c35c1f5023a, type: 3}
+  difClip: {fileID: 8300000, guid: b7b5a6156961bac44a67504d42ce6fcf, type: 3}
 --- !u!114 &4187372419010425299
 MonoBehaviour:
   m_ObjectHideFlags: 0
