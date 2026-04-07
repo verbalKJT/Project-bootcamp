@@ -389,6 +389,7 @@ MonoBehaviour:
   bossFallClip: {fileID: 8300000, guid: 70902b48c720742d68f19e6aa331004d, type: 3}
   bossElecClip: {fileID: 8300000, guid: 190e4dbb701f6458fa058689b6d4cb1e, type: 3}
   bossDieClip: {fileID: 8300000, guid: cea42f050ca8f444c89b5eb47bd450b0, type: 3}
+  bossDieEffect: {fileID: 3621047873860463696, guid: fb3b9b0b33d48c64c8c11e01dbe71caa, type: 3}
 --- !u!114 &1298491883025628511
 MonoBehaviour:
   m_ObjectHideFlags: 0

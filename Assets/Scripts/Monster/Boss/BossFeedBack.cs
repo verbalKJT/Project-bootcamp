@@ -15,9 +15,10 @@ public class BossFeedBack : MonoBehaviourPun
     [Header("전깃줄 시작 오디오")]
     [SerializeField] private AudioClip bossElecClip;
     
-    [Header("보스 사망 오디오")]
+    [Header("보스 사망 오디오 및 효과")]
     [SerializeField] private AudioClip bossDieClip;
-
+    [SerializeField] private GameObject bossDieEffect;
+    
     public void CallSpawnClip()
     {
         if(bossSpawnClip != null)
@@ -36,9 +37,11 @@ public class BossFeedBack : MonoBehaviourPun
             audioSource.PlayOneShot(bossElecClip);
     }
 
-    public void CallDieClip()
+    public void CallDieClipAndEffect()
     {
         if(bossDieClip != null)
             audioSource.PlayOneShot(bossDieClip);
+        if(bossDieEffect != null)
+            Instantiate(bossDieEffect, transform.position, Quaternion.identity);
     }
 }
