@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c817bb960f4417284f9c13b105c1cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TheWall
+  setEffect: {fileID: 5610010966355794069, guid: 803ecf87f61d9fb4f84ba6319ba95c9c, type: 3}
 --- !u!1001 &4792276286131647679
 PrefabInstance:
   m_ObjectHideFlags: 0

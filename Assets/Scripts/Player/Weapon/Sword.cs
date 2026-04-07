@@ -13,7 +13,7 @@ public class Sword : MonoBehaviourPun
     [Header("검 중앙")] public Transform center;
     public bool isStrike = false;
     public Vector3 prevPos;
-    public HashSet<Collider> hitTargets = new HashSet<Collider>();
+    public HashSet<int> hitTargets = new HashSet<int>();
 
     private GameObject swordForce;
 
@@ -63,12 +63,14 @@ public class Sword : MonoBehaviourPun
             {
                 Collider hitCol = hit.collider;
 
-                if (hitTargets.Contains(hitCol)) continue;
-
-                hitTargets.Add(hitCol);
-
                 LivingEnitiy target = hitCol.GetComponentInParent<LivingEnitiy>();
                 if (target == null) continue;
+                
+                int targetViewID = target.photonView.ViewID;
+                if (hitTargets.Contains(targetViewID)) continue;
+
+                hitTargets.Add(targetViewID);
+                
 
                 if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
                 {
@@ -76,7 +78,8 @@ public class Sword : MonoBehaviourPun
                 }
 
                 target.TakeDamage(weaponData.damage); 
-                feedback.photonView.RPC("SpawnBaiscHitEffect", RpcTarget.All,hit.point);
+                Vector3 hitPos = hitCol.ClosestPoint(curPos);
+                feedback.photonView.RPC("SpawnBaiscHitEffect", RpcTarget.All,hitPos);
             }
         }
 

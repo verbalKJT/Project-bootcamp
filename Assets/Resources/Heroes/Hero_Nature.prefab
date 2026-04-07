@@ -1717,9 +1717,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NatureFeedback
   audioSource: {fileID: 8599368273155385108}
+  shotClip: {fileID: 8300000, guid: 1d74880bed4586644a16a79a2d9dc8af, type: 3}
   hitEffect: {fileID: 6361997728236094490, guid: fd25cbdb7c54fa4478d443fd2bea4ef1, type: 3}
-  hitClip: {fileID: 0}
-  snareFireClip: {fileID: 0}
+  snareFireClip: {fileID: 8300000, guid: 83829ff414f47a048b5387e4ab33571c, type: 3}
   snareHitEffect: {fileID: 6126188424833946103, guid: a58aa9a78f2b45b45bb0f3e2e1e3ad3c, type: 3}
   wolfSpwanEffect: {fileID: 7986504087968017091, guid: 12a56ee4630040c4eb17ae9707ed4cef, type: 3}
 --- !u!114 &2085190032438506447

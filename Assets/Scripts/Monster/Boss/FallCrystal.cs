@@ -9,16 +9,17 @@ public class FallCrystal : MonoBehaviourPun
 
     private Rigidbody rb;
 
+    [SerializeField] private GameObject spawnEffect;
     [SerializeField] private GameObject particle; // 효과
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = true;
-
+        Instantiate(spawnEffect, transform.position + Vector3.up, Quaternion.identity);
         rb.AddForce(Vector3.down * 10f, ForceMode.VelocityChange);
 
-        StartCoroutine(DestroySelf(3f));
+        StartCoroutine(DestroySelf(2f));
     }
 
     void OnCollisionEnter(Collision collision)
@@ -26,28 +27,27 @@ public class FallCrystal : MonoBehaviourPun
         LayerMask collisionMask = collision.gameObject.layer;
 
         LayerMask elseMask = LayerMask.GetMask("Ground", "Wall", "NavMesh");
-        
-        if(!PhotonNetwork.IsMasterClient) return;
-        
+
+        if (!PhotonNetwork.IsMasterClient) return;
+        Vector3 exactHitPoint = collision.contacts[0].point;
         if (collisionMask == LayerMask.NameToLayer("Player"))
         {
             PlayerHealth player = collision.gameObject.GetComponent<PlayerHealth>();
             player.TakeDamage(damage);
-            DestroyCrystal();
+            photonView.RPC("FallHit", RpcTarget.All, exactHitPoint);
         }
         else if (collisionMask == LayerMask.NameToLayer("Crystal"))
         {
             CriticalObj ctx = collision.gameObject.GetComponent<CriticalObj>();
             ctx.TakeDamageObj(damage);
-            DestroyCrystal();
-
-        }else if (collisionMask == LayerMask.NameToLayer("Ground"))
-        {
-            // 충돌이 발생한 가장 첫번쨰 포인트
-            Vector3 exactHitPoint = collision.contacts[0].point;
-            Instantiate(particle, exactHitPoint, Quaternion.identity);
-            DestroyCrystal();
+            photonView.RPC("FallHit", RpcTarget.All, exactHitPoint);
         }
+        else
+        {
+            photonView.RPC("FallHit", RpcTarget.All, exactHitPoint);
+        }
+
+        DestroyCrystal();
     }
 
     public void DestroyCrystal()
@@ -60,5 +60,11 @@ public class FallCrystal : MonoBehaviourPun
     {
         yield return new WaitForSeconds(time);
         DestroyCrystal();
+    }
+
+    [PunRPC]
+    public void FallHit(Vector3 hitPoint)
+    {
+        Instantiate(particle, hitPoint, Quaternion.identity);
     }
 }

@@ -9839,6 +9839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ef255732174ed790c963109d6638bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallCrystal
+  spawnEffect: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
   particle: {fileID: 5374757574983774937, guid: b1ae5055f08b8284d9e996465d1d37e3, type: 3}
 --- !u!114 &6837289702244406963
 MonoBehaviour:

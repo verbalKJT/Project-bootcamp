@@ -19,7 +19,8 @@ public class FireForce : MonoBehaviourPun
 
         // 시작과 동시에 약간 위로 힘 주기
         // 생성될 때 앞으로 가는 힘은 이미 받아져있는 상태임
-        rb.AddForce(Vector3.up * initalDir, ForceMode.Impulse);
+        if (photonView.IsMine)
+            rb.AddForce(Vector3.up * initalDir, ForceMode.Impulse);
     }
 
     private void OnTriggerEnter(Collider other)

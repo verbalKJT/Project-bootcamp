@@ -22,18 +22,16 @@ public class NatureBall : MonoBehaviourPun
         if (other.tag == "Monster")
         {
             EnemyHealth target = other.GetComponent<EnemyHealth>();
-            //hitEffect = PhotonNetwork.Instantiate(hitEffect.name, transform.position, transform.rotation);
             target.photonView.RPC("Is_Hit", RpcTarget.All);
 
             target.TakeDamage(weaponData.damage);
 
+            photonView.RPC("NatureBallHitEffect",RpcTarget.All,hitPos);
             //몬스터한테 맞았으면 삭제 // 네트워크 오브젝트 삭제는 서버 역할
             if (PhotonNetwork.IsMasterClient)
             {
-                //PhotonNetwork.Destroy(hitEffect);
                 PhotonNetwork.Destroy(gameObject);
             }
-            photonView.RPC("NatureBallHitEffect",RpcTarget.All,hitPos);
         }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             LivingEnitiy target = other.GetComponent<BossHp>();

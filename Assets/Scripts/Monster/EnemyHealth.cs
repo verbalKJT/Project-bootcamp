@@ -17,23 +17,17 @@ public class EnemyHealth : LivingEnitiy
     public Animator animator;
 
     public EnemyMove em;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private MonsterFeedBack feedback;
     void Start()
     {
        curhp = foreast_state.hp; // 체력 초기화
-       hpBar.fillAmount = curhp;
+       hpBar.fillAmount = curhp; 
        em = GetComponent<EnemyMove>();
-       
+       feedback = GetComponent<MonsterFeedBack>();
        // 생성 후 스포너에 자기 자신 추가
        EnemySpawner.enemies.Add(this); 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
    
     protected override void OnHpChanged() // 자식들이 쓸 껍데기
     {
@@ -51,8 +45,8 @@ public class EnemyHealth : LivingEnitiy
     protected override void OnDeath() // 죽었을 때
     {
         // RPC TakeDamToMonster에서 IsDead를 체크하고 들어온 상태
-        photonView.RPC("CallDieAnim",RpcTarget.All);
-        
+        CallDieAnim();
+        feedback.DieClip();
         // 사망 시 
         if (EnemySpawner.enemies.Contains(this))
         {
@@ -68,16 +62,14 @@ public class EnemyHealth : LivingEnitiy
     {
         animator.SetTrigger("IsHit");
     }
-
-    [PunRPC]
+    
     public void CallDieAnim()
     {
         // 애니메이션 변경 후
         animator.SetTrigger("IsDead");
         // agent 정지
-        
         em.agent.Stop();
-        StartCoroutine(DestroySelf(2f));
+        feedback.DieEffect(transform.position);
     }
 
     //  애니메이션 이벤트
@@ -85,7 +77,7 @@ public class EnemyHealth : LivingEnitiy
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.Destroy(gameObject);
+            StartCoroutine(DestroySelf(2f));
         }
     }
 
@@ -99,8 +91,28 @@ public class EnemyHealth : LivingEnitiy
     }
 
     [PunRPC]
+    public void Is_Stun(bool isStun,float duration)
+    {
+        animator.SetBool("Stuned", isStun);
+        if (isStun)
+        {
+            StartCoroutine(SnareEffect(duration));
+        }
+    }
+    [PunRPC]
     public void Is_Stun(bool isStun)
     {
         animator.SetBool("Stuned", isStun);
+    }
+    
+    IEnumerator SnareEffect(float time)
+    {
+        // 3초정도 agent 이동 막기.
+        em.agent.isStopped = true;
+
+        yield return new WaitForSeconds(time);
+        // 속박 효과 해제
+        em.agent.isStopped = false;
+        photonView.RPC("Is_Stun", RpcTarget.All, false);
     }
 }

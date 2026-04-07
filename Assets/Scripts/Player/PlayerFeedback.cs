@@ -6,7 +6,7 @@ public class PlayerFeedback : MonoBehaviourPun
     [Header("공용 오디오")] [SerializeField] protected AudioSource audioSource;
 
     [Header("기본공격 시 효과 및 오디오")]
-    [SerializeField] private AudioClip hitClip;
+    [SerializeField] private AudioClip shotClip;
     [SerializeField] private GameObject hitEffect;
     
     public void BasicHit(Vector3 hitPos)
@@ -21,9 +21,9 @@ public class PlayerFeedback : MonoBehaviourPun
         BasicHit(hitPos);
     }
 
-    public void BasicHitSound()
+    public void BasicShotSound()
     {
-        if (hitClip !=  null)
-            audioSource.PlayOneShot(hitClip);
+        if (shotClip !=  null)
+            audioSource.PlayOneShot(shotClip);
     }
 }

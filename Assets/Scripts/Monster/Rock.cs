@@ -11,7 +11,7 @@ public class Rock : MonoBehaviourPun, IPunInstantiateMagicCallback
     private EnemyRangeAttack era;
 
     [SerializeField] private GameObject hitEffect;
-
+    [SerializeField] private AudioClip difClip;
     void Start()
     {
         StartCoroutine(DestroySelf(6f));
@@ -48,20 +48,19 @@ public class Rock : MonoBehaviourPun, IPunInstantiateMagicCallback
             Debug.Log(other.gameObject.name);
             LivingEnitiy player = other.GetComponent<PlayerHealth>();
             player.TakeDamagePlayer(damage);
-
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
             // effect 생성.
-            
+            photonView.RPC("SpawnHitWire", RpcTarget.All, hitPoint);
             PhotonNetwork.Destroy(gameObject);
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("PlayerWeapon"))
         {
-            Debug.Log(other.gameObject.name);
             Shield shield = other.GetComponentInParent<Shield>();
-            Debug.Log("피격전 " + shield.CurrentHp);
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
             if (shield != null)
                 shield.TakeShieldDamage(damage);
-
-            Debug.Log("피격후 " + shield.CurrentHp);
+            photonView.RPC("SpawnDifEffect", RpcTarget.All, hitPoint);
+            
             PhotonNetwork.Destroy(gameObject);
         }
     }
@@ -73,5 +72,23 @@ public class Rock : MonoBehaviourPun, IPunInstantiateMagicCallback
         {
             PhotonNetwork.Destroy(gameObject);
         }
+    }
+
+    [PunRPC]
+    public void SpawnDifEffect(Vector3 hitPoint)
+    {
+       GameObject effect = Instantiate(hitEffect, hitPoint, Quaternion.identity);
+       AudioSource audioSource = effect.GetComponent<AudioSource>();
+       if (audioSource != null)
+       {
+           audioSource.Stop();
+           audioSource.PlayOneShot(difClip);
+       }
+    }
+
+    [PunRPC]
+    public void SpawnHitWire(Vector3 hitPoint)
+    {
+        Instantiate(hitEffect, hitPoint, Quaternion.identity);
     }
 }

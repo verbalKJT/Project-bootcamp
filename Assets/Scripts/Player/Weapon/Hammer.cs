@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
@@ -6,37 +7,61 @@ public class Hammer : MonoBehaviourPun
     [SerializeField] public Weapon weaponData;
     
     private BoxCollider hammerCollider;
+    
+    private RockFeedback feedback;
+    [Header("해머 중앙")] public Transform center;
+    public bool isStrike = false;
+    public Vector3 prevPos;
+    public HashSet<int> hitTargets = new HashSet<int>();
+
     void Start()
     {
+        feedback = GetComponentInParent<RockFeedback>();
         hammerCollider = GetComponent<BoxCollider>();
         // 초기 비활성화
         hammerCollider.enabled = false; 
     }
-
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
-        if (other.tag == "Monster")
-        {
-            // OnTriggerEnter 호출이 Update에서 자기 자신 가능하게 바꿔 놓음
-            LivingEnitiy target = other.GetComponent<EnemyHealth>();
-            // 모두에게 맞은 애니메이션 출력
-            target.photonView.RPC("Is_Hit", RpcTarget.All);
-            // 데미치 처리
-            target.TakeDamage(weaponData.damage + 40); // 공격
-        }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
-        {
-            LivingEnitiy target = other.GetComponent<BossHp>();
-            target.TakeDamage(weaponData.damage);
-        }    
+        if (!photonView.IsMine || !isStrike) return;
+        CheckStrikeBound();
     }
-    public void OnCollider()
+    public void CheckStrikeBound()
     {
-        // 공격할 때만 -> AnimEventMover로 콜라이더 키기
-        hammerCollider.enabled = true;
-    }
+        Vector3 curPos = center.position;
 
-    public void OffCollider()
-    {
-        hammerCollider.enabled = false;
+        Vector3 direction = curPos - prevPos;
+        float distance = direction.magnitude;
+
+        if (distance > 0)
+        {
+            int hitMask = LayerMask.GetMask("Monster", "Boss");
+
+            RaycastHit[] hits = Physics.SphereCastAll(prevPos, 1.5f, direction.normalized, distance, hitMask);
+
+            foreach (RaycastHit hit in hits)
+            {
+                Collider hitCol = hit.collider;
+
+                LivingEnitiy target = hitCol.GetComponentInParent<LivingEnitiy>();
+                if (target == null) continue;
+
+                int targetID = target.photonView.ViewID;
+                if (hitTargets.Contains(targetID)) continue;
+
+                hitTargets.Add(targetID);
+                
+                if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
+                {
+                    target.photonView.RPC("Is_Hit", RpcTarget.All);
+                }
+
+                target.TakeDamage(weaponData.damage); 
+                Vector3 hitPos = hitCol.ClosestPoint(curPos);
+                feedback.photonView.RPC("SpawnBaiscHitEffect", RpcTarget.All,hitPos);
+            }
+        }
+
+        prevPos = curPos;
     }
 }

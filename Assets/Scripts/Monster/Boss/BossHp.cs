@@ -16,15 +16,19 @@ public class BossHp : LivingEnitiy
     [SerializeField] private ProgressBar hpBar;
 
     private BossAttack _bossAttack;
+    private BossFeedBack feedBack;
     // 게임 클리어 플래그
     public static bool BossDead =false;
+    
     private void Start()
     {
         _bossAttack = GetComponent<BossAttack>();
+        feedBack = GetComponent<BossFeedBack>();
         curhp = bossState.hp;
         float ratio = Mathf.Clamp01((float)curhp / bossState.hp);
         hpBar.SetProgress(ratio);
         
+        feedBack.CallSpawnClip(); // 등장 오디오
         if (PhotonNetwork.IsMasterClient)
         {
             photonView.RPC("BossSpwand", RpcTarget.All);
@@ -50,15 +54,16 @@ public class BossHp : LivingEnitiy
     protected override void OnDeath() // 죽었을 때
     {  
         BossDead =  true;
-        // RPC TakeDamToMonster에서 IsDead를 체크하고 들어온 상태
-        photonView.RPC("CallDieAnim",RpcTarget.All);
+        feedBack.CallDieClip();
+        
+        // RPC -> 중복일 수 있음.
+        CallDieAnim();
     }
     [PunRPC]
     public void BossSpwand()
     {
         _animator.SetTrigger("Spwan");
     }
-    [PunRPC]
     public void CallDieAnim()
     {
         // 애니메이션 변경 후
