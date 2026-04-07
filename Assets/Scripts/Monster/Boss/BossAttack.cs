@@ -30,6 +30,11 @@ public class BossAttack : MonoBehaviourPun
     {
         // 보스 공격 쿨타임은 방장만 재기
         if (!PhotonNetwork.IsMasterClient) return;
+        if (CriticalObj.isDestroyed)
+        {
+            feedback.CallSpawnClip();
+            return;
+        }
         fallTimer += Time.deltaTime;
         if (fallTimer >= fallCool)
         {
