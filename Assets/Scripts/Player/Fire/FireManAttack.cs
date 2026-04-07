@@ -143,7 +143,10 @@ public class FireManAttack : PlayerAttack
                     if (hits.TryGetComponent(out LivingEnitiy  target))
                     {
                         target.TakeDamage(30);
-                        target.photonView.RPC("Is_Hit", RpcTarget.All);
+                        if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
+                        {
+                            target.photonView.RPC("Is_Hit", RpcTarget.All);   
+                        }
                     }
                 }
             }
