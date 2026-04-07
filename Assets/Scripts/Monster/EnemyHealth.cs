@@ -55,8 +55,6 @@ public class EnemyHealth : LivingEnitiy
             BossSpawner.BossSpawnerInstance.IncreaseDiedCnt();
         }
     }
-    protected override void OnRespawn() // 다시 살아날때
-    { }
     [PunRPC]
     public void Is_Hit()
     {
@@ -77,7 +75,7 @@ public class EnemyHealth : LivingEnitiy
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(DestroySelf(2f));
+            StartCoroutine(DestroySelf(0.9f));
         }
     }
 
