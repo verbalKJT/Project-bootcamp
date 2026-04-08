@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class RockAttack : PlayerAttack
 {
-    protected bool isShieldActive = false;
     protected bool shieldInput;
 
     private RockAnimMover ram;
@@ -22,17 +21,22 @@ public class RockAttack : PlayerAttack
     public override float SecSkillCool => wallCool;
 
     private Shield _shield;
-
     private RockFeedback _feedback;
-
+    private WallBuild _wallBuild;
+    
     private int randDam = 40;
 
+    public bool isLanding { get; set; } = false;
+    private bool IsActionLocked => isLanding || _wallBuild.isAiming || isAttacking;
+    public bool isAttacking = false;
+    public bool isShieldActive { get; private set; } = false;
     void Start()
     {
         base.Start();
         ram = GetComponentInChildren<RockAnimMover>();
         _shield = GetComponentInChildren<Shield>();
         _feedback = GetComponent<RockFeedback>();
+        _wallBuild = GetComponentInChildren<WallBuild>();
     }
 
     void Update()
@@ -40,13 +44,14 @@ public class RockAttack : PlayerAttack
         base.Update();
         if (!photonView.IsMine) return;
         if (GameManager.isCinematic) return;
-        if (input)
+        if (input && !IsActionLocked && !isShieldActive)
         {
+            isAttacking = true;
             photonView.RPC("AttackAnim", RpcTarget.All);
         }
 
         shieldInput = Input.GetMouseButton(1);
-        bool shieldState = shieldInput && _shield.CanRaise;
+        bool shieldState = shieldInput && _shield.CanRaise && !IsActionLocked;
 
         if (shieldState != isShieldActive) // 쉴드가 파괴 되지 않았을 때만
         {
@@ -65,9 +70,11 @@ public class RockAttack : PlayerAttack
         }
 
         earthquakeTime += Time.deltaTime; // 쿨타임 재기
-        if (shift && pm.isGrounded && earthquakeTime >= earthquakeCool)
+        if (shift && pm.isGrounded && earthquakeTime >= earthquakeCool && !IsActionLocked && !isShieldActive)
         {
             earthquakeTime = 0f;
+            isLanding = true;
+            ForceShieldDown();
             photonView.RPC("Earthquake", RpcTarget.All, true);
         }
 
@@ -101,6 +108,7 @@ public class RockAttack : PlayerAttack
     {
         _feedback.StartLandSound();
         if (!photonView.IsMine) return;
+        
         pm.rb.AddForce(transform.forward * 32f, ForceMode.VelocityChange);
         pm.rb.AddForce(transform.up * 12f, ForceMode.VelocityChange);
     }
@@ -109,18 +117,21 @@ public class RockAttack : PlayerAttack
     {
         _feedback.EndLandSound();
         if (photonView.IsMine)
+        {
             pm.rb.AddForce(Vector3.down * 50f, ForceMode.VelocityChange);
-        
+        }
+
         _feedback.LandEffect(FindLandPos());
     }
 
     private Vector3 FindLandPos()
     {
         Vector3 origin = transform.position;
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 15f,LayerMask.GetMask("Ground")))
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 15f, LayerMask.GetMask("Ground")))
         {
             return hit.point + Vector3.up * 0.03f;
         }
+
         return origin;
     }
 
