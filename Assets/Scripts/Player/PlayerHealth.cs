@@ -37,14 +37,11 @@ public class PlayerHealth : LivingEnitiy
         // 음수가 안나오도록
         float ratio = Mathf.Clamp01((float)curhp / playerState.hp);
         hpBar.SetProgress(ratio);
-        if (ratio <= 0)
-        {
-            OnDeath();
-        }
     }
 
     protected override void OnDeath() // 죽었을 때
     {
+        if (!photonView.IsMine) return;
         photonView.RPC("Is_Stun", RpcTarget.All, true);
     }
 

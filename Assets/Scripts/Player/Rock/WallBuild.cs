@@ -12,7 +12,7 @@ public class WallBuild : PlayerAttack
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Transform rayPoint;
     
-    private bool isAiming = false;
+    public bool isAiming = false;
     private GameObject curPreWall;
 
     private RockAttack rk;
@@ -20,7 +20,8 @@ public class WallBuild : PlayerAttack
     private Camera pCam;
 
     private float yRot = 0f;
-   
+
+    private bool CanBuild => !rk.isAttacking && !rk.isShieldActive && !rk.isAttacking;
     void Start()
     {
         rk = GetComponent<RockAttack>();
@@ -35,8 +36,9 @@ public class WallBuild : PlayerAttack
         if(commandE && rk.wallTime  >= rk.wallCool)
         {
             rk.photonView.RPC("SummonWall", RpcTarget.All, true);
-            if (!isAiming) // 설치 중이 아니라면 
+            if (!isAiming && CanBuild) // 설치 중이 아니라면 
             {
+                rk.photonView.RPC(nameof(RockAttack.SummonWall), RpcTarget.All, true);
                 StartAiming(); // 조준 -> RockAttack.cs 사용불가
                 yRot = 0f;
             }
@@ -56,7 +58,6 @@ public class WallBuild : PlayerAttack
             // 조준중 R키로 취소. 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                isAiming = false;
                 CancleAming();
             }
 

@@ -62,14 +62,12 @@ public class NatureManAttack : PlayerAttack
         if (commandE && summonTime >= summonCoolTime) // e키로 소환
         {
             photonView.RPC("SummonWolf", RpcTarget.All, true);
-            summonTime = 0f; // 초기화
         }
         
         snareTime += Time.deltaTime;
         if (commandQ && snareTime >= snareCoolTime && pm.isGrounded)
         {
             photonView.RPC("Snare", RpcTarget.All);
-            snareTime = 0f;
         }
     }
 
@@ -103,6 +101,7 @@ public class NatureManAttack : PlayerAttack
     {
         
         if (!photonView.IsMine) return;
+        summonTime = 0f; // 초기화
         foreach (Transform t in summonPoint)
         {
             // 소환 위치에 늑대 2개 소환
@@ -126,7 +125,7 @@ public class NatureManAttack : PlayerAttack
     {
         feedback.SnareFireSound(); // 스네어 발사 오디오
         if (!photonView.IsMine) return;
-        
+        snareTime = 0f;
         GameObject obj = PhotonNetwork.Instantiate("Heroes/"+snareObj.name, snareSPoint.position, Quaternion.identity);
         
         // 바닥을 기어야하니.

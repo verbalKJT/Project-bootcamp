@@ -526,7 +526,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 0, z: -10.5}
+  m_Center: {x: 0, y: 0, z: -11}
 --- !u!65 &31728332
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -547,7 +547,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 0, z: 17}
+  m_Center: {x: 0, y: 0, z: 17.5}
 --- !u!43 &39846037
 Mesh:
   m_ObjectHideFlags: 0
@@ -2266,7 +2266,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4096
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -2309,6 +2309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0d6bb8d660d4f6d969868a3ad96240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CriticalObj
+  explosionEffect: {fileID: 0}
+  overSceneName: Over
 --- !u!1001 &632813747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6698,7 +6700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineThirdPersonFollow
   Damping: {x: 0, y: 0, z: 0}
-  ShoulderOffset: {x: 1, y: 8, z: 0}
+  ShoulderOffset: {x: 1, y: 6, z: 0}
   VerticalArmLength: 0.4
   CameraSide: 0.5
   CameraDistance: 14

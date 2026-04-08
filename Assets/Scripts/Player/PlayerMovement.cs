@@ -19,6 +19,8 @@ public class PlayerMovement : PlayerInput
     [Header("카메라 수직 이동")]
     [SerializeField] private float cameraSpeed = 20f;
     [SerializeField] private float maxShoulderOffsetY = 16f;
+    [Header("이동 충돌 보정 거리")]
+    [SerializeField] private float wallSkin = 0.01f;
     
     
     [Header("땅 레이어")] [SerializeField]
@@ -44,8 +46,7 @@ public class PlayerMovement : PlayerInput
             
             playerCam.Follow = transform;
             thirdPersonFollow = playerCam.GetComponent<CinemachineThirdPersonFollow>();
-            // 마우스 커서 중앙 고정 및 안보이게
-            Cursor.lockState = CursorLockMode.Locked;
+            // 마우스 커서  안보이게
             Cursor.visible = false;
         }
     }
@@ -119,11 +120,61 @@ public class PlayerMovement : PlayerInput
 
         if (canMove)
         {
-            // 이동
-            moveV = transform.forward * v * Time.fixedDeltaTime * playerState.speed;
-            moveH = transform.right * h * Time.fixedDeltaTime * playerState.speed;
-            rb.MovePosition(rb.position + moveV + moveH);
+            // 이동 방향 한번에
+            Vector3 inputDir = transform.forward * v + transform.right * h;
+            // 방향 길이 1로 제한 후 실제 움직일 거리
+            Vector3 moveDelta = Vector3.ClampMagnitude(inputDir, 1f) * (playerState.speed * Time.fixedDeltaTime);
+
+            // 이동량이 있다면 
+            if (moveDelta.sqrMagnitude > 0f)
+            {
+                // 이동
+                rb.MovePosition(rb.position + GetResolvedMove(moveDelta));
+            }
         }
+    }
+
+    private Vector3 GetResolvedMove(Vector3 moveDelta)
+    {
+        // 벽이 없으면
+        // SweepTest -> rb가 방향으로 이동할 때 앞에 뭐가 부딪히는 지
+        // QueryTriggerInteraction.Ignore -> 트리거 콜라이더 무시
+        if (!rb.SweepTest(moveDelta.normalized, out RaycastHit hit, moveDelta.magnitude + wallSkin,
+                QueryTriggerInteraction.Ignore)) 
+        {
+            return moveDelta; // 벽이 없으면 원래 이동거리.
+        }
+        
+        // 벽이 있으면
+        // 지금거리에서 벽까지 거리 (음수는 안나오게)
+        float moveDistance = Mathf.Max(hit.distance - wallSkin, 0f);
+        // 벽을 뚫지 않고 갈 수 있는 최대거리
+        Vector3 resolvedMove = moveDelta.normalized * moveDistance;
+
+        // remainMove -> 벽 때문에 못갈 거리.(남은 이동량)
+        Vector3 remainMove = moveDelta - resolvedMove;
+        // ProjectOnPlane -> 남은 이동량 중에서 벽으로 파고드는 성분 제고 후 벽표면에 따라 움직이는 성분만 남김
+        Vector3 slideMove = Vector3.ProjectOnPlane(remainMove, hit.normal);
+
+        // 미끄러지는 성분이 거의 없다면
+        if (slideMove.sqrMagnitude <= 0.0001f)
+        {
+            // 벽을 뚫지 않고 갈 수 있는 최대거리만큼만 이동
+            return resolvedMove;
+        }
+        
+        // 미끄러지는 이동 방향앞에 벽이 있는지
+        if (rb.SweepTest(slideMove.normalized, out RaycastHit slideHit, slideMove.magnitude + wallSkin,
+                QueryTriggerInteraction.Ignore))
+        {
+            // 벽이 있다면
+            // 벽(앞에 조금 남기고)까지의 최대거리
+            float slideDistance = Mathf.Max(slideHit.distance - wallSkin, 0f);
+            // 기존 미끄러지는 이동 방향에 최대로 갈 수 있는 거리
+            slideMove = slideMove.normalized * slideDistance;
+        }
+        // 벽 직전까지 이동 최대거리 + 미끄러지는 이동 최대거리 
+        return resolvedMove + slideMove;
     }
 
     private void Jump()

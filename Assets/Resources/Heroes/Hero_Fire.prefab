@@ -228,6 +228,7 @@ MonoBehaviour:
   playerCam: {fileID: 0}
   cameraSpeed: 20
   maxShoulderOffsetY: 16
+  wallSkin: 0.01
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -249,6 +250,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   sword: {fileID: 5138308362424021807}
   isCast: 0
+  isDash: 0
 --- !u!114 &4349054476287959122
 MonoBehaviour:
   m_ObjectHideFlags: 0

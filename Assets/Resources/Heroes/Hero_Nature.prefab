@@ -1740,6 +1740,7 @@ MonoBehaviour:
   playerCam: {fileID: 0}
   cameraSpeed: 20
   maxShoulderOffsetY: 16
+  wallSkin: 0.05
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024

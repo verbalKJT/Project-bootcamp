@@ -7,55 +7,60 @@ using UnityEngine;
 public class FireManAttack : PlayerAttack
 {
     [Header("Sword.cs")] [SerializeField] private Sword sword;
-    
+
     private float forceTime = 7f;
     private const float fCoolTime = 7f; // 검기 쿨타임 
     public bool isCast = false;
-    
+    public bool isDash = false;
+    public bool IsActionLocked => isCast || isDash;
+
     private float dashTime = 5f;
     private const float dashCoolTime = 5f; // 대쉬 쿨타임 
     private float dashDis = 20f; // 대쉬 거리
-    
+
     public override float FirstSkillTime => dashTime;
     public override float FirstSkillCool => dashCoolTime;
     public override float SecSkillTime => forceTime;
     public override float SecSkillCool => fCoolTime;
 
     private FireFeedback _feedback;
+
     void Start()
     {
-        base.Start();// 부모 Start 메서드 먼저 -> animator + PlayerMovement 할당
+        base.Start(); // 부모 Start 메서드 먼저 -> animator + PlayerMovement 할당
         _feedback = GetComponent<FireFeedback>();
     }
-    
+
     void Update()
     {
         base.Update(); // 부모 Update 메서드 먼저 -> Input 입력
-        if(GameManager.isCinematic) return;
-        if (input)
+        if (GameManager.isCinematic) return;
+        if (input && !IsActionLocked)
         {
-            photonView.RPC("AttackAnim",RpcTarget.All);
+            photonView.RPC("AttackAnim", RpcTarget.All);
         }
 
-        if (commandE && forceTime >= fCoolTime) 
+        if (commandE && forceTime >= fCoolTime && !isDash)
         {
             forceTime = 0f; // 쿨타임 초기화 
             isCast = true;
-            photonView.RPC("Force",RpcTarget.All);
+            photonView.RPC("Force", RpcTarget.All);
         }
+
         forceTime += Time.deltaTime; // 검기 시간 새기
-         // 스킬 UI 갱신
-        
+        // 스킬 UI 갱신
+
         // 대쉬 스킬은 Shift로 + 땅에 있을 때만?
-        if (shift && dashTime >= dashCoolTime && pm.isGrounded && !isCast)
+        if (shift && dashTime >= dashCoolTime && pm.isGrounded && !isCast && !isDash)
         {
             dashTime = 0f;
-            photonView.RPC("Dash",RpcTarget.All);
-           
+            isDash = true;
+            photonView.RPC("Dash", RpcTarget.All);
         }
-        dashTime += Time.deltaTime;// 대쉬 스킬 시간 재기 
+
+        dashTime += Time.deltaTime; // 대쉬 스킬 시간 재기 
     }
-    
+
 
     [PunRPC]
     public void AttackAnim()
@@ -66,18 +71,20 @@ public class FireManAttack : PlayerAttack
     [PunRPC]
     public void Force()
     {
-        animator.SetBool("IsCast",true);
+        animator.ResetTrigger("Attack");
+        animator.SetBool("IsCast", true);
         _feedback.ForceEffect(); // 아우라 효과
-        if(!photonView.IsMine) return;
+        if (!photonView.IsMine) return;
         // 못 움직이도록
         pm.canMove = false;
-        
+
         // 애니메이션 이벤트로 플레이어 이동 활성화
     }
 
     [PunRPC]
     public void Dash()
     {
+        animator.ResetTrigger("Attack");
         animator.SetTrigger("Slide");
         _feedback.DashSound();
         Vector3 spawnPos = transform.position - transform.forward * 1.5f;
@@ -89,36 +96,36 @@ public class FireManAttack : PlayerAttack
         // 애니메이션 이벤트로 플레이어 이동 활성화 + IsTrigger 해제
         pm.col.excludeLayers |= 1 << LayerMask.NameToLayer("Monster");
     }
-    
+
     // 대쉬 스킬
     public void Slide(float dashDisance)
     {
         // 대쉬할 방향만 
         Vector3 slideDir = (moveV + moveH).normalized;
-        if(slideDir == Vector3.zero) slideDir = transform.forward;
-        
+        if (slideDir == Vector3.zero) slideDir = transform.forward;
+
         // 0.3초 동안 이동 
         StartCoroutine(DashRoutine(slideDir, dashDis, 0.3f));
-        
     }
+
     IEnumerator DashRoutine(Vector3 dir, float distance, float duration)
     {
         // 대쉬 동안 충돌 될 몬스터 갯수
         HashSet<int> monsters = new HashSet<int>();
-        
+
         pm.canMove = false; // 대쉬 중 조작 금지
-    
+
         // 대쉬 시작
         Vector3 startPos = pm.rb.position;
         // 대쉬할 거리
         Vector3 targetPos = startPos + dir * distance;
-        
+
         // 비율
         float elapsed = 0f;
 
         // 내 콜라이더 크가
         float radius = pm.col.radius;
-        
+
         while (elapsed < duration)
         {
             elapsed += Time.fixedDeltaTime;
@@ -127,10 +134,10 @@ public class FireManAttack : PlayerAttack
             // 점진적으로 목표 지점까지 이동 보간
             Vector3 nextPos = Vector3.Lerp(startPos, targetPos, t);
             pm.rb.MovePosition(nextPos);
-                
-            LayerMask enemyLayer = LayerMask.GetMask("Monster","Boss");
+
+            LayerMask enemyLayer = LayerMask.GetMask("Monster", "Boss");
             // 맞은 놈 
-            Collider[] monColliders = Physics.OverlapSphere(transform.position,radius,enemyLayer);
+            Collider[] monColliders = Physics.OverlapSphere(transform.position, radius, enemyLayer);
 
             foreach (Collider hits in monColliders)
             {
@@ -140,22 +147,23 @@ public class FireManAttack : PlayerAttack
                 if (!monsters.Contains(hitId))
                 {
                     monsters.Add(hitId);
-                    if (hits.TryGetComponent(out LivingEnitiy  target))
+                    if (hits.TryGetComponent(out LivingEnitiy target))
                     {
                         target.TakeDamage(30);
                         if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
                         {
-                            target.photonView.RPC("Is_Hit", RpcTarget.All);   
+                            target.photonView.RPC("Is_Hit", RpcTarget.All);
                         }
                     }
                 }
             }
-            
+
             yield return new WaitForFixedUpdate();
         }
 
         // 최종 위치 고정 및 상태 복구
         pm.rb.MovePosition(targetPos);
-        pm.canMove = true;
+        isDash = false;
+        pm.canMove = !(isCast || isDash);
     }
 }

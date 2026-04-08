@@ -44,6 +44,7 @@ public class Shield : MonoBehaviourPun, IPunObservable
         CurrentHp = maxShieldHp;
         ApplyState();
     }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -106,10 +107,8 @@ public class Shield : MonoBehaviourPun, IPunObservable
 
         _rockAttack?.ForceShieldDown();
         ApplyState();
-        if (IsRecovering)
-        {
-            StartCoroutine(RecoveryShield(recoverDelay));
-        }
+
+        StartCoroutine(RecoveryShield(recoverDelay));
     }
 
     IEnumerator RecoveryShield(float time)

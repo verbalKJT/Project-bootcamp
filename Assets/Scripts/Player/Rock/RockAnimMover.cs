@@ -54,18 +54,13 @@ public class RockAnimMover : MonoBehaviourPun
     public void OnOffMove(int isOn)
     {
         if(!playerMovement.photonView.IsMine) return;
-        bool canMove;
-        if (isOn == 1)
-        {
-            canMove = true;
-        }
-        else
-        {
-            canMove = false;
-            rk.photonView.RPC("Earthquake", RpcTarget.All,false);
-        }
-        // AddForce 타이밍
+        bool canMove = isOn == 1;
         playerMovement.canMove = canMove; // 회전은 가능
+        if (!canMove)
+        {
+            rk.photonView.RPC("Earthquake", RpcTarget.All, false);
+        }
+        rk.isLanding = !canMove;
     }
 
     private void QuakeJump()
@@ -85,5 +80,6 @@ public class RockAnimMover : MonoBehaviourPun
     {
         if(!photonView.IsMine) return;
         hammer.isStrike = false;
+        rk.isAttacking = false;
     }
 }
