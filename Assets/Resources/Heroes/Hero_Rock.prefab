@@ -586,6 +586,7 @@ MonoBehaviour:
   playerCam: {fileID: 0}
   cameraSpeed: 20
   maxShoulderOffsetY: 16
+  wallSkin: 0.05
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -606,6 +607,7 @@ MonoBehaviour:
   playerState: {fileID: 0}
   animator: {fileID: 0}
   wall: {fileID: 1661941200241538334, guid: 215627614292441f59fe6655bf10ece4, type: 3}
+  isAttacking: 0
 --- !u!114 &8078049227992091229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -627,6 +629,7 @@ MonoBehaviour:
     m_Bits: 1024
   lineRenderer: {fileID: 5696757857748348928}
   rayPoint: {fileID: 1654158092271718922}
+  isAiming: 0
 --- !u!114 &183573821792174633
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -36,7 +36,10 @@ public class FireAnimMover : MonoBehaviourPun
     public void StopMoveDuringDash()
     {
         if (!playerMovement.photonView.IsMine) return;
-        playerMovement.canMove = true;
+        if (!fm.isCast)
+        {
+            playerMovement.canMove = true;
+        }
     }
 
     public void StartAttack()
