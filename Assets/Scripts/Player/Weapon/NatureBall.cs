@@ -19,9 +19,9 @@ public class NatureBall : MonoBehaviourPun
     {
         if(!photonView.IsMine) return;
         Vector3 hitPos = other.ClosestPoint(transform.position);
-        if (other.tag == "Monster")
+        if (other.CompareTag("Monster"))
         {
-            EnemyHealth target = other.GetComponent<EnemyHealth>();
+            EnemyHealth target = other.GetComponentInParent<EnemyHealth>();
             target.photonView.RPC("Is_Hit", RpcTarget.All);
 
             target.TakeDamage(weaponData.damage);
@@ -34,7 +34,7 @@ public class NatureBall : MonoBehaviourPun
             }
         }else if (other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
-            LivingEnitiy target = other.GetComponent<BossHp>();
+            LivingEnitiy target = other.GetComponentInParent<BossHp>();
             target.TakeDamage(weaponData.damage);
             photonView.RPC("NatureBallHitEffect", RpcTarget.All, hitPos);
         }    

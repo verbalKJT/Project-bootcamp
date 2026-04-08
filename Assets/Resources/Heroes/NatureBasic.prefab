@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6691865104229193908}
   - component: {fileID: 1119179762483836931}
   - component: {fileID: 6406873581874906690}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4905,7 +4905,7 @@ GameObject:
   - component: {fileID: 6245240405345189154}
   - component: {fileID: 9150079641058182721}
   - component: {fileID: 5010176806772466173}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9804,7 +9804,7 @@ GameObject:
   - component: {fileID: -4423136074315296922}
   - component: {fileID: 2536574452701851038}
   - component: {fileID: 4697041660452607205}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: NatureBasic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14709,7 +14709,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.00001
+  m_Radius: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &6809339923223186495
 Rigidbody:
@@ -14802,7 +14802,7 @@ GameObject:
   - component: {fileID: 2978750632416464512}
   - component: {fileID: 6894328613904042626}
   - component: {fileID: 3560371591784846077}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Trails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
