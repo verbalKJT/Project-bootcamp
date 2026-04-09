@@ -19,7 +19,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        PhotonNetwork.GameVersion = "v1.0";
+        // 기존 게임 버전 정하는 PhotonNetwork.GameVersion = "v1.0"; 삭제
 
         if (!PhotonNetwork.IsConnected)
         {
