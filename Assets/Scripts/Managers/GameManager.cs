@@ -25,10 +25,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     // 보스 생성 후 타임라인 시네마틱 플래그
     public static bool isCinematic = false;
     
+    //내 플레이어가 소환되었는지
+    private bool hasSpwanedLocalPlayer = false;
+    
     IEnumerator Start()
     {
         yield return null; //  1프레임 대기
 
+        if(hasSpwanedLocalPlayer) yield break;
         SpawnPlayerCharacter();
         //SpawnEnemies();
     }
@@ -36,6 +40,19 @@ public class GameManager : MonoBehaviourPunCallbacks
     // 플레이어 생성 로직
     void SpawnPlayerCharacter()
     {
+        // 이미 소환된 플레이어가 있으면 
+        if(hasSpwanedLocalPlayer) return;
+        
+        PlayerMovement[] players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        foreach (PlayerMovement player in players)
+        {
+            if (player.photonView.IsMine)
+            {
+                hasSpwanedLocalPlayer = true;
+                return;
+            }
+        }
+        
         // 로컬 플레이어의 커스텀 프로퍼티에서 선택된 캐릭터 인덱스 가져오기
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(SELECTED_CHAR, out object selectedCharObj))
         {
@@ -57,11 +74,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             
             // ActorNumber를 활용해 스폰 포인트 순환 배정
-            int spawnIndex = PhotonNetwork.LocalPlayer.ActorNumber % playerSpawnPoints.Length;
+            int spawnIndex = (PhotonNetwork.LocalPlayer.ActorNumber -1) % playerSpawnPoints.Length;
             Vector3 spawnPos = playerSpawnPoints[spawnIndex].position;
             
             // 네트워크 상에 오브젝트 생성
             PhotonNetwork.Instantiate("Heroes/" + prefabName, spawnPos, Quaternion.identity);
+            hasSpwanedLocalPlayer = true;
         }
         else
         {
