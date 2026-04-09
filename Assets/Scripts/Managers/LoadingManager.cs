@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,6 +19,13 @@ public class LoadingManager : MonoBehaviourPunCallbacks
     public Sprite[] characterSprites;
 
     private AsyncOperation asyncOperation;
+
+    private void Awake()
+    {
+        // 전송 주기 올리기
+        PhotonNetwork.SendRate = 60;
+        PhotonNetwork.SerializationRate = 30;
+    }
 
     void Start()
     {
@@ -55,41 +63,23 @@ public class LoadingManager : MonoBehaviourPunCallbacks
 
     IEnumerator LoadGameSceneAsync()
     {
-        asyncOperation = SceneManager.LoadSceneAsync("Map1");
-        asyncOperation.allowSceneActivation = false;
+        // 각 클라이언트가 로컬로 Map1을 여는 방식이 아닌
+        //asyncOperation = SceneManager.LoadSceneAsync("Map1");
         
         float progress = 0f; // 실제 UI에 보여줄 값
 
-        while (!asyncOperation.isDone)
-        {
-            float targetProgress = Mathf.Clamp01(asyncOperation.progress / 0.9f);
-            
+        while (progress < 1f)
+        { 
             // 로딩 게이지 부드럽게 증가
             progress = 
-                Mathf.MoveTowards(progress, targetProgress, Time.deltaTime * 0.5f);  // ← 이 값이 속도 조절
-            
+                Mathf.MoveTowards(progress, 1f, Time.deltaTime * 0.5f);  // ← 이 값이 속도 조절
             loadingSlider.value = progress;
-            
-            // 로딩 100% 됐을 때
-            if (progress >= 1f)
-            {
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    // ⭐ 모든 클라이언트에게 씬 활성화 신호
-                    photonView.RPC("ActivateScene", RpcTarget.AllBuffered);
-                }
-                yield break;
-            }
             yield return null;
         }
-    }
 
-    [PunRPC]
-    void ActivateScene()
-    {
-        if (asyncOperation != null)
+        if (PhotonNetwork.IsMasterClient)
         {
-            asyncOperation.allowSceneActivation = true;
+            PhotonNetwork.LoadLevel("Map1"); // 같이 넘어감
         }
     }
 }
