@@ -1185,22 +1185,22 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Dead
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: hit
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Spwan
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Fall
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Electric
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
 --- !u!4 &4126780034713886658 stripped
 Transform:
