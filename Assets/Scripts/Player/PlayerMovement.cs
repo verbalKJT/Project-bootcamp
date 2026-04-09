@@ -3,7 +3,7 @@ using Photon.Pun;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class PlayerMovement : PlayerInput
+public class PlayerMovement : PlayerInput, IPunObservable
 {
     // 내 캐릭터
     public static GameObject player;
@@ -15,24 +15,33 @@ public class PlayerMovement : PlayerInput
 
     [Header("플레이어 시네머신 캠")] [SerializeField]
     private CinemachineCamera playerCam;
+
     private CinemachineThirdPersonFollow thirdPersonFollow;
-    [Header("카메라 수직 이동")]
-    [SerializeField] private float cameraSpeed = 20f;
+    [Header("카메라 수직 이동")] [SerializeField] private float cameraSpeed = 20f;
     [SerializeField] private float maxShoulderOffsetY = 16f;
-    [Header("이동 충돌 보정 거리")]
-    [SerializeField] private float wallSkin = 0.01f;
-    
-    
-    [Header("땅 레이어")] [SerializeField]
-    private LayerMask groundLayer;
+
+    [Header("이동 충돌 보정 거리")] [SerializeField]
+    private float wallSkin = 0.01f;
+
+
+    [Header("땅 레이어")] [SerializeField] private LayerMask groundLayer;
 
     public bool isGrounded;
 
     public bool canMove = true;
 
     private Quaternion targetRotation;
-    
-    
+
+
+    // 네트워크로 받은 원격 플레이어 목표 위치
+    private Vector3 networkPosition;
+    // 네트워크로 받은 원격 플레이어 목표 회전
+    private Quaternion networkRotation;
+    // 네트워크로 받은 상대 속도
+    private Vector3 networkVelocity;
+    // 한 번이라도 네트워크 상태를 받았는지
+    private bool hasNetworkState;
+
 
     void Awake()
     {
@@ -43,11 +52,15 @@ public class PlayerMovement : PlayerInput
             var vcam = FindAnyObjectByType<CinemachineCamera>();
 
             playerCam = vcam;
-            
+
             playerCam.Follow = transform;
             thirdPersonFollow = playerCam.GetComponent<CinemachineThirdPersonFollow>();
             // 마우스 커서  안보이게
             Cursor.visible = false;
+        }
+        else
+        {
+            rb.isKinematic = true;
         }
     }
 
@@ -61,49 +74,55 @@ public class PlayerMovement : PlayerInput
             {
                 playerCam.gameObject.SetActive(false);
             }
+
+            // 다른 플레이어 UI 끄기
+            Transform skillUI = transform.Find("SkillUI");
+            if (skillUI != null)
+            {
+                skillUI.gameObject.SetActive(false);
+            }
         }
     }
 
     void Update()
     {
         base.Update();
-        
-        if (canMove)
+        if (photonView.IsMine)
         {
-            if (h != 0 || v != 0)
+            if (canMove)
             {
                 // 입력 받은 h와 v중 큰 값
                 float moveValue = Mathf.Abs(h) > Mathf.Abs(v) ? h : v;
+                animator.SetFloat("Blend", Mathf.Abs(moveValue));
 
-
-                photonView.RPC("MoveAnim", RpcTarget.All, Mathf.Abs(moveValue));
-
-                if (moveValue == 0f)
+                if (spaceBar && isGrounded) // 스페이스바를 누르면
                 {
-                    // 정지 상태일 때 0을 전달하여 애니메이션 멈춤
-                    photonView.RPC("MoveAnim", RpcTarget.All, 0f);
+                    animator.SetTrigger("Jump");
+                    Jump();
                 }
             }
 
-            if (spaceBar && isGrounded) // 스페이스바를 누르면
+            // 카메라 상하
+            // 맥 -> 왼 command  / 윈도우 -> 왼 alt
+            if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.LeftCommand))
+                && thirdPersonFollow != null)
             {
-                photonView.RPC("JumpAnim", RpcTarget.All);
+                Vector3 shoulder = thirdPersonFollow.ShoulderOffset;
+                shoulder.y += mouseY * cameraSpeed;
+                shoulder.y = Mathf.Clamp(shoulder.y, 0, maxShoulderOffsetY);
+                thirdPersonFollow.ShoulderOffset = shoulder;
             }
+
+            // 회전
+            Quaternion rot = Quaternion.Euler(0, mouseX * playerState.rotationSpeed, 0);
+            rb.MoveRotation(rb.rotation * rot);
         }
-        // 카메라 상하
-        // 맥 -> 왼 command  / 윈도우 -> 왼 alt
-        if((Input.GetKey(KeyCode.LeftAlt) ||  Input.GetKey(KeyCode.LeftCommand))
-           && thirdPersonFollow !=null)
+        else
         {
-            Vector3 shoulder = thirdPersonFollow.ShoulderOffset;
-            shoulder.y += mouseY * cameraSpeed;
-            shoulder.y = Mathf.Clamp(shoulder.y, 0, maxShoulderOffsetY);
-            thirdPersonFollow.ShoulderOffset = shoulder;
+            if (!hasNetworkState) return;
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 20f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * 20f);
         }
-        
-        // 회전
-        Quaternion rot = Quaternion.Euler(0, mouseX * playerState.rotationSpeed, 0);
-        rb.MoveRotation(rb.rotation * rot);
 
         isGrounded = Grounded();
     }
@@ -111,7 +130,7 @@ public class PlayerMovement : PlayerInput
     void FixedUpdate()
     {
         if (!photonView.IsMine) return; // 점프도 내 캐릭터만
-        if(GameManager.isCinematic) return;
+        if (GameManager.isCinematic) return;
         if (rb.linearVelocity.y < 0)
         {
             // 중력 가속도 높이기 -> 떨어질 떄 팍 떨어지게
@@ -140,11 +159,11 @@ public class PlayerMovement : PlayerInput
         // SweepTest -> rb가 방향으로 이동할 때 앞에 뭐가 부딪히는 지
         // QueryTriggerInteraction.Ignore -> 트리거 콜라이더 무시
         if (!rb.SweepTest(moveDelta.normalized, out RaycastHit hit, moveDelta.magnitude + wallSkin,
-                QueryTriggerInteraction.Ignore)) 
+                QueryTriggerInteraction.Ignore))
         {
             return moveDelta; // 벽이 없으면 원래 이동거리.
         }
-        
+
         // 벽이 있으면
         // 지금거리에서 벽까지 거리 (음수는 안나오게)
         float moveDistance = Mathf.Max(hit.distance - wallSkin, 0f);
@@ -162,7 +181,7 @@ public class PlayerMovement : PlayerInput
             // 벽을 뚫지 않고 갈 수 있는 최대거리만큼만 이동
             return resolvedMove;
         }
-        
+
         // 미끄러지는 이동 방향앞에 벽이 있는지
         if (rb.SweepTest(slideMove.normalized, out RaycastHit slideHit, slideMove.magnitude + wallSkin,
                 QueryTriggerInteraction.Ignore))
@@ -173,6 +192,7 @@ public class PlayerMovement : PlayerInput
             // 기존 미끄러지는 이동 방향에 최대로 갈 수 있는 거리
             slideMove = slideMove.normalized * slideDistance;
         }
+
         // 벽 직전까지 이동 최대거리 + 미끄러지는 이동 최대거리 
         return resolvedMove + slideMove;
     }
@@ -223,7 +243,11 @@ public class PlayerMovement : PlayerInput
     public void JumpAnim()
     {
         animator.SetTrigger("Jump");
-        Jump();
+
+        if (photonView.IsMine)
+        {
+            Jump();
+        }
     }
 
     [PunRPC]
@@ -236,5 +260,29 @@ public class PlayerMovement : PlayerInput
     public void OnMoveRPC()
     {
         animator.SetBool("IsCast", false);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(this.transform.position);
+            stream.SendNext(this.transform.rotation);
+            stream.SendNext(this.rb.linearVelocity);
+        }
+        else
+        {
+            Vector3 pos = (Vector3)stream.ReceiveNext();
+            Quaternion rot = (Quaternion)stream.ReceiveNext();
+            Vector3 vel = (Vector3)stream.ReceiveNext();
+
+            // 패킷이 도착하는데 걸리는 시간       내가 정보를 받은 시각     상대가 정보를 보낸 시각
+            float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+
+            networkPosition = pos + vel * lag;
+            networkRotation = rot;
+            networkVelocity = vel;
+            hasNetworkState = true;
+        }
     }
 }

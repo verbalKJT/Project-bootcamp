@@ -993,19 +993,59 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
       propertyPath: m_SynchronizeParameters.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
       propertyPath: m_SynchronizeParameters.Array.data[4].Name
-      value: Attack
+      value: RangeAttack
       objectReference: {fileID: 0}
     - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
       propertyPath: m_SynchronizeParameters.Array.data[4].Type
-      value: 9
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[5].Name
+      value: Near
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[5].Type
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
       propertyPath: m_SynchronizeLayers.Array.data[1].LayerIndex
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeLayers.Array.data[0].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeLayers.Array.data[1].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[0].SynchronizeType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[1].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[2].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[3].SynchronizeType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[4].SynchronizeType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6454416036671641964, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
+      propertyPath: m_SynchronizeParameters.Array.data[5].SynchronizeType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6492300442113121044, guid: 5b5dbb1a1137748558626ca12b55a3b0, type: 3}
       propertyPath: m_Layer

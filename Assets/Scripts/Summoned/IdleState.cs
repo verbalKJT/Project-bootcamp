@@ -8,6 +8,7 @@ public class IdleState : BaseState
     public override void EnterState()
     {
         UpdateState();
+        _summoned.PlayEachAnims();
     }
     public override void UpdateState()
     {

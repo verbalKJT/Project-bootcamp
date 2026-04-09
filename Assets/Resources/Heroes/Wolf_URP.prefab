@@ -534,28 +534,28 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Summoned
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: IsBoundary
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Move
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Attack
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Dismissed
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: CanAttack
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Walking
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
 --- !u!82 &8776919435146959490
 AudioSource:
