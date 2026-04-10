@@ -29,12 +29,14 @@ public class RockAnimMover : MonoBehaviourPun
     // 애니메이션 이벤트로 위치 변경
     public void OnShield()
     {
+        if (!photonView.IsMine) return;
         // 로컬 좌표 
         shield.transform.localRotation = Quaternion.Euler(-8f,-56f, 43f);
     }
 
     public void OffShield()
     {
+        if (!photonView.IsMine) return;
         // 회전값
         shield.transform.localRotation = shieldRot;
         _shield.ApplyState();
@@ -42,10 +44,12 @@ public class RockAnimMover : MonoBehaviourPun
 
     public void OnEnergyShield()
     {
+        if (!photonView.IsMine) return;
         _shield.ApplyState();
     }
     public void MakeAttackBound()
     {
+        if (!photonView.IsMine) return;
         rk.MakeAttackBound();
         playerMovement.rb.linearVelocity = Vector3.zero; // 착지하는 순간 속도 0
         rk.Landing();
@@ -66,6 +70,7 @@ public class RockAnimMover : MonoBehaviourPun
 
     private void QuakeJump()
     {
+        if (!photonView.IsMine) return;
         rk.QuakeJump();
     }
     public void StartAttack()

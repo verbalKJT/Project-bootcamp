@@ -75,7 +75,7 @@ public class EnemyHealth : LivingEnitiy
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(DestroySelf(0.9f));
+            StartCoroutine(DestroySelf(0.5f));
         }
     }
 
@@ -112,5 +112,15 @@ public class EnemyHealth : LivingEnitiy
         // 속박 효과 해제
         em.agent.isStopped = false;
         photonView.RPC("Is_Stun", RpcTarget.All, false);
+    }
+    public void ClearByBossDeath()
+    {
+        em.agent.isStopped = true;
+        animator.SetTrigger("IsDead");
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(DestroySelf(0.5f));
+        }
     }
 }

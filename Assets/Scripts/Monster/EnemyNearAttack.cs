@@ -62,12 +62,14 @@ public class EnemyNearAttack : MonoBehaviourPun
             {
                 // criticalObj를 찾았다면
                 CriticalObj cri = _enemySensor.curTarget.GetComponent<CriticalObj>();
+                nearAttackRange = 5f;
                 target_Died = (cri == null || cri.curHp <= 0);
             }
             else
             {
                 // criticalObj를 못 찾았다면
                 PlayerHealth player = _enemySensor.curTarget.GetComponent<PlayerHealth>();
+                nearAttackRange = 9f; // 다시 원래 범위
                 target_Died = (player == null || player.isDead);
             }
 

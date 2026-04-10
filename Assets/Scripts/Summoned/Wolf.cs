@@ -67,7 +67,7 @@ public class Wolf : Summoned
         master = PlayerMovement.player;
         
         if (photonView.IsMine)
-            StartCoroutine(DeSpawn(10f));
+            StartCoroutine(DeSpawn(11.4f));
     }
 
     // 상태 체크

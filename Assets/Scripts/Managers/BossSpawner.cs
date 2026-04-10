@@ -33,7 +33,7 @@ public class BossSpawner : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient) return;
         diedCnt++;
-        if (diedCnt >= 1 && !isSpawned) // 30마리정도 생각중
+        if (diedCnt >= 20 && !isSpawned) // 30마리정도 생각중
         {
             SpawnBoss();
             isSpawned = true;

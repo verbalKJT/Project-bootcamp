@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ForestMon
   m_EditorClassIdentifier: Assembly-CSharp::MonsterState
   moveSpeed: 5
-  hp: 1
-  nearDam: 50
+  hp: 100
+  nearDam: 20

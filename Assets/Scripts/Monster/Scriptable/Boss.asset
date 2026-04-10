@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Boss
   m_EditorClassIdentifier: Assembly-CSharp::MonsterState
   moveSpeed: 0
-  hp: 1
+  hp: 3000
   nearDam: 0

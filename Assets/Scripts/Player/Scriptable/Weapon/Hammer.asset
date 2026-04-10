@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0569f47d34989462795000c2f937832b, type: 3}
   m_Name: Hammer
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  damage: 20
-  reloadTime: 2
+  damage: 30
+  reloadTime: 1.2
+  speed: 0
+  effect: {fileID: 0}

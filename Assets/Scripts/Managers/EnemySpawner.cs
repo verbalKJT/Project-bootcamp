@@ -19,7 +19,8 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
     
     // 생성 중인지
     private bool isSpawning = false;
-    
+
+    private int maxCount = 15; // 30마리까지 생성.
     // 적 생성 로직
     void SpawnEnemies()
     {
@@ -57,7 +58,6 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
             float random = Random.Range(2f, 4f);
             // 적 생성 
             StartCoroutine(RandomSpawnEnemies(random));
-            SpawnEnemies();
         }
     }
     
@@ -68,7 +68,7 @@ public class EnemySpawner : MonoBehaviourPunCallbacks
         
         // 50마리 정도 생각 중
         // 살아있는 몬스터의 수
-        return (enemies.Count <1) ?  true : false;
+        return (enemies.Count < maxCount) ?  true : false;
     }
 
     IEnumerator RandomSpawnEnemies(float time)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FallCrystal : MonoBehaviourPun
 {
-    private int damage = 30;
+    private int damage = 36;
 
     private Rigidbody rb;
 

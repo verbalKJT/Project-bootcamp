@@ -1,12 +1,17 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
 public class RockAttack : PlayerAttack
 {
     protected bool shieldInput;
-
+    
     private RockAnimMover ram;
 
+    [SerializeField] private Hammer hammer;
+    private float hammerReload = 0;
+    private float hammerCooldown;
+    
     // 프로 퍼티로 가져다 쓰는건 편하게
     public float earthquakeTime { get; private set; } = 8f;
     public float earthquakeCool { get; private set; } = 8f;
@@ -24,7 +29,7 @@ public class RockAttack : PlayerAttack
     private RockFeedback _feedback;
     private WallBuild _wallBuild;
     
-    private int randDam = 40;
+    private int landDam = 52;
 
     public bool isLanding { get; set; } = false;
     private bool IsActionLocked => isLanding || _wallBuild.isAiming || isAttacking;
@@ -37,6 +42,7 @@ public class RockAttack : PlayerAttack
         _shield = GetComponentInChildren<Shield>();
         _feedback = GetComponent<RockFeedback>();
         _wallBuild = GetComponentInChildren<WallBuild>();
+        hammerCooldown = hammer.weaponData.reloadTime;
     }
 
     void Update()
@@ -46,9 +52,14 @@ public class RockAttack : PlayerAttack
         if (GameManager.isCinematic) return;
         if (input && !IsActionLocked && !isShieldActive)
         {
-            isAttacking = true;
-            photonView.RPC("AttackAnim", RpcTarget.All);
+            if (hammerReload >= hammerCooldown)
+            {
+                isAttacking = true;
+                photonView.RPC("AttackAnim", RpcTarget.All);
+                hammerReload = 0;
+            }
         }
+        hammerReload += Time.deltaTime;
 
         shieldInput = Input.GetMouseButton(1);
         bool shieldState = shieldInput && _shield.CanRaise && !IsActionLocked;
@@ -147,12 +158,12 @@ public class RockAttack : PlayerAttack
                 if (target.gameObject.layer == LayerMask.NameToLayer("Boss"))
                 {
                     LivingEnitiy b = target.gameObject.GetComponent<BossHp>();
-                    b.TakeDamage(randDam);
+                    b.TakeDamage(landDam);
                 }
                 else if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
                 {
                     LivingEnitiy t = target.GetComponent<EnemyHealth>();
-                    t.TakeDamage(randDam);
+                    t.TakeDamage(landDam);
                     t.photonView.RPC("Is_Hit", RpcTarget.All);
                 }
             }
