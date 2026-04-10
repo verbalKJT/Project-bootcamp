@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FireForce : MonoBehaviourPun
 {
-    private int damage = 50; // 공격력
+    private int damage = 50; // 검기 공격력
 
     private float initalDir = 3f; // 아래로 꽂힐 초기 방향
     private float custom_Gravity = 0.1f; // 검기만 받을 중력 힘 

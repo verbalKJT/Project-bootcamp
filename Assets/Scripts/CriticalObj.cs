@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CriticalObj : MonoBehaviourPunCallbacks, IPunObservable
 {
-    public int maxhp { get; private set; } = 1000;
+    public int maxhp { get; private set; } = 1400;
     public int curHp { get; private set; }
 
     // 체력이 변할 때마다 호출될 이벤트 (현재, 최대)체력

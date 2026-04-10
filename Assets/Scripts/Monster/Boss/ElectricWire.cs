@@ -7,7 +7,7 @@ public class ElectricWire : MonoBehaviourPun
     [Header("Hit Effect")]
     [SerializeField] private GameObject hitEffect;
     
-    private int damage = 20;
+    private int damage = 24;
 
     void Start()
     {

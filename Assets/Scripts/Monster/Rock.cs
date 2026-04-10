@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Photon.Pun;
 using UnityEngine;
@@ -5,17 +6,22 @@ using UnityEngine.Serialization;
 
 public class Rock : MonoBehaviourPun, IPunInstantiateMagicCallback
 {
-    private int damage = 10;
+    private int damage = 18;
     public Rigidbody rb { get; private set; }
 
     private EnemyRangeAttack era;
 
     [SerializeField] private GameObject hitEffect;
     [SerializeField] private AudioClip difClip;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
     void Start()
     {
         StartCoroutine(DestroySelf(6f));
-        rb = GetComponent<Rigidbody>();
         era = GetComponentInParent<EnemyRangeAttack>();
     }
 

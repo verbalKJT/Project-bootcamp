@@ -604,8 +604,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5599eedbc9a4f71bec133804bd10e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockAttack
-  playerState: {fileID: 0}
+  playerState: {fileID: 11400000, guid: 4dbfeb8d5e5fb4c86a6f7d8cf737c26f, type: 2}
   animator: {fileID: 0}
+  hammer: {fileID: 2106839030529903809}
   wall: {fileID: 1661941200241538334, guid: 215627614292441f59fe6655bf10ece4, type: 3}
   isAttacking: 0
 --- !u!114 &8078049227992091229

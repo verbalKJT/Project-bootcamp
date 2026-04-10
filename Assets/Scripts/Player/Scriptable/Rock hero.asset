@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb4a8358d44e4b5b9d53d0f10b1e567, type: 3}
   m_Name: Rock hero
   m_EditorClassIdentifier: Assembly-CSharp::PlayerState
-  hp: 1
+  hp: 320
   speed: 20
   jumpForce: 10
   rotationSpeed: 50

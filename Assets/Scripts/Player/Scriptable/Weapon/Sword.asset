@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0569f47d34989462795000c2f937832b, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  damage: 20
-  reloadTime: 2
+  damage: 25
+  reloadTime: 0.9
   speed: 30
+  effect: {fileID: 0}

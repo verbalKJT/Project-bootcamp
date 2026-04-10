@@ -19,7 +19,7 @@ public class EnemyRangeAttack : MonoBehaviourPun
     [field: SerializeField] public GameObject weapon { get; private set; }
 
     // 생성된 무기
-    private GameObject fire;
+    public GameObject fire;
     private Rock fireRock;
 
 
@@ -120,7 +120,17 @@ public class EnemyRangeAttack : MonoBehaviourPun
             }
 
             ClearProjectileRefs();
+            return;
         }
+        Collider rockCol = fire.GetComponent<Collider>();
+        if (rockCol != null)
+        {
+            rockCol.enabled = false;
+        }
+        
+        fireRock.rb.isKinematic = true;
+        fireRock.rb.linearVelocity = Vector3.zero;
+        fireRock.rb.angularVelocity = Vector3.zero;
     }
 
     public void Shoot()
@@ -159,16 +169,20 @@ public class EnemyRangeAttack : MonoBehaviourPun
         // 포물선 공식을 사용한 초기 속도 계산 -> 목표지점까지의 최소한의 힘임       
         Vector3 reVelocity = CalculateTargetPosition(firePos.position,
             sTargert, 5f); // angle 각도가 작아질 수로 Cos값이 커져서 힘이 세짐.
+    
+        Collider rockCol = fire.GetComponent<Collider>();
+        if (rockCol != null)
+        {
+            rockCol.enabled = true;
+        }
 
-
-        // 던질 때 중력 적용
+        fireRock.rb.isKinematic = false;
         fireRock.rb.useGravity = true;
-        // 속도를 그대로 대입
         fireRock.rb.linearVelocity = reVelocity;
+        fireRock.rb.angularVelocity = Vector3.zero;
 
         // 돌이 날아갈 때 랜덤하게 회전.
         fireRock.rb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.Impulse);
-
         photonView.RPC("RangeAttack", RpcTarget.All, false);
         ClearProjectileRefs();
     }

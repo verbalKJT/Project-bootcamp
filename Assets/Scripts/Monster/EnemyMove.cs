@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-public class EnemyMove : MonoBehaviourPun
+public class EnemyMove : MonoBehaviourPun, IPunObservable
 {
     [Header("이동할 위치")]
     [SerializeField] private Transform[] movePoint; // 반드시 이동할 위치들
@@ -15,11 +15,21 @@ public class EnemyMove : MonoBehaviourPun
     [field: SerializeField]
     public MonsterState _monsterState { get; private set; }
     public NavMeshAgent agent;
+    
+    private Vector3 networkPosition;
+    private Quaternion networkRotation;
+    private Vector3 networkVelocity;
+    private bool hasNetworkState;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>(); // 적 생성 후 바로 초기화해주기 위해 awake 권장
         agent.speed = _monsterState.moveSpeed;
+        
+        if (!photonView.IsMine)
+        {
+            agent.enabled = false;
+        }
     }
 
     void Start()
@@ -28,7 +38,11 @@ public class EnemyMove : MonoBehaviourPun
     
     void Update()
     {
-        
+        if (photonView.IsMine) return;
+        if (!hasNetworkState) return;
+
+        transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 15f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, networkRotation, Time.deltaTime * 20f);
     }
     
     
@@ -89,5 +103,29 @@ public class EnemyMove : MonoBehaviourPun
             yield return null; 
         }
         StartCoroutine(GotoDestination(wayIndex+1));
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+            stream.SendNext(agent.velocity);
+        }
+        else
+        {
+            Vector3 pos = (Vector3)stream.ReceiveNext();
+            Quaternion rot = (Quaternion)stream.ReceiveNext();
+            Vector3 vel = (Vector3)stream.ReceiveNext();
+
+            float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+
+            networkPosition = pos + vel * lag;
+            networkRotation = rot;
+            networkVelocity = vel;
+            hasNetworkState = true;
+        }
     }
 }

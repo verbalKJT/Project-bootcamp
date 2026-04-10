@@ -7,7 +7,10 @@ using UnityEngine;
 public class FireManAttack : PlayerAttack
 {
     [Header("Sword.cs")] [SerializeField] private Sword sword;
-
+    private float swordReload = 0;
+    private float swordCooldown;
+    
+    
     private float forceTime = 7f;
     private const float fCoolTime = 7f; // 검기 쿨타임 
     public bool isCast = false;
@@ -17,7 +20,7 @@ public class FireManAttack : PlayerAttack
     private float dashTime = 5f;
     private const float dashCoolTime = 5f; // 대쉬 쿨타임 
     private float dashDis = 20f; // 대쉬 거리
-
+    private int dashDamage = 30; // 기본 공격이 25
     public override float FirstSkillTime => dashTime;
     public override float FirstSkillCool => dashCoolTime;
     public override float SecSkillTime => forceTime;
@@ -29,6 +32,7 @@ public class FireManAttack : PlayerAttack
     {
         base.Start(); // 부모 Start 메서드 먼저 -> animator + PlayerMovement 할당
         _feedback = GetComponent<FireFeedback>();
+        swordCooldown = sword.weaponData.reloadTime;
     }
 
     void Update()
@@ -37,9 +41,14 @@ public class FireManAttack : PlayerAttack
         if (GameManager.isCinematic) return;
         if (input && !IsActionLocked)
         {
-            photonView.RPC("AttackAnim", RpcTarget.All);
+            if (swordReload >= swordCooldown)
+            {
+                photonView.RPC("AttackAnim", RpcTarget.All);
+                swordReload = 0;
+            }
+        
         }
-
+        swordReload += Time.deltaTime;
         if (commandE && forceTime >= fCoolTime && !isDash)
         {
             forceTime = 0f; // 쿨타임 초기화 
@@ -149,7 +158,7 @@ public class FireManAttack : PlayerAttack
                     monsters.Add(hitId);
                     if (hits.TryGetComponent(out LivingEnitiy target))
                     {
-                        target.TakeDamage(30);
+                        target.TakeDamage(dashDamage); // 30데미지
                         if (target.gameObject.layer == LayerMask.NameToLayer("Monster"))
                         {
                             target.photonView.RPC("Is_Hit", RpcTarget.All);

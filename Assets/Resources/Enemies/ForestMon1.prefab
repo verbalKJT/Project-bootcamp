@@ -286,7 +286,6 @@ GameObject:
   - component: {fileID: 1345454280712618063}
   - component: {fileID: 195956192736968079}
   - component: {fileID: 5707275649698584725}
-  - component: {fileID: 3859106144226781074}
   m_Layer: 6
   m_Name: ForestMon1
   m_TagString: Monster
@@ -531,6 +530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   <firePos>k__BackingField: {fileID: 975670660067197314}
   <weapon>k__BackingField: {fileID: 2259493615913689608, guid: 514c9d8c7d0a2473f9ac8286cdf12740, type: 3}
+  fire: {fileID: 0}
 --- !u!114 &195956192736968079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,28 +567,13 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 6117277431117192529}
   - {fileID: 6982170610268609746}
-  - {fileID: 3859106144226781074}
+  - {fileID: 0}
   - {fileID: 4479187845761640734}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &3859106144226781074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4787734284849576031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!1 &5052786251262100939
 GameObject:
   m_ObjectHideFlags: 0
