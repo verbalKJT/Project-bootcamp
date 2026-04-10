@@ -34,6 +34,7 @@ public class BGMManager : MonoBehaviour
             audioSource.Play();
         }
     }
+
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -64,10 +65,14 @@ public class BGMManager : MonoBehaviour
             case "Lobby":
             case "TeamLobby":
             case "Loading":
+            case "Clear":
                 PlayBGM("Garden_Intro");
                 break;
             case "Map1":
                 PlayBGM("Mid_Map1");
+                break;
+            case "Over":
+                PlayBGM("Over");
                 break;
         }
     }
@@ -77,8 +82,8 @@ public class BGMManager : MonoBehaviour
         if (audioClipDictionary.TryGetValue(bgmName, out AudioClip audioClip))
         {
             // 중복 방지
-            if(audioSource.clip == audioClip && audioSource.isPlaying) return;
-            
+            if (audioSource.clip == audioClip && audioSource.isPlaying) return;
+
             audioSource.clip = audioClip;
             audioSource.Play();
         }

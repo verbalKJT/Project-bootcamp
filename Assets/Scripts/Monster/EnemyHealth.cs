@@ -20,7 +20,7 @@ public class EnemyHealth : LivingEnitiy
     private MonsterFeedBack feedback;
     void Start()
     {
-       curhp = foreast_state.hp; // 체력 초기화
+       curhp = 1; // 체력 초기화
        hpBar.fillAmount = curhp; 
        em = GetComponent<EnemyMove>();
        feedback = GetComponent<MonsterFeedBack>();

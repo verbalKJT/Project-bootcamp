@@ -33,7 +33,7 @@ public class BossSpawner : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient) return;
         diedCnt++;
-        if (diedCnt >= 20 && !isSpawned) // 30마리정도 생각중
+        if (diedCnt >= 1 && !isSpawned) // 30마리정도 생각중
         {
             SpawnBoss();
             isSpawned = true;
@@ -68,6 +68,10 @@ public class BossSpawner : MonoBehaviourPun
     IEnumerator SpawnBossCinematicRoutine(float duration, CinemachineBasicMultiChannelPerlin noise)
     {
         yield return new WaitForSeconds(duration);
+        if (BGMManager.instance != null)
+        {
+            BGMManager.instance.PlayBGM("Midnight_Boss");
+        }
         GameManager.isCinematic = false;
         if (noise != null)
             noise.enabled = false;
