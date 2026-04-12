@@ -14,6 +14,8 @@ public class OverSceneeManager : MonoBehaviourPunCallbacks
     void Start()
     {
         director.stopped += OnCanvas;
+        
+        Cursor.visible = true;
     }
 
     private void OnCanvas(PlayableDirector obj)

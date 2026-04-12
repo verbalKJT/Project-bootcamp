@@ -57,6 +57,7 @@ public class PlayerMovement : PlayerInput, IPunObservable
             thirdPersonFollow = playerCam.GetComponent<CinemachineThirdPersonFollow>();
             // 마우스 커서  안보이게
             Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined; // 창내부 
         }
         else
         {
