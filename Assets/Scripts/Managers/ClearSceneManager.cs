@@ -8,6 +8,7 @@ public class ClearSceneManager : MonoBehaviourPunCallbacks
     [SerializeField] private Canvas endCanvas;
     void Start()
     {
+        Cursor.visible = true;
         if(SceneManager.GetActiveScene().name == "Clear")
             StartCoroutine(ActiveRotine(3f));
     }
